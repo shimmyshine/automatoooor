@@ -1,0 +1,8 @@
+[
+    {
+        "name": "Harmony",
+        "providerURL": "https://api.harmony.one",
+        "providerURL_Backup": "https://harmony-0-rpc.gateway.pokt.network",
+        "chainId": 1666600000
+    }
+]

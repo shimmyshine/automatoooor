@@ -3,6 +3,7 @@ import { Contract, ethers } from "ethers";
 import { Logger } from "tslog";
 import { BondDepositoryABI } from "../data/contract_abis/WAGMI/BondDepository";
 import { BaseProvider } from "@ethersproject/providers";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 
 const WAGMI_CBR = (
   log: Logger,
@@ -20,6 +21,7 @@ const WAGMI_CBR = (
     const contractToUse = new Contract(bond[1], BondDepositoryABI, signer);
 
     let bondTotal = 0;
+    let claimTotal;
 
     try {
       bondTotal = await contractToUse.pendingPayoutFor(address);
@@ -27,14 +29,14 @@ const WAGMI_CBR = (
       log.error(e);
     }
 
-    if (bondTotal > 1) {
+    if (Number(formatUnits(bondTotal, 9)) > 0) {
       try {
-        await contractToUse.redeem(address, true);
+        //await contractToUse.redeem(address, true);
       } catch (e) {
         log.error(e);
       }
 
-      log.info("Redeemed " + bondTotal * 1 + " for " + bond[0]);
+      log.info("Redeemed " + formatUnits(bondTotal, 9) + " for " + bond[0]);
     }
   });
 };

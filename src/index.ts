@@ -18,7 +18,9 @@ const log: Logger = new Logger({
   displayFilePath: "hidden",
 });
 
-const address: string = getAddress(Networks[0].name);
+const address: string = getAddress(Networks[0].name)
+  ? getAddress(Networks[0].name)
+  : log.warn("No suitable account to use") && process.exit(1);
 const provider = getProvider(0);
 const signer = getSigner(Networks[0].name, provider);
 
@@ -78,13 +80,13 @@ const main = async (): Promise<void> => {
     }
 
     /* Claim Before Rebase */
-    if (
-      settings.functions.WAGMI_CBR.active &&
-      rebaseCounter.timeToNextRebase <= 120
-    ) {
+    if (settings.functions.WAGMI_CBR.active) {
       log.info("WAGMI Claim Before Rebase is active");
 
-      if (settings.functions.WAGMI_CBR.setTimeoutInfo.setTime) {
+      if (
+        settings.functions.WAGMI_CBR.setTimeoutInfo.setTime &&
+        rebaseCounter.timeToNextRebase <= 120
+      ) {
         setInterval(() => {
           WAGMI_CBR(
             log,
@@ -94,7 +96,7 @@ const main = async (): Promise<void> => {
             settings.functions.WAGMI_CBR,
           );
         }, settings.functions.WAGMI_CBR.setTimeoutInfo.interval);
-      } else {
+      } else if (rebaseCounter.timeToNextRebase <= 120) {
         WAGMI_CBR(log, address, provider, signer, settings.functions.WAGMI_CBR);
       }
     }

@@ -14,8 +14,6 @@ const WAGMI_RRC = async (
     setTimeoutInfo: { setTime: boolean; interval: number };
   },
 ): Promise<RebaseCounter> => {
-  log.info("WAGMI Rebase Rewards Counter has begun.");
-
   const epoch = await new Contract(
     contracts.WAGMI.StakingDistributor,
     StakingDistributorABI,

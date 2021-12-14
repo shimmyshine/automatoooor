@@ -16,7 +16,7 @@ export const settings: Settings = {
       showLog: true,
       setTimeoutInfo: {
         setTime: true, // Not many reasons not to set this the same as active
-        interval: 5 * 1000, // 1 * 1000 = 1 second
+        interval: 19 * 1000, // 1 * 1000 = 1 second
       },
     },
     WAGMI_SAR: {

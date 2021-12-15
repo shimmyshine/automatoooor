@@ -1,31 +1,40 @@
 import { Settings } from "../helpers/Interfaces";
 
 export const settings: Settings = {
-  general: { showBlockNumber: true, blockNumberFreq: 10 * 1000 },
-  functions: {
-    WAGMI_RRC: {
-      active: true, // Rebase Rewards Counter
-      showLog: true,
-      setTimeoutInfo: {
-        setTime: true, // Not many reasons not to set this the same as active
-        interval: 20 * 1000, // 1 * 1000 = 1 second
+  settingsCheck: {
+    showWarns: true,
+    showErrors: true,
+    allowErrorsToKill: true, // DO NOT TURN OFF UNLESS YOU KNOW WHAT YOU ARE DOING!
+  },
+  networks: {
+    Harmony: {
+      name: "Harmony",
+      isActive: true,
+      groups: [1], // For 2 groups: [1, 2] or for 3 groups: [1, 2, 3]
+      orders: {
+        // eslint-disable-next-line prettier/prettier
+        1: { // group id
+          1: 1, // order: module id --- so for 2 module, you might have { 1: 1, 2: 3, 3: 2 } meaning module 1 will get executed 1st, module 2 will get executed 3rd and module 3 will get executed 2nd
+        },
       },
+      showBlockNumber: true,
+      blockNumberFreq: 10 * 1000,
+      gasPriceDefault: 10,
+      gasPriceEnforced: 2,
+      gasLimitDefault: 882841,
+      gasLimitEnforced: 200000,
     },
-    WAGMI_CBR: {
-      active: true, // Claim Before Rebase - Requires Rebase Rewards Counter Set To Active
-      showLog: true,
-      setTimeoutInfo: {
-        setTime: true, // Not many reasons not to set this the same as active
-        interval: 19 * 1000, // 1 * 1000 = 1 second
-      },
-    },
-    WAGMI_SAR: {
-      active: false, // Sell After Rebase - Requires Rebase Rewards Counter Set To Active
-      showLog: true,
-      setTimeoutInfo: {
-        setTime: false, // Not many reasons not to set this the same as active
-        interval: 20 * 1000, // 1 * 1000 = 1 second
-      },
+    Fantom: {
+      name: "Fantom",
+      isActive: false,
+      groups: [],
+      orders: {},
+      showBlockNumber: true,
+      blockNumberFreq: 10 * 1000,
+      gasPriceDefault: 10,
+      gasPriceEnforced: 2,
+      gasLimitDefault: 882841,
+      gasLimitEnforced: 200000,
     },
   },
 };

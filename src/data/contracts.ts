@@ -1,6 +1,4 @@
-import { Contracts } from "helpers/Interfaces";
-
-export const contracts: Contracts = {
+/*export const contracts: Contracts = {
   tokens: {
     WAGMI: "0x0dc78c79b4eb080ead5c1d16559225a46b580694",
     sWAGMI: "0xf38593388079f7f5130d605e38abf6090d981ec2",
@@ -24,3 +22,4 @@ export const contracts: Contracts = {
     },
   },
 };
+*/

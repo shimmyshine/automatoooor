@@ -1,15 +1,36 @@
 export interface Settings {
-  general: GeneralSettings;
-  functions: FunctionsSettings;
+  settingsCheck: {
+    showWarns: boolean;
+    showErrors: boolean;
+    allowErrorsToKill: boolean;
+  };
+  networks: NetworkSettings;
 }
 
-export interface GeneralSettings {
+export interface NetworkSettings {
+  [key: string]: NetworkSettingsBO;
+}
+
+export interface NetworkSettingsBO {
+  name: string;
+  isActive: boolean;
+  groups: number[];
+  orders: {
+    [key: number]: {
+      [key: number]: number;
+    };
+  };
   showBlockNumber: boolean;
   blockNumberFreq: number;
+  gasPriceDefault: number;
+  gasPriceEnforced: number;
+  gasLimitDefault: number;
+  gasLimitEnforced: number;
 }
 
 export interface FunctionsSettings {
   [key: string]: {
+    functionID: number;
     active: boolean;
     showLog: boolean;
     setTimeoutInfo: {
@@ -19,12 +40,6 @@ export interface FunctionsSettings {
   };
 }
 
-export interface RebaseCounter {
-  timeStamp: number;
-  nextRebaseTime: string;
-  timeToNextRebase: number;
-}
-
 export interface Account {
   [key: string]: {
     Private: string;
@@ -32,27 +47,24 @@ export interface Account {
   };
 }
 
-export interface Contracts {
-  tokens: {
-    WAGMI: string;
-    sWAGMI: string;
-    wsWAGMI: string;
+export interface Modules {
+  [key: number]: {
+    moduleID: number;
+    moduleName: string;
+    moduleDescription: string;
+    moduleSettings: ModuleSettings;
+    moduleSettingsCheck: string;
+    chain: string;
+    directory: string;
   };
-  WAGMI: {
-    StakingDistributor: string;
-    BondDepository: string;
-    Staking: string;
-    StakingHelper: string;
-    Treasury: string;
-    DAO: string;
-    Bonds: {
-      DAI: string;
-      DAI_WAGMI: string;
-      UST: string;
-      UST_WAGMI: string;
-      USDC: string;
-      BUSD: string;
-      ONE_WAGMI: string;
-    };
+}
+
+export interface ModuleSettings {
+  active: boolean;
+  showLog: boolean;
+  setTimeoutInfo: {
+    setTime: boolean;
+    interval: number;
   };
+  extras?: unknown;
 }

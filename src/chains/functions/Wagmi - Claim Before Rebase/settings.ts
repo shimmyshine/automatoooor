@@ -4,7 +4,7 @@ const moduleSettings: ModuleSettings = {
   active: true,
   showLog: true,
   setTimeoutInfo: {
-    setTime: true,
+    setTime: false,
     interval: 20 * 1000, // 1 * 1000 = 1 second
   },
   extras: {

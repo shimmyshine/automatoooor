@@ -4,6 +4,7 @@ import { Logger } from "tslog";
 import { StakingDistributorABI } from "../data/contract_abis/StakingDistributor";
 import { BaseProvider } from "@ethersproject/providers";
 import moduleSettings from "../settings";
+import moduleInfo from "../";
 
 export async function Main(
   log: Logger,
@@ -13,6 +14,9 @@ export async function Main(
   signer: Wallet,
 ): Promise<void> {
   const thisSettings = moduleSettings;
+  const info = moduleInfo;
+
+  log.info("[Module: " + info.moduleName + "]: has been triggered to run.");
 
   let epoch = null;
   try {

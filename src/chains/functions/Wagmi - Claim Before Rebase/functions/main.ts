@@ -6,7 +6,7 @@ import { BondDepositoryABI } from "../data/contract_abis/BondDepository";
 import { BaseProvider } from "@ethersproject/providers";
 import moduleSettings from "../settings";
 import { formatUnits } from "ethers/lib/utils";
-import moduleInfo from "..";
+import moduleInfo from "../";
 
 export async function Main(
   log: Logger,
@@ -16,6 +16,8 @@ export async function Main(
 ): Promise<void> {
   const thisSettings = moduleSettings;
   const info = moduleInfo;
+
+  log.info("[Module: " + info.moduleName + "]: has been triggered to run.");
 
   let epoch = null;
   try {

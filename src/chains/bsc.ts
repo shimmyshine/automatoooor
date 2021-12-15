@@ -7,23 +7,23 @@ import { Logger } from "tslog";
 import { NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID } from "../data/functions";
 
-const Harmony = async (
+const Binance_Smart_Chain = async (
   log: Logger,
   networkSettings: NetworkSettingsBO,
   groups: number[],
   order: { [key: number]: { [key: number]: number } },
 ): Promise<void> => {
-  const address: string = getAddress(Networks[0].name)
-    ? getAddress(Networks[0].name)
-    : log.error(Networks[0].name + ": No suitable account to use") &&
+  const address: string = getAddress(Networks[3].name)
+    ? getAddress(Networks[3].name)
+    : log.error(Networks[3].name + ": No suitable account to use") &&
       process.exit(1);
-  const provider = getProvider(0);
-  const signer = getSigner(Networks[0].name, provider);
+  const provider = getProvider(3);
+  const signer = getSigner(Networks[3].name, provider);
 
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
     setInterval(async () => {
-      log.info(Networks[0].name + ": Block: " + (await getBlock(provider)));
+      log.info(Networks[3].name + ": Block: " + (await getBlock(provider)));
     }, networkSettings.blockNumberFreq);
   }
 
@@ -68,4 +68,4 @@ const Harmony = async (
   });
 };
 
-export default Harmony;
+export default Binance_Smart_Chain;

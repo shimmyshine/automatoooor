@@ -1,14 +1,11 @@
 import { ModuleSettings } from "../../../helpers/Interfaces";
 
 const moduleSettings: ModuleSettings = {
-  active: true,
-  showLog: true,
+  active: false,
+  showLog: false,
   setTimeoutInfo: {
-    setTime: true,
+    setTime: false,
     interval: 20 * 1000, // 1 * 1000 = 1 second
-  },
-  extras: {
-    inTime: 120,
   },
 };
 

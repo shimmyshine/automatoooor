@@ -1,7 +1,17 @@
 # automatoooor
 Automate actions in crypto.  From keeping an eye on information to performing sells, stakes, pair breaks, auto claims, autocompound, etc...
 
-Networks supported: Harmony, Fantom, Avalanche, Binance Smart Chain, Ethereum, Aurora, Polygon, RSK and Telos
+Networks supported: 
+
+* Harmony
+* Fantom
+* Avalanche
+* Binance Smart Chain
+* Ethereum
+* Aurora
+* Polygon
+* RSK
+* Telos
 
 ### Instructions
 1. Clone the repository

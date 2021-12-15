@@ -3,7 +3,7 @@ Automate actions in crypto.  From keeping an eye on informaiton to performing se
 
 Networks supported: Harmony, Fantom, Avalanche, Binance Smart Chain, Ethereum, Aurora, Polygon, RSK and Telos
 
-###Instructions
+### Instructions
 1. Clone the repository
 2. Run "npm install"
 3. Create an .env file and add your information with this format

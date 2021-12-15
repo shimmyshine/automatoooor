@@ -13,6 +13,9 @@ Networks supported:
 * RSK
 * Telos
 
+### Wiki
+Learn more about the customization of groups, orders and modules/functions on the [wiki](https://github.com/shimmyshine/automatoooor/wiki)
+
 ### Instructions
 1. Clone the repository
 2. Run "npm install"

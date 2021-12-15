@@ -10,11 +10,11 @@ export const settings: Settings = {
     Harmony: {
       name: "Harmony",
       isActive: true,
-      groups: [1, 2], // For 2 groups: [1, 2] or for 3 groups: [1, 2, 3]
+      groups: [1, 2],
       orders: {
         // eslint-disable-next-line prettier/prettier
-        1: { // group id
-          1: 1, // order: module id --- so for 3 modules, you might have { 1: 1, 2: 3, 3: 2 } meaning module 1 will get executed 1st, module 3 will get executed 2nd and module 2 will get executed 3rd
+        1: {
+          1: 1,
         },
         2: {
           1: 2,
@@ -22,7 +22,7 @@ export const settings: Settings = {
         },
       },
       groupsInterval: {
-        1: 0, // group id: interval duration (1 * 1000 = 1 second)
+        1: 0,
         2: 20 * 1000,
       },
       showBlockNumber: true,

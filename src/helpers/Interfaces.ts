@@ -20,6 +20,9 @@ export interface NetworkSettingsBO {
       [key: number]: number;
     };
   };
+  groupsInterval: {
+    [key: number]: number;
+  };
   showBlockNumber: boolean;
   blockNumberFreq: number;
   gasPriceDefault: number;
@@ -66,5 +69,7 @@ export interface ModuleSettings {
     setTime: boolean;
     interval: number;
   };
-  extras?: unknown;
+  extras?: {
+    [key: string]: string | number;
+  };
 }

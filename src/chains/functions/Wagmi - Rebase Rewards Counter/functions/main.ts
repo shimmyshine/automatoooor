@@ -1,5 +1,5 @@
 import { contracts } from "../data/contracts";
-import { Contract } from "ethers";
+import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import { StakingDistributorABI } from "../data/contract_abis/StakingDistributor";
 import { BaseProvider } from "@ethersproject/providers";
@@ -9,14 +9,21 @@ export async function Main(
   log: Logger,
   address: string,
   provider: BaseProvider,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  signer: Wallet,
 ): Promise<void> {
   const thisSettings = moduleSettings;
 
-  const epoch = await new Contract(
-    contracts.StakingDistributor,
-    StakingDistributorABI,
-    provider,
-  ).nextEpochTime();
+  let epoch = null;
+  try {
+    epoch = await new Contract(
+      contracts.StakingDistributor,
+      StakingDistributorABI,
+      provider,
+    ).nextEpochTime();
+  } catch (e) {
+    log.warn(e);
+  }
   const epochDate = epoch * 1000;
   const currentDate = new Date().valueOf();
   const delta = (epochDate - currentDate) / 1000;

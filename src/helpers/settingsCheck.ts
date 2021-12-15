@@ -131,64 +131,6 @@ const settingsCheck = (log: Logger, functions: Modules): void => {
       );
     });
   });
-
-  /*
-  if (settings.functions["WAGMI_RRC"].active) {
-    if (!settings.functions["WAGMI_RRC"].setTimeoutInfo.setTime) {
-      triggerError(
-        "Settings->functions->WAGMI_RRC->active: WAGMI_RRC has active set to true, but it's setTimeoutInfo->setTime is set to false.  This must be true otherwise WAGMI_CBR & WAGMI_SAR will not run properly.",
-        showErrors,
-        log,
-        allowErrorsToKill ? true : false,
-      );
-    } else {
-      if (settings.functions["WAGMI_RRC"].setTimeoutInfo.interval <= 0)
-        triggerError(
-          "Settings->functions->WAGMI_RRC->setTimeoutInfo: setTime is set to true, but interval is 0.  It must be a value, ideally more than 10 seconds.",
-          showErrors,
-          log,
-          allowErrorsToKill ? true : false,
-        );
-    }
-  }
-
-  if (settings.functions["WAGMI_CBR"].active) {
-    if (settings.functions["WAGMI_CBR"].setTimeoutInfo.setTime) {
-      if (settings.functions["WAGMI_CBR"].setTimeoutInfo.interval <= 0) {
-        triggerError(
-          "Settings->functions->WAGMI_CBR->setTimeoutInfo: setTime is set to true, but interval is 0.  It must be a value, ideally more than 10 seconds.",
-          showErrors,
-          log,
-          allowErrorsToKill ? true : false,
-        );
-      }
-    } else {
-      triggerWarning(
-        "Settings->functions->WAGMI_CBR->setTimeoutInfo->setTime: setTime is set to false, this means it will not loop or perform an action when expected.",
-        showWarns,
-        log,
-      );
-    }
-  }
-
-  if (settings.functions["WAGMI_SAR"].active) {
-    if (settings.functions["WAGMI_SAR"].setTimeoutInfo.setTime) {
-      if (settings.functions["WAGMI_SAR"].setTimeoutInfo.interval <= 0) {
-        triggerError(
-          "Settings->functions->WAGMI_SAR->setTimeoutInfo: setTime is set to true, but interval is 0.  It must be a value, ideally more than 10 seconds.",
-          showErrors,
-          log,
-          allowErrorsToKill ? true : false,
-        );
-      }
-    } else {
-      triggerWarning(
-        "Settings->functions->WAGMI_SAR->setTimeoutInfo->setTime: setTime is set to false, this means it will not loop or perform an action when expected.",
-        showWarns,
-        log,
-      );
-    }
-  }*/
 };
 
 export default settingsCheck;

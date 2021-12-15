@@ -22,19 +22,23 @@ const main = async (): Promise<void> => {
 
   isFunctionActive(1);
 
-  await Harmony(
-    log,
-    settings.networks["Harmony"],
-    settings.networks["Harmony"].groups,
-    settings.networks["Harmony"].orders,
-  );
+  if (settings.networks["Harmony"].isActive) {
+    await Harmony(
+      log,
+      settings.networks["Harmony"],
+      settings.networks["Harmony"].groups,
+      settings.networks["Harmony"].orders,
+    );
+  }
 
-  await Fantom(
-    log,
-    settings.networks["Fantom"],
-    settings.networks["Fantom"].groups,
-    settings.networks["Fantom"].orders,
-  );
+  if (settings.networks["Fantom"].isActive) {
+    await Fantom(
+      log,
+      settings.networks["Fantom"],
+      settings.networks["Fantom"].groups,
+      settings.networks["Fantom"].orders,
+    );
+  }
 };
 
 main().catch((e) => {

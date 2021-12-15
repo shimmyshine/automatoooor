@@ -19,16 +19,7 @@ export function settingsCheck(
   const info = moduleInfo;
 
   if (thisSettings.active) {
-    if (!thisSettings.setTimeoutInfo.setTime) {
-      triggerError(
-        "[Module: " +
-          info.moduleName +
-          "]->active: WAGMI_RRC has active set to true, but it's setTimeoutInfo->setTime is set to false.  This must be true otherwise WAGMI_CBR & WAGMI_SAR will not run properly.",
-        showErrors,
-        log,
-        allowErrorsToKill ? true : false,
-      );
-    } else {
+    if (thisSettings.setTimeoutInfo.setTime) {
       if (thisSettings.setTimeoutInfo.interval <= 0)
         triggerError(
           "[Module: " +

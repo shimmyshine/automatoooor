@@ -30,14 +30,41 @@ const Harmony = async (
   groups.map((grp) => {
     const thisOrder = Object.values(order[grp]).sort((n1, n2) => n1 - n2);
 
-    thisOrder.map(async (res) => {
-      const specificFunctionData = await getFunctionByID(res);
+    if (networkSettings.groupsInterval[grp] > 0) {
+      setInterval(() => {
+        thisOrder.map(async (res) => {
+          const specificFunctionData = await getFunctionByID(res);
 
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require("../." +
-        specificFunctionData[res].directory +
-        "/functions/main.ts").Main(log, address, provider, signer);
-    });
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const functionSettings = require("../." +
+            specificFunctionData[res].directory +
+            "/settings.ts");
+
+          if (functionSettings.default.active) {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            require("../." +
+              specificFunctionData[res].directory +
+              "/functions/main.ts").Main(log, address, provider, signer);
+          }
+        });
+      }, networkSettings.groupsInterval[grp]);
+    } else {
+      thisOrder.map(async (res) => {
+        const specificFunctionData = await getFunctionByID(res);
+
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const functionSettings = require("../." +
+          specificFunctionData[res].directory +
+          "/settings.ts");
+
+        if (functionSettings.default.active) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../." +
+            specificFunctionData[res].directory +
+            "/functions/main.ts").Main(log, address, provider, signer);
+        }
+      });
+    }
   });
 
   /*let WAGMIRebaseCounter: RebaseCounter = {

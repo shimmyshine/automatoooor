@@ -1,5 +1,5 @@
 # automatoooor
-Automate actions in crypto.  From keeping an eye on informaiton to performing sells, stakes, pair breaks, auto claims, autocompound, etc...
+Automate actions in crypto.  From keeping an eye on information to performing sells, stakes, pair breaks, auto claims, autocompound, etc...
 
 Networks supported: Harmony, Fantom, Avalanche, Binance Smart Chain, Ethereum, Aurora, Polygon, RSK and Telos
 
@@ -7,7 +7,8 @@ Networks supported: Harmony, Fantom, Avalanche, Binance Smart Chain, Ethereum, A
 1. Clone the repository
 2. Run "npm install"
 3. Create an .env file and add your information with this format
-```PUBLIC_KEY_HARMONY=
+```
+PUBLIC_KEY_HARMONY=
 PRIVATE_KEY_HARMONY=
 
 PUBLIC_KEY_FANTOM=

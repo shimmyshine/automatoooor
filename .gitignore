@@ -1,3 +1,9 @@
 .env
 node_modules
 dist
+
+src/chains/functions/[Harmony] ViperSwap - Perform Swap/settings.ts
+src/chains/functions/[Harmony] Wagmi - Claim Before Rebase/settings.ts
+src/chains/functions/[Harmony] Wagmi - Rebase Rewards Counter/settings.ts
+src/chains/functions/[Harmony] Wagmi - Unwrap and Unstake/settings.ts
+src\chains\functions\[CHAIN]_PROTOCOL_-_BRIEF_DESCRIPTION\settings.ts

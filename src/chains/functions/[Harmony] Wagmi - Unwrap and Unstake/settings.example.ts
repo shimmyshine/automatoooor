@@ -5,10 +5,11 @@ const moduleSettings: ModuleSettings = {
   showLog: true,
   setTimeoutInfo: {
     setTime: false,
-    interval: 20 * 1000, // 1 * 1000 = 1 second
+    interval: 0, // 1 * 1000 = 1 second
   },
   extras: {
-    inTime: 120,
+    timeToWaitAfterRebase: 3 * 60 * 60 * 1000, // 1 * 1000 = 1 second - this is 3 hours
+    percentToUnwrap: 0.2,
   },
 };
 

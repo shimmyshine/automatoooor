@@ -10,33 +10,19 @@ export const settings: Settings = {
     Harmony: {
       name: "Harmony",
       isActive: true,
-      groups: [1, 2],
+      groups: [1],
       orders: {
         // eslint-disable-next-line prettier/prettier
         1: {
           1: 3,
           2: 2,
-          3: 4,
-        },
-        2: {
-          1: 1,
         },
       },
       groupsInterval: {
         1: 20 * 1000,
-        2: 0,
-      },
-      otfSettings: {
-        "3:4": {
-          fromToken: "",
-          toToken: "",
-          slippageAllowed: 200, // 1 = .01%
-          deadline: 20 * 60 * 1000, // 1 * 1000 = 1 second
-          quantity: "", // number in wei or MAX to swap all held in the wallet
-        },
       },
       showBlockNumber: true,
-      blockNumberFreq: 10 * 60 * 1000,
+      blockNumberFreq: 10 * 1000,
       gasPriceDefault: 10,
       gasPriceEnforced: 25,
       gasLimitDefault: 882841,
@@ -48,7 +34,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -62,7 +47,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -76,7 +60,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -90,7 +73,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -104,7 +86,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -118,7 +99,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -132,7 +112,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,
@@ -146,7 +125,6 @@ export const settings: Settings = {
       groups: [],
       orders: {},
       groupsInterval: {},
-      otfSettings: {},
       showBlockNumber: true,
       blockNumberFreq: 10 * 60 * 1000,
       gasPriceDefault: 10,

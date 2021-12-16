@@ -19,6 +19,12 @@ const Fantom = async (
       process.exit(1);
   const provider = getProvider(1);
   const signer = getSigner(Networks[1].name, provider);
+  const systemGas = {
+    gasPrice:
+      networkSettings.gasPriceEnforced == 0
+        ? networkSettings.gasPriceDefault
+        : networkSettings.gasPriceEnforced,
+  };
 
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
@@ -44,7 +50,13 @@ const Fantom = async (
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             require("../." +
               specificFunctionData[res].directory +
-              "/functions/main.ts").Main(log, address, provider, signer);
+              "/functions/main.ts").Main(
+              log,
+              address,
+              provider,
+              signer,
+              systemGas,
+            );
           }
         });
       }, networkSettings.groupsInterval[grp]);
@@ -61,7 +73,13 @@ const Fantom = async (
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           require("../." +
             specificFunctionData[res].directory +
-            "/functions/main.ts").Main(log, address, provider, signer);
+            "/functions/main.ts").Main(
+            log,
+            address,
+            provider,
+            signer,
+            systemGas,
+          );
         }
       });
     }

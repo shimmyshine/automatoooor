@@ -23,6 +23,9 @@ export interface NetworkSettingsBO {
   groupsInterval: {
     [key: number]: number;
   };
+  otfSettings: {
+    [key: string]: unknown;
+  };
   showBlockNumber: boolean;
   blockNumberFreq: number;
   gasPriceDefault: number;

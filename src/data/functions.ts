@@ -1,6 +1,7 @@
 import { promisify } from "util";
 import _glob from "glob";
 import { Modules } from "../helpers/interfaces";
+import { settings } from "./settings";
 
 const glob = promisify(_glob);
 
@@ -73,4 +74,11 @@ export const isFunctionActive = async (idMatch: number): Promise<boolean> => {
   const funcSettings: Modules = await getFunctionByID(idMatch);
 
   return funcSettings[idMatch].moduleSettings.active;
+};
+
+export const getOTFSettings = (
+  networkToUse: string,
+  match: string,
+): unknown => {
+  return settings.networks[networkToUse].otfSettings[match];
 };

@@ -18,6 +18,7 @@ export async function Main(
   signer: Wallet,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   systemGas: { gasPrice: number; gasLimit: number },
+  otfSettings: { intervalToAbideBy: number },
 ): Promise<void> {
   const thisSettings = moduleSettings;
   const info = moduleInfo;
@@ -43,7 +44,8 @@ export async function Main(
       Number(
         thisSettings.extras ? thisSettings.extras.timeToWaitAfterRebase : 0,
       );
-    const approvedTimeBuffer = nextApprovedTime + 39 * 1000;
+    const approvedTimeBuffer =
+      nextApprovedTime + (otfSettings.intervalToAbideBy - 1) * 1000;
 
     if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
       let epoch = null;

@@ -27,12 +27,15 @@ export const settings: Settings = {
         2: 0,
       },
       otfSettings: {
-        "3:4": {
-          fromToken: "",
-          toToken: "",
+        "1:1:3": {
+          intervalToAbideBy: 20,
+        },
+        "1:3:4": {
+          fromToken: "", // 0x Token Address
+          toToken: "", // 0x Token Address
           slippageAllowed: 200, // 1 = .01%
           deadline: 20 * 60 * 1000, // 1 * 1000 = 1 second
-          quantity: "", // number in wei or MAX to swap all held in the wallet
+          quantity: 0, // number in wei or MAX to swap all held in the wallet
         },
       },
       showBlockNumber: true,

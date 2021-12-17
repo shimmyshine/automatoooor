@@ -14,17 +14,14 @@ export const settings: Settings = {
       orders: {
         // eslint-disable-next-line prettier/prettier
         1: {
-          1: 3,
-          2: 2,
+          1: 1,
         },
       },
       groupsInterval: {
         1: 20 * 1000,
       },
       otfSettings: {
-        "1:1:3": {
-          intervalToAbideBy: 20,
-        },
+        "1:1:1": {},
       },
       showBlockNumber: true,
       blockNumberFreq: 10 * 1000,

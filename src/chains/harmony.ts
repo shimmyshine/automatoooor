@@ -29,35 +29,52 @@ const Harmony = async (
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
     setInterval(async () => {
-      log.info(Networks[0].name + ": Block: " + (await getBlock(provider)));
+      try {
+        log.info(Networks[0].name + ": Block: " + (await getBlock(provider)));
+      } catch (e) {
+        log.warn(e);
+      }
     }, networkSettings.blockNumberFreq);
   }
 
   groups.map((grp, i: number) => {
     const interVal = setInterval(() => {
       Object.values(order[grp]).map(async (res, z: number) => {
-        const specificFunctionData = await getFunctionByID(res);
+        let specificFunctionData = null;
+        let ctp = false;
+        try {
+          specificFunctionData = await getFunctionByID(res);
+          ctp = true;
+        } catch (e) {
+          log.warn(e);
+        }
 
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const functionSettings = require("../." +
-          specificFunctionData[res].directory +
-          "/settings.ts");
-
-        if (functionSettings.default.active) {
+        if (ctp && specificFunctionData != null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
-          await require("../." +
+          const functionSettings = require("../." +
             specificFunctionData[res].directory +
-            "/functions/main.ts").Main(
-            log,
-            address,
-            provider,
-            signer,
-            systemGas,
-            getOTFSettings(
-              networkSettings.name,
-              i + 1 + ":" + (z + 1) + ":" + res,
-            ),
-          );
+            "/settings.ts");
+
+          if (functionSettings.default.active) {
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              await require("../." +
+                specificFunctionData[res].directory +
+                "/functions/main.ts").Main(
+                log,
+                address,
+                provider,
+                signer,
+                systemGas,
+                getOTFSettings(
+                  networkSettings.name,
+                  i + 1 + ":" + (z + 1) + ":" + res,
+                ),
+              );
+            } catch (e) {
+              log.warn(e);
+            }
+          }
         }
       });
 

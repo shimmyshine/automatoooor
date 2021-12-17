@@ -2,7 +2,7 @@ import { BaseProvider } from "@ethersproject/providers";
 import { Contract, Wallet } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { Logger } from "tslog";
-import moduleInfo from "..";
+import moduleInfo from "../index";
 import { contracts } from "../data/contracts";
 import { StakingABI } from "../data/contract_abis/Staking";
 import { StakingDistributorABI } from "../data/contract_abis/StakingDistributor";
@@ -189,7 +189,7 @@ export const entry = async (
     const currentDate = new Date().valueOf();
     const nextApprovedTime = epochDate + otfSettings.timeAfterRebaseToUse;
     const approvedTimeBuffer =
-      (nextApprovedTime + otfSettings.timeAfterRebaseToUse - 1) * 1000;
+      nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
 
     if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
       if (qtyToUse > 0) {

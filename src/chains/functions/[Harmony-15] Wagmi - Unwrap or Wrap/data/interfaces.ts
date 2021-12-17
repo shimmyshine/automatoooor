@@ -10,4 +10,5 @@ export interface OTFSettings {
   qtyType: string;
   qty: number;
   timeAfterRebaseToUse: number;
+  intervalUsed: number;
 }

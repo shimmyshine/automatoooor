@@ -183,7 +183,7 @@ export const entry = async (
     const currentDate = new Date().valueOf();
     const nextApprovedTime = epochDate + otfSettings.timeAfterRebaseToUse;
     const approvedTimeBuffer =
-      (nextApprovedTime + otfSettings.timeAfterRebaseToUse - 1) * 1000;
+      nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
 
     if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
       if (qtyToUse > 0) {

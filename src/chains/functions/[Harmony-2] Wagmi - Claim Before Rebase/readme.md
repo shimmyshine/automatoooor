@@ -1,18 +1,21 @@
-# MODULE NAME
-MODULE DESCRIPTION
+# WAGMI - Claim Before Rebase
+Auto claims any bonds you have before a rebase.
 
-Module ID: #
-Module Network: NETWORK
+Module ID: 2
+Module Network: Harmony
 
 ## Settings
 Located in ./settings.ts
 ```
 const moduleSettings: ModuleSettings = {
-  active: false,
-  showLog: true,
+  active: true,
+  showLog: false,
   setTimeoutInfo: {
     setTime: false,
     interval: 20 * 1000, // 1 * 1000 = 1 second
+  },
+  extras: {
+    inTime: 120,
   },
 };
 ```
@@ -20,7 +23,7 @@ const moduleSettings: ModuleSettings = {
 ## otfSettings
 ```
 "GROUP:ORDER:MODULE_ID": {
-          key: value,
-        },
+  intervalUsed: 20 * 1000,
+},
 ```
 It is important to remember, the otfSettings are entered in ./src/data/settings.ts and are independent for each time the module is loaded.

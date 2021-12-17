@@ -1,26 +1,24 @@
-# MODULE NAME
-MODULE DESCRIPTION
+# WAGMI - Rebase Rewards Counter
+Tracks the rebase counter for WAGMI and displays it in the console for easy reference.
 
-Module ID: #
-Module Network: NETWORK
+Module ID: 1
+Module Network: Harmony
 
 ## Settings
 Located in ./settings.ts
 ```
 const moduleSettings: ModuleSettings = {
-  active: false,
+  active: true,
   showLog: true,
   setTimeoutInfo: {
-    setTime: false,
-    interval: 20 * 1000, // 1 * 1000 = 1 second
+    setTime: true,
+    interval: 60 * 60 * 1000, // 1 * 1000 = 1 second
   },
 };
 ```
 
 ## otfSettings
 ```
-"GROUP:ORDER:MODULE_ID": {
-          key: value,
-        },
+None
 ```
 It is important to remember, the otfSettings are entered in ./src/data/settings.ts and are independent for each time the module is loaded.

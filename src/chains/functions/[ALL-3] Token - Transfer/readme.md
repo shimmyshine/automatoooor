@@ -29,14 +29,16 @@ const moduleSettings: ModuleSettings = {
 ```
 "GROUP:ORDER:MODULE_ID": {
           type: string,
-          address: string,
+          addressTo: string,
+          tokenAddress: string,
           quantity: number,
           decimal: number,
         },
 ```
 
 ### otfSettings Explained
-* type: string["token", "chain_coin"] is whether you want to send a token or the chain coin (ONE, AVAX, ETH, etc...)
-* address: string is the 0x address of where you want to send the asset
-* quantity: number is the quantity in wei you want to send
-* decimal: number is the decimal of the token your sending (enter 0 if the chain coin)
+type: string["token", "chain_coin"] is whether you want to send a token or the chain coin (ONE, AVAX, ETH, etc...)
+addressTo: string is the 0x address of where you want to send the asset
+tokenAddress: string is the 0x address of the token to send (leave "" if using chain_coin for type)
+quantity: number is the quantity in wei you want to send
+decimal: number is the decimal of the token your sending (enter 0 if the chain coin)

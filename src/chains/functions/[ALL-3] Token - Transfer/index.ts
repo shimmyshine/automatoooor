@@ -2,8 +2,8 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 3,
-  moduleName: "Module Name",
-  moduleDescription: "Module Description",
+  moduleName: "Transfer",
+  moduleDescription: "Transfer a token or the chain coin.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",
   chain: "Harmony", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos

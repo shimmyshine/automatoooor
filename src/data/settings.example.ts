@@ -1,4 +1,5 @@
 import { Settings } from "../helpers/Interfaces";
+import * as networks from "./networks.json";
 
 export const settings: Settings = {
   settingsCheck: {
@@ -9,6 +10,8 @@ export const settings: Settings = {
   networks: {
     Harmony: {
       name: "Harmony",
+      chainId: networks[0].chainId,
+      providerURL: networks[0].providerURL,
       isActive: true,
       groups: [1],
       orders: {
@@ -32,6 +35,8 @@ export const settings: Settings = {
     },
     Fantom: {
       name: "Fantom",
+      chainId: networks[1].chainId,
+      providerURL: networks[1].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -46,6 +51,8 @@ export const settings: Settings = {
     },
     Avalanche: {
       name: "Avalanche",
+      chainId: networks[2].chainId,
+      providerURL: networks[2].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -60,6 +67,8 @@ export const settings: Settings = {
     },
     Binance_Smart_Chain: {
       name: "Binance_Smart_Chain",
+      chainId: networks[3].chainId,
+      providerURL: networks[3].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -74,6 +83,8 @@ export const settings: Settings = {
     },
     Ethereum: {
       name: "Ethereum",
+      chainId: networks[4].chainId,
+      providerURL: networks[4].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -88,6 +99,8 @@ export const settings: Settings = {
     },
     Aurora: {
       name: "Aurora",
+      chainId: networks[5].chainId,
+      providerURL: networks[5].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -102,6 +115,8 @@ export const settings: Settings = {
     },
     Polygon: {
       name: "Polygon",
+      chainId: networks[6].chainId,
+      providerURL: networks[6].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -116,6 +131,8 @@ export const settings: Settings = {
     },
     RSK: {
       name: "RSK",
+      chainId: networks[7].chainId,
+      providerURL: networks[7].providerURL,
       isActive: false,
       groups: [],
       orders: {},
@@ -130,6 +147,8 @@ export const settings: Settings = {
     },
     Telos: {
       name: "Telos",
+      chainId: networks[8].chainId,
+      providerURL: networks[8].providerURL,
       isActive: false,
       groups: [],
       orders: {},

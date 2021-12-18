@@ -2,23 +2,26 @@ import { getAddress } from "../helpers/getAddress";
 import { getBlock } from "../helpers/getCurrentBlock";
 import { getProvider } from "../helpers/getNetworkProvider";
 import { getSigner } from "../helpers/getSigner";
-import * as Networks from "../data/networks.json";
 import { Logger } from "tslog";
 import { NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
 
-const Polygon = async (
+const NetworkRouter = async (
   log: Logger,
   networkSettings: NetworkSettingsBO,
   groups: number[],
   order: { [key: number]: { [key: number]: number } },
 ): Promise<void> => {
-  const address: string = getAddress(Networks[6].name)
-    ? getAddress(Networks[6].name)
-    : log.error(Networks[6].name + ": No suitable account to use") &&
-      process.exit(1);
-  const provider = getProvider(6);
-  const signer = getSigner(Networks[6].name, provider);
+  const address = "";
+  if (getAddress(networkSettings.name)) {
+    getAddress(networkSettings.name);
+  } else {
+    log.error(networkSettings.name + ": No suitable account to use");
+    process.exit(1);
+  }
+
+  const provider = getProvider(networkSettings.name);
+  const signer = getSigner(networkSettings.name, provider);
   const systemGas = {
     gasPrice:
       networkSettings.gasPriceEnforced == 0
@@ -29,7 +32,13 @@ const Polygon = async (
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
     setInterval(async () => {
-      log.info(Networks[6].name + ": Block: " + (await getBlock(provider)));
+      try {
+        log.info(
+          networkSettings.name + ": Block: " + (await getBlock(provider)),
+        );
+      } catch (e) {
+        log.warn(e);
+      }
     }, networkSettings.blockNumberFreq);
   }
 
@@ -37,15 +46,15 @@ const Polygon = async (
     const interVal = setInterval(() => {
       Object.values(order[grp]).map(async (res, z: number) => {
         let specificFunctionData = null;
-        let ctp = false;
+        let clearToProceed = false;
         try {
           specificFunctionData = await getFunctionByID(res);
-          ctp = true;
         } catch (e) {
           log.warn(e);
         }
+        clearToProceed = true;
 
-        if (ctp && specificFunctionData != null) {
+        if (clearToProceed && specificFunctionData != null) {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           const functionSettings = require("../." +
             specificFunctionData[res].directory +
@@ -81,4 +90,4 @@ const Polygon = async (
   });
 };
 
-export default Polygon;
+export default NetworkRouter;

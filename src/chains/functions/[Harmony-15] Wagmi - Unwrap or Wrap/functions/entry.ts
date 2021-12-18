@@ -98,17 +98,6 @@ export const entry = async (
     const stakingRebase =
       Number(await stakingReward.toString()) / Number(await circ.toString());
 
-    let sWAGMIBalance = null;
-    try {
-      sWAGMIBalance = await new Contract(
-        contracts.sWAGMI,
-        sWAGMIABI,
-        provider,
-      ).balanceOf(address);
-    } catch (e) {
-      log.warn(e);
-    }
-
     let currentIndex = null;
     try {
       currentIndex = await new Contract(
@@ -121,14 +110,31 @@ export const entry = async (
     }
 
     let wsWAGMIBalance = null;
-    try {
-      wsWAGMIBalance = await new Contract(
-        contracts.wsWAGMI,
-        wsWAGMIABI,
-        provider,
-      ).balanceOf(address);
-    } catch (e) {
-      log.warn(e);
+    let sWAGMIBalance = null;
+    if (otfSettings.type == "wrap") {
+      try {
+        wsWAGMIBalance = await new Contract(
+          contracts.wsWAGMI,
+          wsWAGMIABI,
+          provider,
+        ).balanceOf(address);
+      } catch (e) {
+        log.warn(e);
+      }
+
+      sWAGMIBalance = balanceOf;
+    } else if (otfSettings.type == "unwrap") {
+      try {
+        sWAGMIBalance = await new Contract(
+          contracts.sWAGMI,
+          sWAGMIABI,
+          provider,
+        ).balanceOf(address);
+      } catch (e) {
+        log.warn(e);
+      }
+
+      wsWAGMIBalance = balanceOf;
     }
 
     const wsWAGMIBalanceCalculatedAssWAGMI = calculateWrappedAssWagmi(

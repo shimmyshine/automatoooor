@@ -1,12 +1,17 @@
 import { BaseProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-import * as networks from "../data/networks.json";
+import { settings } from "../data/settings";
+import { Network } from "@ethersproject/networks";
 
-export const getProvider = (networkToUse: number): BaseProvider => {
-  return ethers.getDefaultProvider({
-    name: networks[networkToUse].name,
-    chainId: networks[networkToUse].chainId,
+export const getProvider = (networkToUse: string): BaseProvider => {
+  const network: Network = {
+    name: networkToUse,
+    chainId: settings.networks[networkToUse].chainId,
     _defaultProvider: (providers) =>
-      new providers.JsonRpcProvider(networks[networkToUse].providerURL),
-  });
+      new providers.JsonRpcProvider(
+        settings.networks[networkToUse].providerURL,
+      ),
+  };
+
+  return ethers.getDefaultProvider(network);
 };

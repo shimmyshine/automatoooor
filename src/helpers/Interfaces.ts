@@ -13,6 +13,8 @@ export interface NetworkSettings {
 
 export interface NetworkSettingsBO {
   name: string;
+  chainId: number;
+  providerURL: string;
   isActive: boolean;
   groups: number[];
   orders: {
@@ -75,4 +77,9 @@ export interface ModuleSettings {
   extras?: {
     [key: string]: string | number;
   };
+}
+
+export interface SystemGas {
+  gasPrice: number;
+  gasLimit: number;
 }

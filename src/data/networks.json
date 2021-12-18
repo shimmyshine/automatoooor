@@ -1,12 +1,12 @@
 [
     {
         "name": "Harmony",
-        "providerURL": "https://api.harmony.one",
+        "providerURL": "https://api.harmony.one/",
         "chainId": 1666600000
     },
     {
         "name": "Fantom",
-        "providerURL": "https://rpc.ftm.tools",
+        "providerURL": "https://rpc.ftm.tools/",
         "chainId": 250
     },
     {

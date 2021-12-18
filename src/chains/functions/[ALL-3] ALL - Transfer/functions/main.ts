@@ -5,14 +5,13 @@ import moduleSettings from "../settings";
 import moduleInfo from "..";
 import { OTFSettings } from "../data/interfaces";
 import { entry } from "./entry";
-import { SystemGas } from "helpers/Interfaces";
 
 export async function Main(
   log: Logger,
   address: string,
   provider: BaseProvider,
   signer: Wallet,
-  systemGas: SystemGas,
+  systemGas: { gasPrice: number; gasLimit: number },
   otfSettings: OTFSettings,
 ): Promise<void> {
   const thisSettings = moduleSettings;

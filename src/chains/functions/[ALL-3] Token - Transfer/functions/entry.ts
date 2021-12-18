@@ -28,7 +28,7 @@ export const entry = async (
     try {
       transferAttempt = await contractToUse.transfer(
         otfSettings.addressTo,
-        otfSettings.quantity,
+        String(otfSettings.quantity),
       );
     } catch (e) {
       log.warn(e);
@@ -40,7 +40,7 @@ export const entry = async (
       "[Module: " +
         thisInfo.moduleName +
         " sent " +
-        otfSettings.quantity * 10 ** otfSettings.decimal +
+        otfSettings.quantity / 10 ** otfSettings.decimal +
         " tokens to " +
         otfSettings.addressTo,
     );
@@ -61,7 +61,7 @@ export const entry = async (
       "[Module: " +
         thisInfo.moduleName +
         " sent " +
-        otfSettings.quantity * 10 * otfSettings.decimal +
+        (otfSettings.quantity / 10) ** otfSettings.decimal +
         " coins to " +
         otfSettings.addressTo,
     );

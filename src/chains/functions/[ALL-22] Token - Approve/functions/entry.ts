@@ -27,7 +27,7 @@ export const entry = async (
   try {
     allowanceAttempt = await contractToUse.approve(
       otfSettings.contractAddress,
-      otfSettings.quantity,
+      String(otfSettings.quantity),
     );
   } catch (e) {
     log.warn(e);
@@ -41,7 +41,7 @@ export const entry = async (
       " approved " +
       otfSettings.contractAddress +
       " to transfer " +
-      otfSettings.quantity * 10 ** otfSettings.decimal +
+      otfSettings.quantity / 10 ** otfSettings.decimal +
       " tokens",
   );
 };

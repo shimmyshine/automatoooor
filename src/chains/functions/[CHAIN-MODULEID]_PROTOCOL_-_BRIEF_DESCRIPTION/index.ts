@@ -1,7 +1,7 @@
 import settings from "./settings";
 
 const moduleInfo = {
-  moduleID: 3,
+  moduleID: 0,
   moduleName: "Module Name",
   moduleDescription: "Module Description",
   moduleSettings: settings,

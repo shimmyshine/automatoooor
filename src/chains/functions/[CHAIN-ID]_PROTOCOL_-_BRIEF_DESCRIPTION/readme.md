@@ -1,10 +1,10 @@
 # MODULE NAME
 MODULE DESCRIPTION
 
-Module ID: #
-Module Network: NETWORK
-Module Protocol: PROTOCOL
-Module Primary Focus: REAUSABILITY (IE: Performs Transfer, Stake or Unstake)
+* Module ID: #
+* Module Network: NETWORK
+* Module Protocol: PROTOCOL
+* Module Primary Focus: REAUSABILITY (IE: Performs Transfer, Stake or Unstake)
 
 ## Settings
 **Located in ./settings.ts**
@@ -33,5 +33,5 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ### otfSettings Explained
-key: value is .... (IE: intervalSet: number is the value you used for the interval to ensure it safely runs within a specific window only once as desired)
-key: value2 is ....(IE: type: string["stake", "unstake"] is the type of action you want to perform, a stake or an unstake)
+* key: value is .... (IE: intervalSet: number is the value you used for the interval to ensure it safely runs within a specific window only once as desired)
+* key: value2 is ....(IE: type: string["stake", "unstake"] is the type of action you want to perform, a stake or an unstake)

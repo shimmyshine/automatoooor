@@ -6,7 +6,7 @@ const moduleInfo = {
   moduleDescription: "Approve a contract to perform a transferFrom",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",
-  chain: "Harmony", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos
+  chain: "ALL", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos
 };
 
 export default moduleInfo;

@@ -38,7 +38,10 @@ export const getFunctionsByChain = async (
   res.map((dir) => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const functionValues = require("../." + dir + "/index.ts");
-    if (functionValues.default.chain == chainMatch) {
+    if (
+      functionValues.default.chain == chainMatch ||
+      functionValues.default.chain == "ALL"
+    ) {
       functions[functionValues.default.moduleName] = {
         ...functionValues.default,
         directory: dir,

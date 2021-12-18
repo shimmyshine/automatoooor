@@ -19,3 +19,5 @@ WORKDIR /app
 COPY package.json ./package.json
 COPY --from=builder /app/dist ./dist
 CMD ["node", "/app/dist/index.js"]
+
+LABEL org.opencontainers.image.source="https://github.com/shimmyshine/automatoooor"

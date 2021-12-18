@@ -24,8 +24,8 @@ export async function Main(
     log.info("[Module: " + info.moduleName + "]: has been triggered to run.");
 
   const interVal = setIntervalAsync(
-    () => {
-      entry(log, address, provider, signer, systemGas, otfSettings);
+    async () => {
+      await entry(log, address, provider, signer, systemGas, otfSettings);
 
       if (!thisSettings.setTimeoutInfo.setTime) {
         clearIntervalAsync(interVal);

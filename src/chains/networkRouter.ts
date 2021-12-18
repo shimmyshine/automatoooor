@@ -18,7 +18,12 @@ const NetworkRouter = async (
 
   const provider = getProvider(networkSettings.name);
   const signer = getSigner(networkSettings.name, provider);
-  await provider.ready;
+
+  try {
+    await provider.ready;
+  } catch (e) {
+    log.warn(e);
+  }
 
   const systemGas = {
     gasPrice:

@@ -39,14 +39,14 @@ export const entry = async (
     Object.entries(bonds).map(async (bond) => {
       const contractToUse = new Contract(bond[1], BondDepositoryABI, signer);
 
-      let bondTotal = null;
+      let bondTotal = 0;
       try {
         bondTotal = await contractToUse.pendingPayoutFor(address);
       } catch (e) {
         log.warn(e);
       }
 
-      if (Number(formatUnits(await bondTotal, 9)) > 0) {
+      if (Number(formatUnits(bondTotal, 9)) > 0) {
         let redeem = null;
         try {
           redeem = contractToUse.redeem(address, true);

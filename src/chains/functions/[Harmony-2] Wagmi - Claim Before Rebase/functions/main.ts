@@ -5,6 +5,8 @@ import moduleInfo from "..";
 import { entry } from "./entry";
 import { OTFSettings } from "../data/interfaces";
 import { Wallet } from "ethers";
+import { setIntervalAsync } from "set-interval-async/dynamic";
+import { clearIntervalAsync } from "set-interval-async";
 
 export async function Main(
   log: Logger,
@@ -21,16 +23,16 @@ export async function Main(
   if (thisSettings.showLog)
     log.info("[Module: " + info.moduleName + "]: has been triggered to run.");
 
-  const interVal = setInterval(
+  const interVal = setIntervalAsync(
     () => {
       entry(log, address, provider, signer, systemGas, otfSettings);
 
       if (!thisSettings.setTimeoutInfo.setTime) {
-        clearInterval(interVal);
+        clearIntervalAsync(interVal);
       }
     },
     thisSettings.setTimeoutInfo.setTime
       ? thisSettings.setTimeoutInfo.interval
-      : 0,
+      : 10,
   );
 }

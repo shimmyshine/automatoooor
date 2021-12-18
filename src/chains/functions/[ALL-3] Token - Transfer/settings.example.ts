@@ -5,7 +5,7 @@ const moduleSettings: ModuleSettings = {
   showLog: true,
   setTimeoutInfo: {
     setTime: false,
-    interval: 20 * 1000, // 1 * 1000 = 1 second
+    interval: 0, // 1 * 1000 = 1 second
   },
 };
 

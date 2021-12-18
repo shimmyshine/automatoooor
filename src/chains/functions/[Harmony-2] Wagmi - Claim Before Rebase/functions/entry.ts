@@ -1,5 +1,4 @@
-import { BaseProvider } from "@ethersproject/providers";
-import { Contract, Wallet } from "ethers";
+import { Contract, Wallet, providers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -12,7 +11,7 @@ import moduleSettings from "../settings";
 export const entry = async (
   log: Logger,
   address: string,
-  provider: BaseProvider,
+  provider: providers.BaseProvider,
   signer: Wallet,
   systemGas: { gasPrice: number; gasLimit: number },
   otfSettings: OTFSettings,
@@ -20,7 +19,7 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  let epoch = null;
+  let epoch = 0;
   try {
     epoch = await new Contract(
       contracts.StakingDistributor,
@@ -37,23 +36,25 @@ export const entry = async (
   const bonds = contracts.Bonds;
 
   if (delta <= epochDate - otfSettings.intervalUsed + 1) {
-    Object.entries(bonds).map(async (bond): Promise<void> => {
+    Object.entries(bonds).map(async (bond) => {
       const contractToUse = new Contract(bond[1], BondDepositoryABI, signer);
 
-      let bondTotal = 0;
-
+      let bondTotal = null;
       try {
-        bondTotal = await contractToUse.pendingPayoutFor(address, {});
+        bondTotal = await contractToUse.pendingPayoutFor(address);
       } catch (e) {
-        log.error(e);
+        log.warn(e);
       }
 
-      if (Number(formatUnits(bondTotal, 9)) > 0) {
+      if (Number(formatUnits(await bondTotal, 9)) > 0) {
+        let redeem = null;
         try {
-          await contractToUse.redeem(address, true);
+          redeem = contractToUse.redeem(address, true);
         } catch (e) {
-          log.error(e);
+          log.warn(e);
         }
+
+        await redeem.wait(1);
 
         log.info(
           "[Module: " +

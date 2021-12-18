@@ -1,11 +1,13 @@
 # WAGMI - Rebase Rewards Counter
-Tracks the rebase counter for WAGMI and displays it in the console for easy reference.
+Tracks the rebase counter for WAGMI
 
 Module ID: 1
 Module Network: Harmony
+Module Protocol: Euphoria/WAGMI
+Module Primary Focus: Informational Display
 
 ## Settings
-Located in ./settings.ts
+**Located in ./settings.ts**
 ```
 const moduleSettings: ModuleSettings = {
   active: true,
@@ -18,7 +20,10 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ## otfSettings
+**Located in ./src/data/settings.ts and are independent for each time the module is loaded.**
 ```
-None
+empty
 ```
-It is important to remember, the otfSettings are entered in ./src/data/settings.ts and are independent for each time the module is loaded.
+
+### otfSettings Explained
+empty

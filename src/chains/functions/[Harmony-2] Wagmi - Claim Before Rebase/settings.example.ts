@@ -7,9 +7,6 @@ const moduleSettings: ModuleSettings = {
     setTime: false,
     interval: 20 * 1000, // 1 * 1000 = 1 second
   },
-  extras: {
-    inTime: 120,
-  },
 };
 
 export default moduleSettings;

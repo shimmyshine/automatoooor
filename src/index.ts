@@ -12,19 +12,29 @@ const log: Logger = new Logger({
   displayFilePath: "hidden",
 });
 
-const main = async (): Promise<void> => {
+async function main(): Promise<void> {
   log.info("Program started.\n");
 
-  const functions = getFunctions();
+  let functions = {};
+  try {
+    functions = getFunctions();
+  } catch (e) {
+    log.warn(e);
+  }
 
-  settingsCheck(log, await functions);
+  settingsCheck(log, functions);
 
   Object.values(settings.networks).map(async (res) => {
     if (res.isActive) {
-      NetworkRouter(log, settings.networks[res.name], res.groups, res.orders);
+      await NetworkRouter(
+        log,
+        settings.networks[res.name],
+        res.groups,
+        res.orders,
+      );
     }
   });
-};
+}
 
 main().catch((e) => {
   console.log(e);

@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "lint": "eslint . --ext .ts",
+    "prepare-settings": "node ./scripts/prepare-settings.js",
     "start": "npx ts-node ./src/index.ts"
   },
   "author": "",

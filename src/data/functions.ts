@@ -1,6 +1,6 @@
 import { promisify } from "util";
 import _glob from "glob";
-import { Modules } from "../helpers/interfaces";
+import { Modules } from "../helpers/Interfaces";
 import { settings } from "./settings";
 
 const glob = promisify(_glob);

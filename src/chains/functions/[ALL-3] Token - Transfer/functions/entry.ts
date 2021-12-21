@@ -39,7 +39,7 @@ export const entry = async (
     log.info(
       "[Module: " +
         thisInfo.moduleName +
-        " sent " +
+        "] sent " +
         otfSettings.quantity / 10 ** otfSettings.decimal +
         " tokens to " +
         otfSettings.addressTo,
@@ -60,7 +60,7 @@ export const entry = async (
     log.info(
       "[Module: " +
         thisInfo.moduleName +
-        " sent " +
+        "] sent " +
         (otfSettings.quantity / 10) ** otfSettings.decimal +
         " coins to " +
         otfSettings.addressTo,

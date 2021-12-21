@@ -38,7 +38,7 @@ export const entry = async (
   log.info(
     "[Module: " +
       thisInfo.moduleName +
-      " approved " +
+      "] approved " +
       otfSettings.contractAddress +
       " to transfer " +
       otfSettings.quantity / 10 ** otfSettings.decimal +

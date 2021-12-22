@@ -24,7 +24,7 @@ const moduleSettings: ModuleSettings = {
 * interval: number is how frequent you want it to loop (1 * 1000 = 1 second)
 
 ## otfSettings
-**Located in ./src/data/settings.ts and are independent for each time the module is loaded.**
+**Located in ./src/data/CHAIN_settings.ts and are independent for each time the module is loaded.**
 ```
 "group:order:moduleID": {
           intervalUsed: number,

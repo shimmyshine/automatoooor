@@ -2,11 +2,13 @@ const glob = require("glob");
 const path = require("path");
 const fs = require("fs");
 
-glob("./src/**/*settings.example.ts", function (_, matches) {
+glob("./src/**/*.example.ts", function (_, matches) {
   for (const file of matches) {
-    const base = path.dirname(file);
-    if (!fs.existsSync(`${base}/settings.ts`)) {
-      fs.cpSync(file, `${base}/settings.ts`);
+    const dir = path.dirname(file);
+    const base = path.basename(file, ".example.ts");
+    const fname = `${dir}/${base}.ts`;
+    if (!fs.existsSync(fname)) {
+      fs.cpSync(file, fname);
     }
   }
 });

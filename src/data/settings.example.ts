@@ -1,13 +1,13 @@
 import { Settings } from "../helpers/Interfaces";
-import { auroraSettings } from "./settings/settings_aurora";
-import { avalancheSettings } from "./settings/settings_avalanche";
-import { binanceSmartChainSettings } from "./settings/settings_binance_smart_chain";
-import { ethereumSettings } from "./settings/settings_ethereum";
-import { fantomSettings } from "./settings/settings_fantom";
-import { harmonySettings } from "./settings/settings_harmony";
-import { polygonSettings } from "./settings/settings_polygon";
-import { rskSettings } from "./settings/settings_rsk";
-import { telosSettings } from "./settings/settings_telos";
+import { auroraSettings } from "./settings/aurora_settings";
+import { avalancheSettings } from "./settings/avalanche_settings";
+import { binanceSmartChainSettings } from "./settings/binance_smart_chain_settings";
+import { ethereumSettings } from "./settings/ethereum_settings";
+import { fantomSettings } from "./settings/fantom_settings";
+import { harmonySettings } from "./settings/harmony_settings";
+import { polygonSettings } from "./settings/polygon_settings";
+import { rskSettings } from "./settings/rsk_settings";
+import { telosSettings } from "./settings/telos_settings";
 
 export const settings: Settings = {
   settingsCheck: {

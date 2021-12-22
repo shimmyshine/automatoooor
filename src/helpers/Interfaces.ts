@@ -4,6 +4,7 @@ export interface Settings {
     showErrors: boolean;
     allowErrorsToKill: boolean;
   };
+  modulesOutput: boolean;
   networks: NetworkSettings;
 }
 
@@ -30,9 +31,7 @@ export interface NetworkSettingsBO {
   };
   showBlockNumber: boolean;
   blockNumberFreq: number;
-  gasPriceDefault: number;
   gasPriceEnforced: number;
-  gasLimitDefault: number;
   gasLimitEnforced: number;
 }
 

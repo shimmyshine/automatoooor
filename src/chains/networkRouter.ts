@@ -7,6 +7,7 @@ import { Modules, NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
 import { setIntervalAsync } from "set-interval-async/dynamic";
 import { clearIntervalAsync } from "set-interval-async";
+import { getGasSettings } from "../helpers/getGasSettings";
 
 const NetworkRouter = async (
   log: Logger,
@@ -25,12 +26,7 @@ const NetworkRouter = async (
     log.warn(e);
   }
 
-  const systemGas = {
-    gasPrice:
-      networkSettings.gasPriceEnforced == 0
-        ? networkSettings.gasPriceDefault
-        : networkSettings.gasPriceEnforced,
-  };
+  const enforcedGas = getGasSettings(networkSettings.name);
 
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
@@ -75,7 +71,7 @@ const NetworkRouter = async (
               address,
               provider,
               signer,
-              systemGas,
+              enforcedGas,
               getOTFSettings(
                 networkSettings.name,
                 i + 1 + ":" + (z + 1) + ":" + res,

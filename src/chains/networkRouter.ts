@@ -7,7 +7,7 @@ import { Modules, NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
 import { setIntervalAsync } from "set-interval-async/dynamic";
 import { clearIntervalAsync } from "set-interval-async";
-import { getGasSettings } from "../helpers/getGasSettings";
+import { getGasSettings } from "../helpers/getGasSet";
 
 const NetworkRouter = async (
   log: Logger,

@@ -66,24 +66,6 @@ const settingsCheck = (log: Logger, functions: Modules): void => {
           );
       }
 
-      if (setts.gasPriceDefault <= 0)
-        triggerWarning(
-          "Settings: We advise against leaving the default gas price at 0 on " +
-            setts.name +
-            ".",
-          showWarns,
-          log,
-        );
-
-      if (setts.gasLimitDefault <= 0)
-        triggerWarning(
-          "Settings: We advise against leaving the default gas limit at 0 on " +
-            setts.name +
-            ".",
-          showWarns,
-          log,
-        );
-
       if (setts.groups.length >= 1) {
         if (Object.entries(setts.orders).length <= 0)
           triggerError(

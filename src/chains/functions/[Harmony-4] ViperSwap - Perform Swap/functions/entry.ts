@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { BaseProvider } from "@ethersproject/providers";
 import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
@@ -13,7 +14,7 @@ export const entry = async (
   address: string,
   provider: BaseProvider,
   signer: Wallet,
-  systemGas: { gasPrice: number; gasLimit: number },
+  systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
 ): Promise<void> => {
   const thisSettings = moduleSettings;
@@ -32,70 +33,46 @@ export const entry = async (
   if (otfSettings.isDeflationary == "fromToken") {
     if (otfSettings.toToken == "chain_coin") {
       // to eth
-      if (otfSettings.firmToken == "fromToken") {
-        // swapTokensForExactETH
+      // swapExactTokensForETH
 
-        let allowanceAmount = null;
+      let allowanceAmount = null;
+      try {
+        allowanceAmount = fromToken.allowance(
+          address,
+          contracts.viperSwapRouter,
+        );
+      } catch (e) {
+        log.warn(e);
+      }
+
+      //let getAmountsOut()
+
+      //const maximumAmountIn = parseInt()
+
+      if (allowanceAmount < otfSettings.quantity) {
+        log.warn("[Module: " + thisInfo.moduleName + "]: Allowance not set.");
+      } else {
+        //let swapAttempt = null;
         try {
-          allowanceAmount = fromToken.allowance(
-            address,
-            contracts.viperSwapRouter,
-          );
+          //router.swapETHForExactTokens(String(otfSettings.quantity), String(minimumReceived), )
         } catch (e) {
           log.warn(e);
         }
-
-        if(allowanceAmount < otfSettings.quantity) {
-
-        } else {
-
-        }
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapExactTokensForETH
       }
     } else {
-      if (otfSettings.firmToken == "fromToken") {
-        // swapExactTokensForTokens
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapTokensForExactTokens
-      }
     }
   } else if (otfSettings.isDeflationary == "toToken") {
     if (otfSettings.fromToken == "chain_coin") {
       // from eth
-      if (otfSettings.firmToken == "fromToken") {
-        // swapExactETHForTokens
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapETHForExactTokens
-      }
     } else {
-      if (otfSettings.firmToken == "fromToken") {
-        // swapExactTokensForTokens
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapTokensForExactTokens
-      }
     }
   } else {
     if (otfSettings.toToken == "chain_coin") {
       // to eth
-      if (otfSettings.firmToken == "fromToken") {
-        // swapTokensForExactETH
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapExactTokensForETH
-      }
     } else if (otfSettings.fromToken == "chain_coin") {
       // from eth
-      if (otfSettings.firmToken == "fromToken") {
-        // swapExactETHForTokens
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapETHForExactTokens
-      }
     } else {
-      if (otfSettings.firmToken == "fromToken") {
-        // swapExactTokensForTokens
-      } else if (otfSettings.firmToken == "toToken") {
-        // swapTokensForExactTokens
-      }
+      // from token to token
     }
   }
 };

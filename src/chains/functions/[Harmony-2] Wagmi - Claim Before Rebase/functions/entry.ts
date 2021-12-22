@@ -13,7 +13,7 @@ export const entry = async (
   address: string,
   provider: providers.BaseProvider,
   signer: Wallet,
-  systemGas: { gasPrice: number; gasLimit: number },
+  systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
 ): Promise<void> => {
   const thisSettings = moduleSettings;

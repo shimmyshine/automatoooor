@@ -14,7 +14,7 @@ export async function Main(
   provider: BaseProvider,
   signer: Wallet,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  systemGas: { gasPrice: number; gasLimit: number },
+  systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
 ): Promise<void> {
   const thisSettings = moduleSettings;

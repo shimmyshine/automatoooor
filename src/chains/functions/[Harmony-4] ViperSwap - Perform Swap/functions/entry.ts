@@ -32,7 +32,7 @@ export const entry = async (
 
   if (otfSettings.isDeflationary == "fromToken") {
     if (otfSettings.toToken == "chain_coin") {
-      // to eth
+      // from token to eth
       // swapExactTokensForETH
 
       let allowanceAmount = null;
@@ -44,10 +44,6 @@ export const entry = async (
       } catch (e) {
         log.warn(e);
       }
-
-      //let getAmountsOut()
-
-      //const maximumAmountIn = parseInt()
 
       if (allowanceAmount < otfSettings.quantity) {
         log.warn("[Module: " + thisInfo.moduleName + "]: Allowance not set.");

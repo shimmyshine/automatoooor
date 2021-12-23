@@ -6,7 +6,6 @@ import { settings } from "./data/settings";
 import settingsCheck from "./helpers/settingsCheck";
 import { getFunctions } from "./data/functions";
 import NetworkRouter from "./chains/networkRouter";
-import printModules from "./helpers/printModules";
 
 const log: Logger = new Logger({
   displayFunctionName: false,
@@ -24,8 +23,6 @@ async function main(): Promise<void> {
   }
 
   settingsCheck(log, functions);
-
-  if (settings.modulesOutput) printModules(log, functions);
 
   Object.values(settings.networks).map(async (res) => {
     if (res.isActive) {

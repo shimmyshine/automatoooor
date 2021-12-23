@@ -8,6 +8,7 @@ import { getFunctionByID, getOTFSettings } from "../data/functions";
 import { setIntervalAsync } from "set-interval-async/dynamic";
 import { clearIntervalAsync } from "set-interval-async";
 import { getGasSettings } from "../helpers/getGasSet";
+import { settings } from "../data/settings";
 
 const NetworkRouter = async (
   log: Logger,
@@ -48,11 +49,13 @@ const NetworkRouter = async (
 
   groups.map((grp, i: number) => {
     const interVal = setIntervalAsync(
-      () => {
+      async () => {
         Object.values(order[grp]).map(async (res, z: number) => {
           let specificFunctionData: Modules = {};
           try {
             specificFunctionData = await getFunctionByID(res);
+
+            settings.modulesOutput ? log.info(specificFunctionData) : null;
           } catch (e) {
             log.warn(e);
           }
@@ -63,20 +66,24 @@ const NetworkRouter = async (
             "/settings.ts");
 
           if (functionSettings.default.active) {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            require("../." +
-              specificFunctionData[res].directory +
-              "/functions/main.ts").Main(
-              log,
-              address,
-              provider,
-              signer,
-              enforcedGas,
-              getOTFSettings(
-                networkSettings.name,
-                i + 1 + ":" + (z + 1) + ":" + res,
-              ),
-            );
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-var-requires
+              await require("../." +
+                specificFunctionData[res].directory +
+                "/functions/main.ts").Main(
+                log,
+                address,
+                provider,
+                signer,
+                enforcedGas,
+                getOTFSettings(
+                  networkSettings.name,
+                  i + 1 + ":" + (z + 1) + ":" + res,
+                ),
+              );
+            } catch (e) {
+              log.warn(e);
+            }
           }
         });
 

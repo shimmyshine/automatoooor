@@ -66,7 +66,7 @@ export const entry = async (
           otfSettings.type.toLowerCase() +
           ".",
       );
-      qtyToUse = balanceOf;
+      qtyToUse = balanceOf * 1;
       clearToProceed = true;
     } else if (balanceOf >= otfSettings.qty) {
       qtyToUse = otfSettings.qty;

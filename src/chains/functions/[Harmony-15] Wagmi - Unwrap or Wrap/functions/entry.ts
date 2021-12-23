@@ -227,7 +227,7 @@ export const entry = async (
               contracts.wsWAGMI,
               wsWAGMIABI,
               signer,
-            ).unwrap(String(qtyToUse));
+            ).unwrap(String(qtyToUse), systemGas);
           } catch (e) {
             log.warn(e);
           }
@@ -238,7 +238,7 @@ export const entry = async (
             "[Module: " +
               thisInfo.moduleName +
               "]: Converted " +
-              formatUnits(qtyToUse, 9) +
+              qtyToUse / 10 ** 18 +
               " wsWAGMI to sWAGMI.",
           );
         }

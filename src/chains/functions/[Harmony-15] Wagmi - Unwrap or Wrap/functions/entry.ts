@@ -19,7 +19,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -197,54 +197,61 @@ export const entry = async (
     const approvedTimeBuffer =
       nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
 
-    if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
-      if (qtyToUse > 0) {
-        if (otfSettings.type.toLowerCase() == "wrap") {
-          let attemptToWrap = null;
-          try {
-            attemptToWrap = await new Contract(
-              contracts.wsWAGMI,
-              wsWAGMIABI,
-              signer,
-            ).wrap(qtyToUse);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToWrap.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              formatUnits(qtyToUse, 9) +
-              " sWAGMI to wsWAGMI.",
-          );
-        } else if (otfSettings.type.toLowerCase() == "unwrap") {
-          let attemptToUnwrap = null;
-          try {
-            attemptToUnwrap = await new Contract(
-              contracts.wsWAGMI,
-              wsWAGMIABI,
-              signer,
-            ).unwrap(String(qtyToUse), systemGas);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToUnwrap.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              qtyToUse / 10 ** 18 +
-              " wsWAGMI to sWAGMI.",
-          );
+    //if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
+    if (qtyToUse > 0) {
+      if (otfSettings.type.toLowerCase() == "wrap") {
+        let attemptToWrap = null;
+        try {
+          attemptToWrap = await new Contract(
+            contracts.wsWAGMI,
+            wsWAGMIABI,
+            signer,
+          ).wrap(qtyToUse);
+        } catch (e) {
+          log.warn(e);
         }
-      } else {
-        log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
+
+        await attemptToWrap.wait(1);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            formatUnits(qtyToUse, 9) +
+            " sWAGMI to wsWAGMI.",
+        );
+
+        return true;
+      } else if (otfSettings.type.toLowerCase() == "unwrap") {
+        let attemptToUnwrap = null;
+        try {
+          attemptToUnwrap = await new Contract(
+            contracts.wsWAGMI,
+            wsWAGMIABI,
+            signer,
+          ).unwrap(String(qtyToUse), systemGas);
+        } catch (e) {
+          log.warn(e);
+        }
+
+        await attemptToUnwrap.wait(1);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            qtyToUse / 10 ** 18 +
+            " wsWAGMI to sWAGMI.",
+        );
+
+        return true;
       }
+    } else {
+      log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
+      return false;
     }
+    //}
   }
+
+  return false;
 };

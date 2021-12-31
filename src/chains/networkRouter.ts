@@ -9,6 +9,8 @@ import { setIntervalAsync } from "set-interval-async/dynamic";
 import { clearIntervalAsync } from "set-interval-async";
 import { getGasSettings } from "../helpers/getGasSet";
 import { settings } from "../data/settings";
+import { BaseProvider } from "@ethersproject/providers";
+import { Wallet } from "ethers";
 
 const NetworkRouter = async (
   log: Logger,
@@ -47,30 +49,32 @@ const NetworkRouter = async (
     );
   }
 
-  groups.map((grp, i: number) => {
-    const interVal = setIntervalAsync(
-      async () => {
-        Object.values(order[grp]).map(async (res, z: number) => {
+  for (const grp of groups) {
+    let z = 1;
+    const interVal = setIntervalAsync(async function (): Promise<void> {
+      for await (const modu of Object.values(order[grp])) {
+        if (order[grp][z]) {
           let specificFunctionData: Modules = {};
           try {
-            specificFunctionData = await getFunctionByID(res);
-
-            settings.modulesOutput ? log.info(specificFunctionData) : null;
+            specificFunctionData = await getFunctionByID(modu);
           } catch (e) {
             log.warn(e);
           }
 
           // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const functionSettings = require("../." +
-            specificFunctionData[res].directory +
-            "/settings.ts");
+          const functionSettings = await import(
+            "../." + specificFunctionData[modu].directory + "/settings.ts"
+          );
 
           if (functionSettings.default.active) {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-var-requires
-              await require("../." +
-                specificFunctionData[res].directory +
-                "/functions/main.ts").Main(
+              const modulePathCall = await import(
+                "../." +
+                  specificFunctionData[modu].directory +
+                  "/functions/main.ts"
+              );
+
+              await modulePathCall.Main(
                 log,
                 address,
                 provider,
@@ -78,24 +82,19 @@ const NetworkRouter = async (
                 enforcedGas,
                 getOTFSettings(
                   networkSettings.name,
-                  i + 1 + ":" + (z + 1) + ":" + res,
+                  grp + ":" + z + ":" + modu,
                 ),
               );
             } catch (e) {
               log.warn(e);
             }
           }
-        });
-
-        if (networkSettings.groupsInterval[grp] === 0) {
-          clearIntervalAsync(interVal);
         }
-      },
-      networkSettings.groupsInterval[grp] > 0
-        ? networkSettings.groupsInterval[grp]
-        : 10,
-    );
-  });
+
+        z++;
+      }
+    }, 10 * 1000);
+  }
 };
 
 export default NetworkRouter;

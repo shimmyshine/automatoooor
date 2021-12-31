@@ -25,7 +25,13 @@ export async function Main(
 
   const interVal = setIntervalAsync(
     async () => {
-      await entry(log, address, provider, signer, systemGas, otfSettings);
+      try {
+        await entry(log, address, provider, signer, systemGas, otfSettings);
+
+        return true;
+      } catch (e) {
+        log.warn(e);
+      }
 
       if (!thisSettings.setTimeoutInfo.setTime) {
         clearIntervalAsync(interVal);

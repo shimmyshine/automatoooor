@@ -6,11 +6,8 @@ import { Logger } from "tslog";
 import { Modules, NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
 import { setIntervalAsync } from "set-interval-async/dynamic";
-import { clearIntervalAsync } from "set-interval-async";
 import { getGasSettings } from "../helpers/getGasSet";
-import { settings } from "../data/settings";
-import { BaseProvider } from "@ethersproject/providers";
-import { Wallet } from "ethers";
+import Bull from "bull";
 
 const NetworkRouter = async (
   log: Logger,
@@ -50,6 +47,66 @@ const NetworkRouter = async (
   }
 
   for (const grp of groups) {
+    const groupQueue = new Bull("Group: " + grp, {
+      limiter: { max: 1, duration: 2 * 60 * 1000 },
+    });
+
+    let z = 1;
+    for (const modu of Object.values(order[grp])) {
+      if (order[grp][z]) {
+        let specificFunctionData: Modules = {};
+        try {
+          specificFunctionData = await getFunctionByID(modu);
+        } catch (e) {
+          log.warn(e);
+        }
+
+        const functionSettings = await import(
+          "../." + specificFunctionData[modu].directory + "/settings.ts"
+        );
+
+        if (functionSettings.default.active) {
+          try {
+            groupQueue.add({
+              modulePath:
+                "../." +
+                specificFunctionData[modu].directory +
+                "/functions/main.ts",
+              functionSettings: functionSettings,
+              log: log,
+              address: address,
+              provider: provider,
+              signer: signer,
+              enforcedGas: enforcedGas,
+              otfSettings: getOTFSettings(
+                networkSettings.name,
+                grp + ":" + z + ":" + modu,
+              ),
+            });
+          } catch (e) {
+            log.warn(e);
+          }
+        }
+
+        z++;
+      }
+    }
+
+    setTimeout(() => {
+      return true;
+    }, 5 * 1000);
+
+    log.info(groupQueue);
+
+    groupQueue.process(async (specificModule) => {
+      log.info(specificModule);
+      /*try {
+        const module = await import(specificModule.modulePath);
+      }*/
+    });
+  }
+
+  /*for (const grp of groups) {
     let z = 1;
     const interVal = setIntervalAsync(async function (): Promise<void> {
       for await (const modu of Object.values(order[grp])) {
@@ -61,7 +118,6 @@ const NetworkRouter = async (
             log.warn(e);
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
           const functionSettings = await import(
             "../." + specificFunctionData[modu].directory + "/settings.ts"
           );
@@ -94,7 +150,7 @@ const NetworkRouter = async (
         z++;
       }
     }, 10 * 1000);
-  }
+  }*/
 };
 
 export default NetworkRouter;

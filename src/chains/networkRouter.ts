@@ -7,7 +7,21 @@ import { Modules, NetworkSettingsBO } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
 import { setIntervalAsync } from "set-interval-async/dynamic";
 import { getGasSettings } from "../helpers/getGasSet";
-import Bull from "bull";
+import { Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
+
+interface GroupQueue {
+  [key: number]: {
+    modulePath: string;
+    functionSettings: unknown;
+    log: Logger;
+    address: string;
+    provider: Provider;
+    signer: Signer;
+    enforcedGas: { gasPrice?: number; gasLimit?: number };
+    otfSettings: unknown;
+  };
+}
 
 const NetworkRouter = async (
   log: Logger,
@@ -47,9 +61,7 @@ const NetworkRouter = async (
   }
 
   for (const grp of groups) {
-    const groupQueue = new Bull("Group: " + grp, {
-      limiter: { max: 1, duration: 2 * 60 * 1000 },
-    });
+    const groupQueue: GroupQueue = {};
 
     let z = 1;
     for (const modu of Object.values(order[grp])) {
@@ -67,7 +79,7 @@ const NetworkRouter = async (
 
         if (functionSettings.default.active) {
           try {
-            groupQueue.add({
+            groupQueue[z] = {
               modulePath:
                 "../." +
                 specificFunctionData[modu].directory +
@@ -82,7 +94,7 @@ const NetworkRouter = async (
                 networkSettings.name,
                 grp + ":" + z + ":" + modu,
               ),
-            });
+            };
           } catch (e) {
             log.warn(e);
           }
@@ -92,18 +104,22 @@ const NetworkRouter = async (
       }
     }
 
-    setTimeout(() => {
-      return true;
-    }, 5 * 1000);
+    for (const item of Object.values(groupQueue)) {
+      const toOutput = await import(item.modulePath);
 
-    log.info(groupQueue);
+      //log.info(toOutput);
 
-    groupQueue.process(async (specificModule) => {
-      log.info(specificModule);
-      /*try {
-        const module = await import(specificModule.modulePath);
-      }*/
-    });
+      const toOut = await toOutput.Main(
+        item.log,
+        item.address,
+        item.provider,
+        item.signer,
+        item.enforcedGas,
+        item.otfSettings,
+      );
+
+      log.info(toOut);
+    }
   }
 
   /*for (const grp of groups) {

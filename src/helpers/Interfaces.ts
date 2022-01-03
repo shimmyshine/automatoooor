@@ -26,13 +26,17 @@ export interface NetworkSettingsBO {
   groupsInterval: {
     [key: number]: number;
   };
-  otfSettings: {
-    [key: string]: unknown;
-  };
+  otfSettings: OTFSettings;
   showBlockNumber: boolean;
   blockNumberFreq: number;
   gasPriceEnforced: number;
   gasLimitEnforced: number;
+  requireAllTrue: boolean;
+}
+
+export interface OTFSettings {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 export interface FunctionsSettings {
@@ -69,12 +73,8 @@ export interface Modules {
 export interface ModuleSettings {
   active: boolean;
   showLog: boolean;
-  setTimeoutInfo: {
-    setTime: boolean;
-    interval: number;
-  };
   extras?: {
-    [key: string]: string | number;
+    [key: string]: unknown;
   };
 }
 

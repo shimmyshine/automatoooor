@@ -12,10 +12,12 @@ Auto claims any bonds you have before a rebase.
 const moduleSettings: ModuleSettings = {
   active: true,
   showLog: false,
+  returnTrueClaimingNothing: true,
 ```
 
 * active: boolean[true, false] is whether or not you want to active this module
 * showLog: boolean[true, false] is whether you want log information to show (most will show regardless - but this will limit the spammy log information, like when a module is triggered to run)
+* returnTrueClaimingNothing: boolean[true, false] is whether you want this module to return false if it claims 0 breaking module execution following it if they require a true.
 
 ## otfSettings
 **Located in ./src/data/CHAIN_settings.ts and are independent for each time the module is loaded.**

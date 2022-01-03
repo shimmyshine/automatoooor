@@ -5,7 +5,14 @@ export interface Settings {
     allowErrorsToKill: boolean;
   };
   modulesOutput: boolean;
+  logs: Logs;
   networks: NetworkSettings;
+}
+
+export interface Logs {
+  writeLogToFile: boolean;
+  wipeLogsOnRestart: boolean;
+  logPath: string;
 }
 
 export interface NetworkSettings {

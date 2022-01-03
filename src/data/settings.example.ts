@@ -16,6 +16,11 @@ export const settings: Settings = {
     allowErrorsToKill: true, // DO NOT TURN OFF UNLESS YOU KNOW WHAT YOU ARE DOING!
   },
   modulesOutput: false,
+  logs: {
+    writeLogToFile: true,
+    wipeLogsOnRestart: true,
+    logPath: "./src/data/logs/",
+  },
   networks: {
     Harmony: harmonySettings,
     Fantom: fantomSettings,

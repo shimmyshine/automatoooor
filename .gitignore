@@ -4,3 +4,5 @@ dist
 
 **settings.ts
 src/data/settings.ts
+
+src/data/logs/**.txt

@@ -1,19 +1,15 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { Logger } from "tslog";
 import { settings } from "./data/settings";
 import settingsCheck from "./helpers/settingsCheck";
 import { getFunctions } from "./data/functions";
 import NetworkRouter from "./chains/networkRouter";
 
-const log: Logger = new Logger({
-  displayFunctionName: false,
-  displayFilePath: "hidden",
-});
+import { log } from "./helpers/logAssistor";
 
 async function main(): Promise<void> {
-  log.info("Program started.\n");
+  log.info("Automatoooor started.\n");
 
   let functions = {};
   try {

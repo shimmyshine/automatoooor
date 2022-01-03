@@ -3,24 +3,12 @@ import { getBlock } from "../helpers/getCurrentBlock";
 import { getProvider } from "../helpers/getNetworkProvider";
 import { getSigner } from "../helpers/getSigner";
 import { Logger } from "tslog";
-import { Modules, NetworkSettingsBO } from "../helpers/Interfaces";
+import { Modules, NetworkSettingsBO, OTFSettings } from "../helpers/Interfaces";
 import { getFunctionByID, getOTFSettings } from "../data/functions";
-import { setIntervalAsync } from "set-interval-async/dynamic";
 import { getGasSettings } from "../helpers/getGasSet";
-import { Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
 
-interface GroupQueue {
-  [key: number]: {
-    modulePath: string;
-    functionSettings: unknown;
-    log: Logger;
-    address: string;
-    provider: Provider;
-    signer: Signer;
-    enforcedGas: { gasPrice?: number; gasLimit?: number };
-    otfSettings: unknown;
-  };
+interface OrderResults {
+  [key: number]: boolean;
 }
 
 const NetworkRouter = async (
@@ -44,7 +32,7 @@ const NetworkRouter = async (
 
   /* Blocknumber */
   if (networkSettings.showBlockNumber) {
-    setIntervalAsync(
+    const blocksInterval = setInterval(
       async () => {
         try {
           log.info(
@@ -52,6 +40,10 @@ const NetworkRouter = async (
           );
         } catch (e) {
           log.warn(e);
+        }
+
+        if (networkSettings.blockNumberFreq === 0) {
+          clearInterval(blocksInterval);
         }
       },
       networkSettings.blockNumberFreq >= 10
@@ -61,112 +53,80 @@ const NetworkRouter = async (
   }
 
   for (const grp of groups) {
-    const groupQueue: GroupQueue = {};
+    const interVal = setInterval(
+      async () => {
+        let z = 1;
+        const orderResults: OrderResults = {};
+        for (const modu of Object.values(order[grp])) {
+          if (order[grp][z]) {
+            if (z >= 1) {
+              if (networkSettings.requireAllTrue && !orderResults[z - 1]) {
+                orderResults[z] = false;
+                break;
+              }
+            }
 
-    let z = 1;
-    for (const modu of Object.values(order[grp])) {
-      if (order[grp][z]) {
-        let specificFunctionData: Modules = {};
-        try {
-          specificFunctionData = await getFunctionByID(modu);
-        } catch (e) {
-          log.warn(e);
-        }
-
-        const functionSettings = await import(
-          "../." + specificFunctionData[modu].directory + "/settings.ts"
-        );
-
-        if (functionSettings.default.active) {
-          try {
-            groupQueue[z] = {
-              modulePath:
-                "../." +
-                specificFunctionData[modu].directory +
-                "/functions/main.ts",
-              functionSettings: functionSettings,
-              log: log,
-              address: address,
-              provider: provider,
-              signer: signer,
-              enforcedGas: enforcedGas,
-              otfSettings: getOTFSettings(
-                networkSettings.name,
-                grp + ":" + z + ":" + modu,
-              ),
-            };
-          } catch (e) {
-            log.warn(e);
-          }
-        }
-
-        z++;
-      }
-    }
-
-    for (const item of Object.values(groupQueue)) {
-      const toOutput = await import(item.modulePath);
-
-      //log.info(toOutput);
-
-      const toOut = await toOutput.Main(
-        item.log,
-        item.address,
-        item.provider,
-        item.signer,
-        item.enforcedGas,
-        item.otfSettings,
-      );
-
-      log.info(toOut);
-    }
-  }
-
-  /*for (const grp of groups) {
-    let z = 1;
-    const interVal = setIntervalAsync(async function (): Promise<void> {
-      for await (const modu of Object.values(order[grp])) {
-        if (order[grp][z]) {
-          let specificFunctionData: Modules = {};
-          try {
-            specificFunctionData = await getFunctionByID(modu);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          const functionSettings = await import(
-            "../." + specificFunctionData[modu].directory + "/settings.ts"
-          );
-
-          if (functionSettings.default.active) {
+            let specificFunctionData: Modules = {};
             try {
-              const modulePathCall = await import(
-                "../." +
-                  specificFunctionData[modu].directory +
-                  "/functions/main.ts"
-              );
-
-              await modulePathCall.Main(
-                log,
-                address,
-                provider,
-                signer,
-                enforcedGas,
-                getOTFSettings(
-                  networkSettings.name,
-                  grp + ":" + z + ":" + modu,
-                ),
-              );
+              specificFunctionData = await getFunctionByID(modu);
             } catch (e) {
               log.warn(e);
             }
+
+            const functionSettings = await import(
+              "../." + specificFunctionData[modu].directory + "/settings.ts"
+            );
+
+            const otfSettings: OTFSettings = getOTFSettings(
+              networkSettings.name,
+              grp + ":" + z + ":" + modu,
+            );
+
+            if (z >= 1) {
+              if (otfSettings.requirePreviousTrue && !orderResults[z - 1]) {
+                orderResults[z] = false;
+                break;
+              }
+            }
+
+            if (functionSettings.default.active) {
+              let moduleResult;
+
+              try {
+                moduleResult = await import(
+                  "../." +
+                    specificFunctionData[modu].directory +
+                    "/functions/main.ts"
+                );
+
+                const modResult = await moduleResult.Main(
+                  log,
+                  address,
+                  provider,
+                  signer,
+                  enforcedGas,
+                  otfSettings,
+                );
+
+                orderResults[z] = modResult;
+              } catch (e) {
+                log.warn(e);
+              }
+            }
+
+            z++;
           }
         }
 
-        z++;
-      }
-    }, 10 * 1000);
-  }*/
+        if (networkSettings.groupsInterval[grp] === 0) {
+          clearInterval(interVal);
+        }
+      },
+      networkSettings.groupsInterval[grp] > 0
+        ? networkSettings.groupsInterval[grp]
+        : 10,
+    );
+  }
 };
 
 export default NetworkRouter;

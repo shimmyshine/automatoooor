@@ -22,9 +22,20 @@ export async function Main(
     log.info("[Module: " + info.moduleName + "]: has been triggered to run.");
 
   try {
-    await entry(log, address, provider, signer, systemGas, otfSettings);
+    const entrie = await entry(
+      log,
+      address,
+      provider,
+      signer,
+      systemGas,
+      otfSettings,
+    );
 
-    return true;
+    if (typeof entrie !== "boolean") {
+      return true;
+    } else {
+      return entrie;
+    }
   } catch (e) {
     log.warn(e);
 

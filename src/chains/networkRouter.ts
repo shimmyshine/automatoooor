@@ -59,13 +59,6 @@ const NetworkRouter = async (
         const orderResults: OrderResults = {};
         for (const modu of Object.values(order[grp])) {
           if (order[grp][z]) {
-            if (z >= 1) {
-              if (networkSettings.requireAllTrue && !orderResults[z - 1]) {
-                orderResults[z] = false;
-                break;
-              }
-            }
-
             let specificFunctionData: Modules = {};
             try {
               specificFunctionData = await getFunctionByID(modu);
@@ -73,20 +66,39 @@ const NetworkRouter = async (
               log.warn(e);
             }
 
-            const functionSettings = await import(
-              "../." + specificFunctionData[modu].directory + "/settings.ts"
-            );
+            let functionSettings = null;
+            try {
+              functionSettings = await import(
+                "../." + specificFunctionData[modu].directory + "/settings.ts"
+              );
+            } catch (e) {
+              log.warn(e);
+            }
 
             const otfSettings: OTFSettings = getOTFSettings(
               networkSettings.name,
               grp + ":" + z + ":" + modu,
             );
 
-            if (z >= 1) {
-              if (otfSettings.requirePreviousTrue && !orderResults[z - 1]) {
-                orderResults[z] = false;
-                break;
+            if (
+              z >= 1 &&
+              typeof networkSettings.requireAllTrue !== "undefined" &&
+              ((networkSettings.requireAllTrue && !orderResults[z - 1]) ||
+                (otfSettings.requirePreviousTrue && !orderResults[z - 1]))
+            ) {
+              orderResults[z] = false;
+
+              if (specificFunctionData[modu].moduleSettings.showLog) {
+                log.warn(
+                  "[Module: " +
+                    specificFunctionData[modu].moduleName +
+                    "]: The previous module returned false, cancelling this module execution.",
+                );
               }
+
+              z++;
+
+              break;
             }
 
             if (functionSettings.default.active) {

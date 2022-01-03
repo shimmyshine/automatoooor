@@ -185,54 +185,54 @@ export const entry = async (
     const approvedTimeBuffer =
       nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
 
-    //if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
-    if (qtyToUse > 0) {
-      if (otfSettings.type.toLowerCase() == "stake") {
-        let attemptToStake = null;
-        try {
-          attemptToStake = await new Contract(
-            contracts.StakingHelper,
-            StakingHelperABI,
-            signer,
-          ).stake(qtyToUse, address);
-        } catch (e) {
-          log.warn(e);
+    if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
+      if (qtyToUse > 0) {
+        if (otfSettings.type.toLowerCase() == "stake") {
+          let attemptToStake = null;
+          try {
+            attemptToStake = await new Contract(
+              contracts.StakingHelper,
+              StakingHelperABI,
+              signer,
+            ).stake(qtyToUse, address);
+          } catch (e) {
+            log.warn(e);
+          }
+
+          await attemptToStake.wait(1);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              formatUnits(qtyToUse, 9) +
+              " WAGMI to sWAGMI.",
+          );
+        } else if (otfSettings.type.toLowerCase() == "unstake") {
+          let attemptToUnstake = null;
+          try {
+            attemptToUnstake = await new Contract(
+              contracts.Staking,
+              StakingABI,
+              signer,
+            ).unstake(qtyToUse, false);
+          } catch (e) {
+            log.warn(e);
+          }
+
+          await attemptToUnstake.wait(1);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              formatUnits(qtyToUse, 9) +
+              " sWAGMI to WAGMI.",
+          );
         }
-
-        await attemptToStake.wait(1);
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            formatUnits(qtyToUse, 9) +
-            " WAGMI to sWAGMI.",
-        );
-      } else if (otfSettings.type.toLowerCase() == "unstake") {
-        let attemptToUnstake = null;
-        try {
-          attemptToUnstake = await new Contract(
-            contracts.Staking,
-            StakingABI,
-            signer,
-          ).unstake(qtyToUse, false);
-        } catch (e) {
-          log.warn(e);
-        }
-
-        await attemptToUnstake.wait(1);
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            formatUnits(qtyToUse, 9) +
-            " sWAGMI to WAGMI.",
-        );
+      } else {
+        log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
       }
-    } else {
-      log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
     }
-    //}
   }
 };

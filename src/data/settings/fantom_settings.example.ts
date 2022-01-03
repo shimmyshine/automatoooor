@@ -14,4 +14,5 @@ export const fantomSettings: NetworkSettingsBO = {
   blockNumberFreq: 10 * 60 * 1000,
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
+  requireAllTrue: false,
 };

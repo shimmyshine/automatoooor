@@ -21,7 +21,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -208,6 +208,8 @@ export const entry = async (
               formatUnits(qtyToUse, 9) +
               " WAGMI to sWAGMI.",
           );
+
+          return true;
         } else if (otfSettings.type.toLowerCase() == "unstake") {
           let attemptToUnstake = null;
           try {
@@ -229,10 +231,20 @@ export const entry = async (
               formatUnits(qtyToUse, 9) +
               " sWAGMI to WAGMI.",
           );
+
+          return true;
+        } else {
+          return false;
         }
       } else {
         log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
+
+        return false;
       }
+    } else {
+      return false;
     }
+  } else {
+    return false;
   }
 };

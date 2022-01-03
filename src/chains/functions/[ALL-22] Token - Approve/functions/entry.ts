@@ -13,7 +13,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -31,6 +31,8 @@ export const entry = async (
     );
   } catch (e) {
     log.warn(e);
+
+    return false;
   }
 
   await allowanceAttempt.wait(1);
@@ -44,4 +46,6 @@ export const entry = async (
       otfSettings.quantity / 10 ** otfSettings.decimal +
       " tokens",
   );
+
+  return true;
 };

@@ -13,7 +13,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -32,6 +32,8 @@ export const entry = async (
       );
     } catch (e) {
       log.warn(e);
+
+      return false;
     }
 
     await transferAttempt.wait(1);
@@ -44,6 +46,8 @@ export const entry = async (
         " tokens to " +
         otfSettings.addressTo,
     );
+
+    return true;
   } else if (otfSettings.type == "chain_coin") {
     let transferAttempt = null;
     try {
@@ -53,6 +57,8 @@ export const entry = async (
       });
     } catch (e) {
       log.warn(e);
+
+      return false;
     }
 
     await transferAttempt?.wait(1);
@@ -65,5 +71,9 @@ export const entry = async (
         " coins to " +
         otfSettings.addressTo,
     );
+
+    return true;
+  } else {
+    return false;
   }
 };

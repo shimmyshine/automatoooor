@@ -15,7 +15,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -36,6 +36,7 @@ export const entry = async (
   const bonds = contracts.Bonds;
 
   if (delta <= epochDate - otfSettings.intervalUsed + 1) {
+    let totalRedeemed = 0;
     Object.entries(bonds).map(async (bond) => {
       const contractToUse = new Contract(bond[1], BondDepositoryABI, signer);
 
@@ -44,6 +45,8 @@ export const entry = async (
         bondTotal = await contractToUse.pendingPayoutFor(address);
       } catch (e) {
         log.warn(e);
+
+        return false;
       }
 
       if (Number(formatUnits(bondTotal, 9)) > 0) {
@@ -52,6 +55,8 @@ export const entry = async (
           redeem = contractToUse.redeem(address, true);
         } catch (e) {
           log.warn(e);
+
+          return false;
         }
 
         await redeem.wait(1);
@@ -64,7 +69,24 @@ export const entry = async (
             " WAGMI for " +
             bond[0],
         );
+        totalRedeemed += bondTotal;
       }
     });
+
+    if (totalRedeemed > 0) {
+      return true;
+    } else {
+      if (
+        thisSettings.extras
+          ? thisSettings.extras.returnTrueClaimingNothing
+          : true
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  } else {
+    return false;
   }
 };

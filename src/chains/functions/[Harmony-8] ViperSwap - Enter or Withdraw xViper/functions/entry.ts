@@ -15,7 +15,7 @@ export const entry = async (
   signer: Wallet,
   systemGas: { gasPrice?: number; gasLimit?: number },
   otfSettings: OTFSettings,
-): Promise<void> => {
+): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
@@ -69,6 +69,10 @@ export const entry = async (
           quantityToUse * 10 ** 18 +
           " VIPER into the ViperPit",
       );
+
+      return true;
+    } else {
+      return false;
     }
   } else if (otfSettings.to.toLowerCase() == "from") {
     const xViperBalance = xViperContractToUse.balanceOf(address);
@@ -110,6 +114,12 @@ export const entry = async (
           quantityToUse * 10 ** 18 +
           " xVIPER from the ViperPit",
       );
+
+      return true;
+    } else {
+      return false;
     }
+  } else {
+    return false;
   }
 };

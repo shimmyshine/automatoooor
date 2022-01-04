@@ -18,18 +18,22 @@ async function viewLogs(): Promise<void> {
     log.warn(e);
   }
 
-  Object.values(logs).map((logEntry: any, z: number) => {
-    log.info(
-      "Entry " +
-        z +
-        ": [Date: " +
-        logEntry.date +
-        "] [Type: " +
-        logEntry.logLevel +
-        "] " +
-        logEntry.argumentsArray[0],
-    );
-  });
+  if (Object.values(logs).length >= 1) {
+    Object.values(logs).map((logEntry: any, z: number) => {
+      log.info(
+        "Entry " +
+          z +
+          ": [Date: " +
+          logEntry.date +
+          "] [Type: " +
+          logEntry.logLevel +
+          "] " +
+          logEntry.argumentsArray[0],
+      );
+    });
+  } else {
+    log.info("There aren't any logs to view.");
+  }
 }
 
 viewLogs().catch((e) => {

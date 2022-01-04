@@ -80,11 +80,24 @@ const NetworkRouter = async (
               grp + ":" + z + ":" + modu,
             );
 
+            let requirePreviousTrue = false;
+
+            try {
+              if (
+                typeof otfSettings !== "undefined" &&
+                typeof otfSettings.requirePreviousTrue !== "undefined"
+              ) {
+                requirePreviousTrue = otfSettings.requirePreviousTrue;
+              }
+            } catch (e) {
+              log.warn(e);
+            }
+
             if (
               z >= 1 &&
               typeof networkSettings.requireAllTrue !== "undefined" &&
               ((networkSettings.requireAllTrue && !orderResults[z - 1]) ||
-                (otfSettings.requirePreviousTrue && !orderResults[z - 1]))
+                (requirePreviousTrue && !orderResults[z - 1]))
             ) {
               orderResults[z] = false;
 

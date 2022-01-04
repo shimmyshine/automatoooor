@@ -52,7 +52,7 @@ export const entry = async (
       if (Number(formatUnits(bondTotal, 9)) > 0) {
         let redeem = null;
         try {
-          redeem = contractToUse.redeem(address, true);
+          redeem = await contractToUse.redeem(address, true);
         } catch (e) {
           log.warn(e);
 

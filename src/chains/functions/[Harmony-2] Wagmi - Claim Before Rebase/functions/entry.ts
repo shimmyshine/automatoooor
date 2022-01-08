@@ -50,16 +50,13 @@ export const entry = async (
       }
 
       if (Number(formatUnits(bondTotal, 9)) > 0) {
-        let redeem = null;
         try {
-          redeem = await contractToUse.redeem(address, true);
+          await contractToUse.redeem(address, true);
         } catch (e) {
           log.warn(e);
 
           return false;
         }
-
-        await redeem.wait(1);
 
         log.info(
           "[Module: " +

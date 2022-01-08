@@ -5,7 +5,6 @@ import { Logger } from "tslog";
 import moduleInfo from "../index";
 import { contracts } from "../data/contracts";
 import { StakingABI } from "../data/contract_abis/Staking";
-import { StakingDistributorABI } from "../data/contract_abis/StakingDistributor";
 import { sWAGMIABI } from "../data/contract_abis/sWAGMI";
 import { wsWAGMIABI } from "../data/contract_abis/wsWAGMI";
 import { OTFSettings } from "../data/interfaces";
@@ -27,6 +26,7 @@ export const entry = async (
   let clearToProceed = false;
 
   let balanceOf = 0;
+
   if (otfSettings.type.toLowerCase() == "wrap") {
     try {
       balanceOf = await new Contract(
@@ -181,79 +181,50 @@ export const entry = async (
   }
 
   if (clearToProceed) {
-    let nextEpochTime = null;
-    try {
-      nextEpochTime = await new Contract(
-        contracts.StakingDistributor,
-        StakingDistributorABI,
-        provider,
-      ).nextEpochTime();
-    } catch (e) {
-      log.warn(e);
-    }
-    const epochDate = (await nextEpochTime) * 1000;
-    const currentDate = new Date().valueOf();
-    const nextApprovedTime = epochDate + otfSettings.timeAfterRebaseToUse;
-    const approvedTimeBuffer =
-      nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
-
-    if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
-      if (qtyToUse > 0) {
-        if (otfSettings.type.toLowerCase() == "wrap") {
-          let attemptToWrap = null;
-          try {
-            attemptToWrap = await new Contract(
-              contracts.wsWAGMI,
-              wsWAGMIABI,
-              signer,
-            ).wrap(qtyToUse);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToWrap.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              formatUnits(qtyToUse, 9) +
-              " sWAGMI to wsWAGMI.",
+    if (qtyToUse > 0) {
+      if (otfSettings.type.toLowerCase() == "wrap") {
+        try {
+          await new Contract(contracts.wsWAGMI, wsWAGMIABI, signer).wrap(
+            qtyToUse,
           );
-
-          return true;
-        } else if (otfSettings.type.toLowerCase() == "unwrap") {
-          let attemptToUnwrap = null;
-          try {
-            attemptToUnwrap = await new Contract(
-              contracts.wsWAGMI,
-              wsWAGMIABI,
-              signer,
-            ).unwrap(String(qtyToUse), systemGas);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToUnwrap.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              qtyToUse / 10 ** 18 +
-              " wsWAGMI to sWAGMI.",
-          );
-
-          return true;
-        } else {
-          return false;
+        } catch (e) {
+          log.warn(e);
         }
-      } else {
-        log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
 
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            formatUnits(qtyToUse, 9) +
+            " sWAGMI to wsWAGMI.",
+        );
+
+        return true;
+      } else if (otfSettings.type.toLowerCase() == "unwrap") {
+        try {
+          await new Contract(contracts.wsWAGMI, wsWAGMIABI, signer).unwrap(
+            String(qtyToUse),
+            systemGas,
+          );
+        } catch (e) {
+          log.warn(e);
+        }
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            qtyToUse / 10 ** 18 +
+            " wsWAGMI to sWAGMI.",
+        );
+
+        return true;
+      } else {
         return false;
       }
     } else {
+      log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
+
       return false;
     }
   } else {

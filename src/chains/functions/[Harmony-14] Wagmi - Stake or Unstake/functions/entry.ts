@@ -169,79 +169,52 @@ export const entry = async (
   }
 
   if (clearToProceed) {
-    let nextEpochTime = null;
-    try {
-      nextEpochTime = await new Contract(
-        contracts.StakingDistributor,
-        StakingDistributorABI,
-        provider,
-      ).nextEpochTime();
-    } catch (e) {
-      log.warn(e);
-    }
-    const epochDate = (await nextEpochTime) * 1000;
-    const currentDate = new Date().valueOf();
-    const nextApprovedTime = epochDate + otfSettings.timeAfterRebaseToUse;
-    const approvedTimeBuffer =
-      nextApprovedTime * 1000 + otfSettings.intervalUsed - 1;
-
-    if (currentDate >= nextApprovedTime && currentDate <= approvedTimeBuffer) {
-      if (qtyToUse > 0) {
-        if (otfSettings.type.toLowerCase() == "stake") {
-          let attemptToStake = null;
-          try {
-            attemptToStake = await new Contract(
-              contracts.StakingHelper,
-              StakingHelperABI,
-              signer,
-            ).stake(qtyToUse, address);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToStake.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              formatUnits(qtyToUse, 9) +
-              " WAGMI to sWAGMI.",
-          );
-
-          return true;
-        } else if (otfSettings.type.toLowerCase() == "unstake") {
-          let attemptToUnstake = null;
-          try {
-            attemptToUnstake = await new Contract(
-              contracts.Staking,
-              StakingABI,
-              signer,
-            ).unstake(qtyToUse, false);
-          } catch (e) {
-            log.warn(e);
-          }
-
-          await attemptToUnstake.wait(1);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Converted " +
-              formatUnits(qtyToUse, 9) +
-              " sWAGMI to WAGMI.",
-          );
-
-          return true;
-        } else {
-          return false;
+    if (qtyToUse > 0) {
+      if (otfSettings.type.toLowerCase() == "stake") {
+        try {
+          await new Contract(
+            contracts.StakingHelper,
+            StakingHelperABI,
+            signer,
+          ).stake(qtyToUse, address);
+        } catch (e) {
+          log.warn(e);
         }
-      } else {
-        log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
 
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            formatUnits(qtyToUse, 9) +
+            " WAGMI to sWAGMI.",
+        );
+
+        return true;
+      } else if (otfSettings.type.toLowerCase() == "unstake") {
+        try {
+          await new Contract(contracts.Staking, StakingABI, signer).unstake(
+            qtyToUse,
+            false,
+          );
+        } catch (e) {
+          log.warn(e);
+        }
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Converted " +
+            formatUnits(qtyToUse, 9) +
+            " sWAGMI to WAGMI.",
+        );
+
+        return true;
+      } else {
         return false;
       }
     } else {
+      log.warn("[Module: " + thisInfo.moduleName + "]: Insufficient Balance");
+
       return false;
     }
   } else {

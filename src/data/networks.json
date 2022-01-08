@@ -1,7 +1,7 @@
 [
     {
         "name": "Harmony",
-        "providerURL": "https://api.s0.t.hmny.io/",
+        "providerURL": "https://api.harmony.one/",
         "chainId": 1666600000
     },
     {

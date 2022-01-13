@@ -1,9 +1,10 @@
 import { BaseProvider } from "@ethersproject/providers";
-import { ethers, Wallet } from "ethers";
+import { ethers, Signer } from "ethers";
 import { getPK } from "./getAddress";
+import { NonceManager } from "@ethersproject/experimental";
 
-export const getSigner = (network: string, provider: BaseProvider): Wallet => {
-  const signer: Wallet = new ethers.Wallet(getPK(network), provider);
+export const getSigner = (network: string, provider: BaseProvider): Signer => {
+  const signer = new ethers.Wallet(getPK(network), provider);
 
-  return signer;
+  return new NonceManager(signer);
 };

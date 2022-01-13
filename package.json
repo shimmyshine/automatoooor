@@ -34,10 +34,13 @@
   },
   "dependencies": {
     "@ethersproject/contracts": "^5.5.0",
+    "@ethersproject/experimental": "^5.5.0",
+    "@types/set-interval-async": "^1.0.0",
     "bignumber.js": "^9.0.2",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.2",
     "glob": "^7.2.0",
+    "set-interval-async": "^2.0.3",
     "tslog": "^3.3.0"
   }
 }

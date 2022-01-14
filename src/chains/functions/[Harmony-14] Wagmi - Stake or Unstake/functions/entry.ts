@@ -1,4 +1,4 @@
-import { BaseProvider } from "@ethersproject/providers";
+import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, Wallet } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Logger } from "tslog";
@@ -172,11 +172,13 @@ export const entry = async (
     if (qtyToUse > 0) {
       if (otfSettings.type.toLowerCase() == "stake") {
         try {
-          await new Contract(
+          const tx: TransactionResponse = await new Contract(
             contracts.StakingHelper,
             StakingHelperABI,
             signer,
           ).stake(qtyToUse, address);
+
+          await tx.wait(2);
         } catch (e) {
           log.warn(e);
         }
@@ -192,10 +194,13 @@ export const entry = async (
         return true;
       } else if (otfSettings.type.toLowerCase() == "unstake") {
         try {
-          await new Contract(contracts.Staking, StakingABI, signer).unstake(
-            qtyToUse,
-            false,
-          );
+          const tx: TransactionResponse = await new Contract(
+            contracts.Staking,
+            StakingABI,
+            signer,
+          ).unstake(qtyToUse, false);
+
+          await tx.wait(2);
         } catch (e) {
           log.warn(e);
         }

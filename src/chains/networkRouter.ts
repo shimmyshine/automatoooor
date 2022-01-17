@@ -52,7 +52,7 @@ const NetworkRouter = async (
       },
       networkSettings.blockNumberFreq >= 10
         ? networkSettings.blockNumberFreq
-        : 10,
+        : 60 * 1000,
     );
   }
 

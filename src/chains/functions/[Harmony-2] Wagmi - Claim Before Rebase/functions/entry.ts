@@ -1,3 +1,4 @@
+import { TransactionResponse } from "@ethersproject/providers";
 import { Contract, Wallet, providers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Logger } from "tslog";
@@ -51,7 +52,12 @@ export const entry = async (
 
       if (Number(formatUnits(bondTotal, 9)) > 0) {
         try {
-          await contractToUse.redeem(address, true);
+          const tx: TransactionResponse = await contractToUse.redeem(
+            address,
+            true,
+          );
+
+          await tx.wait(2);
         } catch (e) {
           log.warn(e);
 

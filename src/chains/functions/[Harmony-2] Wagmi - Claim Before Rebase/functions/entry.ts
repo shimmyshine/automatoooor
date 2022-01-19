@@ -32,11 +32,11 @@ export const entry = async (
   }
   const epochDate = epoch * 1000;
   const currentDate = new Date().valueOf();
-  const delta = (epochDate - currentDate) / 1000;
+  const delta = epochDate - currentDate;
 
   const bonds = contracts.Bonds;
 
-  if (delta <= epochDate - otfSettings.intervalUsed + 1) {
+  if (delta <= otfSettings.intervalUsed + 1) {
     let totalRedeemed = 0;
     Object.entries(bonds).map(async (bond) => {
       const contractToUse = new Contract(bond[1], BondDepositoryABI, signer);

@@ -35,6 +35,8 @@ export const entry = async (
     signer,
   );
 
+  let rewardsClaimed = 0;
+
   for await (const poolID of comfyPools) {
     let rewards = 0;
     try {
@@ -60,6 +62,7 @@ export const entry = async (
             poolID +
             ".",
         );
+        rewardsClaimed += rewards;
       } catch (e) {
         log.warn(e);
       }
@@ -91,11 +94,16 @@ export const entry = async (
             poolID +
             ".",
         );
+        rewardsClaimed += rewards;
       } catch (e) {
         log.warn(e);
       }
     }
   }
 
-  return true;
+  if (rewardsClaimed > 0) {
+    return true;
+  } else {
+    return false;
+  }
 };

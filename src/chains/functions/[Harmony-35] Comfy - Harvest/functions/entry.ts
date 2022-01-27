@@ -22,72 +22,79 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  const pool0 = 0; // the pool id for the comfy-one pool
-  const comfyReward0Contract = new Contract(
+  const comfyPools = [0];
+  const comfyRewardContract = new Contract(
     contracts.ComfyRewardPool,
     ComfyRewardPool,
     signer,
   );
-
-  let pid0Rewards = 0;
-  try {
-    pid0Rewards = await comfyReward0Contract.pendingCOMFY([0], address);
-  } catch (e) {
-    log.warn(e);
-  }
-
-  if (pid0Rewards > 0) {
-    try {
-      const tx: TransactionResponse = await comfyReward0Contract.withdraw(
-        0,
-        Zero,
-      );
-      await tx.wait(2);
-    } catch (e) {
-      log.warn(e);
-    }
-
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "]: Harvested " +
-        formatUnits(pid0Rewards, 18) +
-        " COMFY.",
-    );
-  }
-
-  const pool1 = 1; // the pool id for the cshare-one pool
-  const comfyReward1Contract = new Contract(
+  const csharePools = [0, 1];
+  const cshareRewardContract = new Contract(
     contracts.CShareRewardPool,
     CShareRewardPool,
     signer,
   );
 
-  let pid1Rewards = 0;
-  try {
-    pid1Rewards = await comfyReward1Contract.pendingShare([0], address);
-  } catch (e) {
-    log.warn(e);
-  }
-
-  if (pid1Rewards > 0) {
+  for await (const poolID of comfyPools) {
+    let rewards = 0;
     try {
-      const tx: TransactionResponse = await comfyReward0Contract.withdraw(
-        1,
-        Zero,
-      );
-      await tx.wait(2);
+      rewards = await comfyRewardContract.pendingCOMFY([poolID], address);
     } catch (e) {
       log.warn(e);
     }
 
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "]: Harvested " +
-        formatUnits(pid1Rewards, 18) +
-        " CSHARE.",
-    );
+    if (rewards > 0) {
+      try {
+        const tx: TransactionResponse = await comfyRewardContract.withdraw(
+          0,
+          Zero,
+        );
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Harvested " +
+            formatUnits(rewards, 18) +
+            " COMFY from pool ID: " +
+            poolID +
+            ".",
+        );
+      } catch (e) {
+        log.warn(e);
+      }
+    }
+  }
+
+  for await (const poolID of csharePools) {
+    let rewards = 0;
+    try {
+      rewards = await cshareRewardContract.pendingShare([poolID], address);
+    } catch (e) {
+      log.warn(e);
+    }
+
+    if (rewards > 0) {
+      try {
+        const tx: TransactionResponse = await cshareRewardContract.withdraw(
+          0,
+          Zero,
+        );
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Harvested " +
+            formatUnits(rewards, 18) +
+            " CSHARE from pool ID: " +
+            poolID +
+            ".",
+        );
+      } catch (e) {
+        log.warn(e);
+      }
+    }
   }
 
   return true;

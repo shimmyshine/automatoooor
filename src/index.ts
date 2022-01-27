@@ -22,12 +22,16 @@ async function main(): Promise<void> {
 
   Object.values(settings.networks).map(async (res) => {
     if (res.isActive) {
-      await NetworkRouter(
-        log,
-        settings.networks[res.name],
-        res.groups,
-        res.orders,
-      );
+      try {
+        await NetworkRouter(
+          log,
+          settings.networks[res.name],
+          res.groups,
+          res.orders,
+        );
+      } catch (e) {
+        log.warn(e);
+      }
     }
   });
 }

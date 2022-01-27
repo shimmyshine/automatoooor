@@ -7,9 +7,10 @@ import { contracts } from "../data/contracts";
 import { CShareRewardPool } from "../data/contract_abis/CShareRewardPool";
 import { OTFSettings } from "../data/interfaces";
 import moduleSettings from "../settings";
-import { Zero } from "@ethersproject/constants";
 import { ComfyRewardPool } from "../data/contract_abis/ComfyRewardPool";
 import { ComfyABI } from "../data/contract_abis/Comfy";
+import { CShareABI } from "../data/contract_abis/CShare";
+import { ERC20ABI } from "../data/contract_abis/erc20";
 
 export const entry = async (
   log: Logger,
@@ -23,43 +24,69 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  const comfyOneLPContract = new Contract(
-    contracts.ComfyOneLP,
-    ComfyABI,
-    signer,
-  );
-  const comfyRewardPoolContract = new Contract(
-    contracts.ComfyRewardPool,
-    ComfyRewardPool,
-    signer,
-  );
+  let tokenContract;
+  let poolContract;
 
-  let balanceOfComfyOneLP = 0;
+  if (otfSettings.contractPreference == "comfypool") {
+    tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+    poolContract = new Contract(
+      contracts.ComfyRewardPool,
+      ComfyRewardPool,
+      signer,
+    );
+  } else if (otfSettings.contractPreference == "csharepool") {
+    if (otfSettings.tokenToDeposit == "comfyonelp") {
+      tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+    } else if (otfSettings.tokenToDeposit == "cshareonelp") {
+      tokenContract = new Contract(contracts.CShareOneLP, CShareABI, signer);
+    } else {
+      return false;
+    }
+    poolContract = new Contract(
+      contracts.CShareRewardPool,
+      CShareRewardPool,
+      signer,
+    );
+  } else if (otfSettings.contractPreference == "zenden") {
+    tokenContract = new Contract(contracts.CShare, CShareABI, signer);
+  } else {
+    return false;
+  }
+
+  let balanceOf = 0;
   try {
-    balanceOfComfyOneLP = await comfyOneLPContract.balanceOf(address);
+    balanceOf = await tokenContract.balanceOf(address);
   } catch (e) {
     log.warn(e);
+    return false;
   }
 
-  if (balanceOfComfyOneLP > 0) {
-    try {
-      const tx: TransactionResponse = await comfyRewardPoolContract.deposit(
-        0,
-        balanceOfComfyOneLP,
-      );
-      await tx.wait(2);
-    } catch (e) {
-      log.warn(e);
+  if (balanceOf > 0) {
+    if (poolContract) {
+      try {
+        const tx: TransactionResponse = await poolContract.deposit(
+          0,
+          balanceOf,
+        );
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Deposited " +
+            formatUnits(balanceOf, 18) +
+            " COMFY-ONE LP.",
+        );
+      } catch (e) {
+        log.warn(e);
+        return false;
+      }
+
+      return true;
+    } else {
+      return false;
     }
-
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "]: Deposited " +
-        formatUnits(balanceOfComfyOneLP, 18) +
-        " COMFY-ONE LP.",
-    );
+  } else {
+    return false;
   }
-
-  return true;
 };

@@ -28,6 +28,7 @@ const NetworkRouter = async (
 
   try {
     await provider.ready;
+    signer.connect(provider);
   } catch (e) {
     log.warn(e);
   }
@@ -56,98 +57,107 @@ const NetworkRouter = async (
     );
   }
 
-  for (const grp of groups) {
+  for await (const grp of groups) {
     if (Object.values(order[grp]).length >= 1) {
       const interVal = setIntervalAsync(
         async (): Promise<void> => {
-          let z = 1;
-          const orderResults: OrderResults = {};
+          provider
+            .getNetwork()
+            .then(async () => {
+              let z = 1;
+              const orderResults: OrderResults = {};
 
-          for (const modu of Object.values(order[grp])) {
-            if (order[grp][z]) {
-              let specificFunctionData: Modules = {};
-              try {
-                specificFunctionData = await getFunctionByID(modu);
-              } catch (e) {
-                log.warn(e);
-              }
+              for await (const modu of Object.values(order[grp])) {
+                if (order[grp][z]) {
+                  let specificFunctionData: Modules = {};
+                  try {
+                    specificFunctionData = await getFunctionByID(modu);
+                  } catch (e) {
+                    log.warn(e);
+                  }
 
-              let functionSettings = null;
-              try {
-                functionSettings = await import(
-                  "../." + specificFunctionData[modu].directory + "/settings.ts"
-                );
-              } catch (e) {
-                log.warn(e);
-              }
+                  let functionSettings = null;
+                  try {
+                    functionSettings = await import(
+                      "../." +
+                        specificFunctionData[modu].directory +
+                        "/settings.ts"
+                    );
+                  } catch (e) {
+                    log.warn(e);
+                  }
 
-              const otfSettings: OTFSettings = getOTFSettings(
-                networkSettings.name,
-                grp + ":" + z + ":" + modu,
-              );
-
-              let requirePreviousTrue = false;
-
-              try {
-                if (
-                  typeof otfSettings !== "undefined" &&
-                  typeof otfSettings.requirePreviousTrue !== "undefined"
-                ) {
-                  requirePreviousTrue = otfSettings.requirePreviousTrue;
-                }
-              } catch (e) {
-                log.warn(e);
-              }
-
-              if (
-                z >= 1 &&
-                typeof networkSettings.requireAllTrue !== "undefined" &&
-                ((networkSettings.requireAllTrue && !orderResults[z - 1]) ||
-                  (requirePreviousTrue && !orderResults[z - 1]))
-              ) {
-                orderResults[z] = false;
-
-                if (specificFunctionData[modu].moduleSettings.showLog) {
-                  log.warn(
-                    "[Module: " +
-                      specificFunctionData[modu].moduleName +
-                      "]: The previous module returned false, cancelling this module execution.",
-                  );
-                }
-
-                z++;
-
-                break;
-              }
-
-              if (functionSettings.default.active) {
-                let moduleResult;
-
-                try {
-                  moduleResult = await import(
-                    "../." +
-                      specificFunctionData[modu].directory +
-                      "/functions/main.ts"
+                  const otfSettings: OTFSettings = getOTFSettings(
+                    networkSettings.name,
+                    grp + ":" + z + ":" + modu,
                   );
 
-                  const modResult = await moduleResult.Main(
-                    log,
-                    address,
-                    provider,
-                    signer,
-                    enforcedGas,
-                    otfSettings,
-                  );
+                  let requirePreviousTrue = false;
 
-                  orderResults[z] = modResult;
-                } catch (e) {
-                  log.warn(e);
+                  try {
+                    if (
+                      typeof otfSettings !== "undefined" &&
+                      typeof otfSettings.requirePreviousTrue !== "undefined"
+                    ) {
+                      requirePreviousTrue = otfSettings.requirePreviousTrue;
+                    }
+                  } catch (e) {
+                    log.warn(e);
+                  }
+
+                  if (
+                    z >= 1 &&
+                    typeof networkSettings.requireAllTrue !== "undefined" &&
+                    ((networkSettings.requireAllTrue && !orderResults[z - 1]) ||
+                      (requirePreviousTrue && !orderResults[z - 1]))
+                  ) {
+                    orderResults[z] = false;
+
+                    if (specificFunctionData[modu].moduleSettings.showLog) {
+                      log.warn(
+                        "[Module: " +
+                          specificFunctionData[modu].moduleName +
+                          "]: The previous module returned false, cancelling this module execution.",
+                      );
+                    }
+
+                    z++;
+
+                    break;
+                  }
+
+                  if (functionSettings.default.active) {
+                    let moduleResult;
+
+                    try {
+                      moduleResult = await import(
+                        "../." +
+                          specificFunctionData[modu].directory +
+                          "/functions/main.ts"
+                      );
+
+                      const modResult = await moduleResult.Main(
+                        log,
+                        address,
+                        provider,
+                        signer,
+                        enforcedGas,
+                        otfSettings,
+                      );
+
+                      orderResults[z] = modResult;
+                    } catch (e) {
+                      log.warn(e);
+                    }
+                  }
+
+                  z++;
                 }
               }
-
-              z++;
-            }
-          }
+            })
+            .catch((e) => {
+              log.warn(e);
+            });
 
           if (networkSettings.groupsInterval[grp] === 0) {
             clearIntervalAsync(interVal);

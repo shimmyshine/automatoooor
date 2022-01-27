@@ -1,7 +1,7 @@
 [
     {
         "name": "Harmony",
-        "providerURL": "https://api.harmony.one/",
+        "providerURL": "https://api.fuzz.fi/",
         "chainId": 1666600000
     },
     {

@@ -10,6 +10,7 @@ export const getProvider = (networkToUse: string): BaseProvider => {
     _defaultProvider: (providers) =>
       new providers.JsonRpcProvider(
         settings.networks[networkToUse].providerURL,
+        { chainId: settings.networks[networkToUse].chainId },
       ),
   };
 

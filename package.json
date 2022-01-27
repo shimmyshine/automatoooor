@@ -37,6 +37,7 @@
     "@ethersproject/constants": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/experimental": "^5.5.0",
+    "@ethersproject/shims": "^5.5.0",
     "@types/set-interval-async": "^1.0.0",
     "bignumber.js": "^9.0.2",
     "dotenv": "^10.0.0",

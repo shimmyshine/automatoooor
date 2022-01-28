@@ -7,6 +7,20 @@ export interface Settings {
   modulesOutput: boolean;
   logs: Logs;
   networks: NetworkSettings;
+  notifications: Notifications;
+}
+
+export interface Notifications {
+  telegram: {
+    active: boolean;
+    token: string;
+    chatID: string;
+  };
+  discord: {
+    active: boolean;
+    token: string;
+    channelID: string;
+  };
 }
 
 export interface Logs {

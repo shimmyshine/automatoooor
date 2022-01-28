@@ -30,6 +30,7 @@
     "ethers": "^5.5.2",
     "follow-redirects": ">=1.14.7",
     "prettier": "^2.5.1",
+    "telegraf-ts": "^3.89.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.3"
   },
@@ -40,6 +41,7 @@
     "@ethersproject/shims": "^5.5.0",
     "@types/set-interval-async": "^1.0.0",
     "bignumber.js": "^9.0.2",
+    "discord.js": "^13.6.0",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.2",
     "glob": "^7.2.0",

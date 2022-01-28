@@ -10,7 +10,6 @@ import moduleSettings from "../settings";
 import { ComfyRewardPool } from "../data/contract_abis/ComfyRewardPool";
 import { ComfyABI } from "../data/contract_abis/Comfy";
 import { CShareABI } from "../data/contract_abis/CShare";
-import { ERC20ABI } from "../data/contract_abis/erc20";
 
 export const entry = async (
   log: Logger,

@@ -8,7 +8,7 @@ glob("./src/**/*.example.ts", function (_, matches) {
     const base = path.basename(file, ".example.ts");
     const fname = `${dir}/${base}.ts`;
     if (!fs.existsSync(fname)) {
-      fs.cpSync(file, fname);
+      fs.copyFileSync(file, fname);
     }
   }
 });

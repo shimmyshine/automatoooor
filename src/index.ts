@@ -38,5 +38,4 @@ async function main(): Promise<void> {
 
 main().catch((e) => {
   console.log(e);
-  process.exit(1);
 });

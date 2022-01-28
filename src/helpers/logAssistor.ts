@@ -2,8 +2,6 @@ import { appendFileSync } from "fs";
 import { ILogObject, Logger } from "tslog";
 import { settings } from "../data/settings";
 import fs from "fs";
-import { sendTelegramMessage } from "./notification_modules/telegramHandler";
-import { sendDiscordMessage } from "./notification_modules/discordHandler";
 
 export const log: Logger = new Logger({
   displayFunctionName: false,
@@ -16,14 +14,6 @@ function logToTransport(logObject: ILogObject) {
     settings.logs.logPath + "logs.txt",
     JSON.stringify(logObject) + "\n",
   );
-
-  if (settings.notifications.telegram.active) {
-    sendTelegramMessage(String(logObject.argumentsArray[0]));
-  }
-
-  if (settings.notifications.discord.active) {
-    sendDiscordMessage(String(logObject.argumentsArray[0]));
-  }
 }
 
 if (settings.logs.writeLogToFile) {

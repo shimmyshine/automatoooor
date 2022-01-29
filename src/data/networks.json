@@ -1,78 +1,47 @@
 [
     {
         "name": "Harmony",
-        "providerURL": "https://api.harmony.one/",
-        "aggregateProviders": [
-            "https://api.harmony.one/",
-            "https://api.s0.t.hmny.one/",
-            "https://api.fuzz.fi/",
-            "https://rpc.heavenswail.one/",
-            "https://rpc.hermesdefi.io/"
-        ],
+        "providerURL": "https://api.fuzz.fi/",
         "chainId": 1666600000
     },
     {
         "name": "Fantom",
         "providerURL": "https://rpc.ftm.tools",
-        "aggregateProviders": [
-            "https://rpc.ftm.tools"
-        ],
         "chainId": 250
     },
     {
         "name": "Avalanche",
         "providerURL": "https://api.avax.network/ext/bc/C/rpc",
-        "aggregateProviders": [
-            "https://api.avax.network/ext/bc/C/rpc"
-        ],
         "chainId": 43114
     },
     {
         "name": "Binance_Smart_Chain",
         "providerURL": "https://bsc-dataseed.binance.org/",
-        "aggregateProviders": [
-            "https://bsc-dataseed.binance.org/"
-        ],
         "chainId": 56
     },
     {
         "name": "Ethereum",
         "providerURL": "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-        "aggregateProviders": [
-            "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-        ],
         "chainId": 1
     },
     {
         "name": "Aurora",
         "providerURL": "https://mainnet.aurora.dev/",
-        "aggregateProviders": [
-            "https://mainnet.aurora.dev/"
-        ],
         "chainId": 1313161554
     },
     {
         "name": "Polygon",
         "providerURL": "https://polygon-rpc.com/",
-        "aggregateProviders": [
-            "https://polygon-rpc.com/"
-        ],
         "chainId": 137
     },
     {
         "name": "RSK",
         "providerURL": "https://public-node.rsk.co/",
-        "aggregateProviders": [
-            "https://public-node.rsk.co/"
-        ],
         "chainId": 30
     },
     {
         "name": "Telos",
         "providerURL": "https://mainnet.telos.net/evm",
-        "aggregateProviders": [
-            "https://mainnet.telos.net/evm"
-        ],
         "chainId": 40
     }
 ]

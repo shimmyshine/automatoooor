@@ -5,8 +5,6 @@ export const fantomSettings: NetworkSettingsBO = {
   name: "Fantom",
   chainId: networks[1].chainId,
   providerURL: networks[1].providerURL,
-  aggregateProviders: networks[1].aggregateProviders,
-  port: 4201,
   isActive: false,
   groups: [],
   orders: {},
@@ -17,5 +15,4 @@ export const fantomSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
-  runPersonalRPCAggregator: false,
 };

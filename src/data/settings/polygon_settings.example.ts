@@ -5,8 +5,6 @@ export const polygonSettings: NetworkSettingsBO = {
   name: "Polygon",
   chainId: networks[6].chainId,
   providerURL: networks[6].providerURL,
-  aggregateProviders: networks[6].aggregateProviders,
-  port: 4206,
   isActive: false,
   groups: [],
   orders: {},
@@ -17,5 +15,4 @@ export const polygonSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
-  runPersonalRPCAggregator: false,
 };

@@ -37,6 +37,8 @@ export interface NetworkSettingsBO {
   name: string;
   chainId: number;
   providerURL: string;
+  aggregateProviders: string[];
+  port: number;
   isActive: boolean;
   groups: number[];
   orders: {
@@ -53,6 +55,7 @@ export interface NetworkSettingsBO {
   gasPriceEnforced: number;
   gasLimitEnforced: number;
   requireAllTrue: boolean;
+  runPersonalRPCAggregator: boolean;
 }
 
 export interface OTFSettings {

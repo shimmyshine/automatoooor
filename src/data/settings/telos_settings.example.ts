@@ -5,6 +5,8 @@ export const telosSettings: NetworkSettingsBO = {
   name: "Telos",
   chainId: networks[8].chainId,
   providerURL: networks[8].providerURL,
+  aggregateProviders: networks[8].aggregateProviders,
+  port: 4208,
   isActive: false,
   groups: [],
   orders: {},
@@ -15,4 +17,5 @@ export const telosSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
+  runPersonalRPCAggregator: false,
 };

@@ -30,20 +30,16 @@ const NetworkRouter = async (
 
   if (networkSettings.runPersonalRPCAggregator == false) {
     provider = getProvider(networkSettings.name);
-    log.info("1");
   } else if (networkSettings.runPersonalRPCAggregator == true) {
-    log.info("2");
-    await setupPrivateAggregator(
+    setupPrivateAggregator(
       networkSettings.aggregateProviders,
       networkSettings.port,
     );
-    log.info("3");
     provider = getProviderLocal(
       networkSettings.name,
       networkSettings.chainId,
-      "https://localhost:" + networkSettings.port,
+      "http://localhost:" + networkSettings.port,
     );
-    log.info("4");
   }
 
   setTimeout(async () => {

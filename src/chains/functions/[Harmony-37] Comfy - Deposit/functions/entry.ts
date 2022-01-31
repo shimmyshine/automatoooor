@@ -24,11 +24,12 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  let tokenContract;
+  let tokenContract, tokenName;
   let poolContract;
 
   if (otfSettings.contractPreference == "comfypool") {
     tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+    tokenName = "COMFY-ONE LP";
     poolContract = new Contract(
       contracts.ComfyRewardPool,
       ComfyRewardPool,
@@ -37,8 +38,10 @@ export const entry = async (
   } else if (otfSettings.contractPreference == "csharepool") {
     if (otfSettings.tokenToDeposit == "comfyonelp") {
       tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+      tokenName = "COMFY-ONE LP";
     } else if (otfSettings.tokenToDeposit == "cshareonelp") {
       tokenContract = new Contract(contracts.CShareOneLP, CShareABI, signer);
+      tokenName = "CSHARE-ONE LP";
     } else {
       return false;
     }
@@ -49,6 +52,7 @@ export const entry = async (
     );
   } else if (otfSettings.contractPreference == "zenden") {
     tokenContract = new Contract(contracts.CShare, CShareABI, signer);
+    tokenName = "CSHARE";
   } else {
     return false;
   }
@@ -75,7 +79,9 @@ export const entry = async (
             thisInfo.moduleName +
             "]: Deposited " +
             formatUnits(balanceOf, 18) +
-            " COMFY-ONE LP.",
+            " " +
+            tokenName +
+            ".",
         );
       } catch (e) {
         log.warn(e);

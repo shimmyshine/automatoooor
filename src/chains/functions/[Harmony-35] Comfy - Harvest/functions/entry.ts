@@ -48,9 +48,8 @@ export const entry = async (
     if (rewards > 0) {
       try {
         const tx: TransactionResponse = await comfyRewardContract.withdraw(
-          poolID,
+          0,
           Zero,
-          { ...systemGas },
         );
         await tx.wait(2);
 
@@ -81,9 +80,8 @@ export const entry = async (
     if (rewards > 0) {
       try {
         const tx: TransactionResponse = await cshareRewardContract.withdraw(
-          poolID,
+          0,
           Zero,
-          { ...systemGas },
         );
         await tx.wait(2);
 

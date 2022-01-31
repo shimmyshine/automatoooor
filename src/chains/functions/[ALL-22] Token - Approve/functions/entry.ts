@@ -28,9 +28,6 @@ export const entry = async (
     allowanceAttempt = await contractToUse.approve(
       otfSettings.contractAddress,
       String(otfSettings.quantity),
-      {
-        ...systemGas,
-      },
     );
   } catch (e) {
     log.warn(e);

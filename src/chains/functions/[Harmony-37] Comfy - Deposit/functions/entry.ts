@@ -23,11 +23,12 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  let tokenContract;
+  let tokenContract, tokenName;
   let poolContract;
 
   if (otfSettings.contractPreference == "comfypool") {
     tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+    tokenName = "COMFY-ONE LP";
     poolContract = new Contract(
       contracts.ComfyRewardPool,
       ComfyRewardPool,
@@ -36,8 +37,10 @@ export const entry = async (
   } else if (otfSettings.contractPreference == "csharepool") {
     if (otfSettings.tokenToDeposit == "comfyonelp") {
       tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
+      tokenName = "COMFY-ONE LP";
     } else if (otfSettings.tokenToDeposit == "cshareonelp") {
       tokenContract = new Contract(contracts.CShareOneLP, CShareABI, signer);
+      tokenName = "CSHARE-ONE LP";
     } else {
       return false;
     }
@@ -48,6 +51,7 @@ export const entry = async (
     );
   } else if (otfSettings.contractPreference == "zenden") {
     tokenContract = new Contract(contracts.CShare, CShareABI, signer);
+    tokenName = "CSHARE";
   } else {
     return false;
   }
@@ -62,10 +66,20 @@ export const entry = async (
 
   if (balanceOf > 0) {
     if (poolContract) {
+      let amountToUse = balanceOf;
+
+      if (otfSettings.amtType == "wei") {
+        if (otfSettings.amt <= amountToUse) {
+          amountToUse = otfSettings.amt;
+        }
+      } else if (otfSettings.amtType == "percent") {
+        amountToUse = Math.floor(amountToUse * otfSettings.amt);
+      }
+
       try {
         const tx: TransactionResponse = await poolContract.deposit(
           otfSettings.poolID,
-          balanceOf,
+          amountToUse,
           { ...systemGas },
         );
         await tx.wait(2);
@@ -74,8 +88,10 @@ export const entry = async (
           "[Module: " +
             thisInfo.moduleName +
             "]: Deposited " +
-            formatUnits(balanceOf, 18) +
-            " COMFY-ONE LP.",
+            formatUnits(amountToUse, 18) +
+            " " +
+            tokenName +
+            ".",
         );
       } catch (e) {
         log.warn(e);

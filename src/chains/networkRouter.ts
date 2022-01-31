@@ -86,6 +86,8 @@ const NetworkRouter = async (
             provider
               .getNetwork()
               .then(async () => {
+                log.info("Attempting to execute group " + grp + ".");
+
                 let z = 1;
                 const orderResults: OrderResults = {};
 

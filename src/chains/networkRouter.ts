@@ -12,7 +12,6 @@ import {
 } from "set-interval-async/dynamic";
 import { setupPrivateAggregator } from "../helpers/networkAggregator";
 import { BaseProvider } from "@ethersproject/providers";
-import { resolve } from "path";
 
 interface OrderResults {
   [key: number]: boolean;
@@ -51,8 +50,6 @@ const NetworkRouter = async (
     } catch (e) {
       log.warn(e);
     }
-
-    const enforcedGas = getGasSettings(networkSettings.name);
 
     /* Blocknumber */
     if (networkSettings.showBlockNumber) {
@@ -148,6 +145,45 @@ const NetworkRouter = async (
 
                     if (functionSettings.default.active) {
                       let moduleResult;
+
+                      const otfOverrides: {
+                        gasPrice?: number;
+                        gasLimit?: number;
+                      } = {
+                        gasPrice: 0,
+                        gasLimit: 0,
+                      };
+                      if (
+                        typeof otfSettings !== "undefined" &&
+                        typeof otfSettings.overridePrice !== "undefined"
+                      ) {
+                        otfOverrides.gasPrice = otfSettings.overridePrice;
+                        log.info(
+                          "[Module: " +
+                            specificFunctionData[modu].moduleName +
+                            "]: Overriding gasPrice with " +
+                            otfSettings.overridePrice +
+                            " wei.",
+                        );
+                      }
+                      if (
+                        typeof otfSettings !== "undefined" &&
+                        typeof otfSettings.overrideLimit !== "undefined"
+                      ) {
+                        otfOverrides.gasLimit = otfSettings.overrideLimit;
+                        log.info(
+                          "[Module: " +
+                            specificFunctionData[modu].moduleName +
+                            "]: Overriding gasLimit with " +
+                            otfSettings.overridePrice +
+                            " wei.",
+                        );
+                      }
+
+                      const enforcedGas = getGasSettings(
+                        networkSettings.name,
+                        otfOverrides,
+                      );
 
                       try {
                         moduleResult = await import(

@@ -176,7 +176,7 @@ export const entry = async (
             contracts.StakingHelper,
             StakingHelperABI,
             signer,
-          ).stake(qtyToUse, address, { ...systemGas });
+          ).stake(qtyToUse, address);
 
           await tx.wait(2);
         } catch (e) {
@@ -198,7 +198,7 @@ export const entry = async (
             contracts.Staking,
             StakingABI,
             signer,
-          ).unstake(qtyToUse, false, { ...systemGas });
+          ).unstake(qtyToUse, false);
 
           await tx.wait(2);
         } catch (e) {

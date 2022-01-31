@@ -5,8 +5,6 @@ export const ethereumSettings: NetworkSettingsBO = {
   name: "Ethereum",
   chainId: networks[4].chainId,
   providerURL: networks[4].providerURL,
-  aggregateProviders: networks[4].aggregateProviders,
-  port: 4204,
   isActive: false,
   groups: [],
   orders: {},
@@ -17,5 +15,4 @@ export const ethereumSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
-  runPersonalRPCAggregator: false,
 };

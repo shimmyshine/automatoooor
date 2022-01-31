@@ -16,18 +16,3 @@ export const getProvider = (networkToUse: string): BaseProvider => {
 
   return ethers.getDefaultProvider(network);
 };
-
-export const getProviderLocal = (
-  nameTU: string,
-  chainIDTU: number,
-  urlTU: string,
-): BaseProvider => {
-  const network: Network = {
-    name: nameTU,
-    chainId: chainIDTU,
-    _defaultProvider: (providers) =>
-      new providers.JsonRpcProvider(urlTU, { chainId: chainIDTU }),
-  };
-
-  return ethers.getDefaultProvider(network);
-};

@@ -25,12 +25,10 @@ const moduleSettings: ModuleSettings = {
           amtType: string,
           amt: number,
           tokenIn: string,
-          tokenOut: string,
         },
 ```
 
 ### otfSettings Explained
 * amtType: ["max", "percent", "wei"] is how you want to measure the quantity to use.
 * amt: number is the number to use specifically.  (max=0, wei=quantity of token measured in wei, percent=a number between 0 & 1 in decimal form)
-* tokenIn: ["comfy", "cshare"] is whether you'd like to zap COMFY or CSHARE.
-* tokenOut: ["comfyonelp", "cshareonelp"] is whether you'd like to zap to COMFY-ONE LP or CSHARE-ONE LP.
+* tokenIn: ["comfy", "cshare"] is whether you'd like to zap comfy or cshare to comfy-one lp or cshare-one lp.

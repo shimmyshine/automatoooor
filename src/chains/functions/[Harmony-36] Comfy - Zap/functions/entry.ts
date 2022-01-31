@@ -23,91 +23,102 @@ export const entry = async (
 
   // Code Execution Here
   const zapContract = new Contract(contracts.Zap, ZapABI, signer);
-  let contractIn, contractInName, contractInAddress;
-  let contractOut, contractOutName, contractOutAddress;
-  let balanceOf;
 
   if (otfSettings.tokenIn == "comfy") {
-    contractIn = new Contract(contracts.Comfy, ComfyABI, signer);
-    contractInName = "COMFY";
-    contractInAddress = contracts.Comfy;
-  } else if (otfSettings.tokenIn == "cshare") {
-    contractIn = new Contract(contracts.CShare, CShareABI, signer);
-    contractInName = "CSHARE";
-    contractInAddress = contracts.CShare;
-  } else {
-    log.warn(
-      "[Module: " + thisInfo.moduleName + "]: Incorrect tokenIn otfSetting!",
-    );
-    return false;
-  }
-
-  try {
-    balanceOf = await contractIn.balanceOf(address);
-  } catch (e) {
-    log.warn(e);
-
-    return false;
-  }
-
-  if (otfSettings.tokenOut == "comfyonelp") {
-    contractOut = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
-    contractOutName = "COMFY-ONE LP";
-    contractOutAddress = contracts.ComfyOneLP;
-  } else if (otfSettings.tokenOut == "cshareonelp") {
-    contractOut = new Contract(contracts.CShareOneLP, CShareABI, signer);
-    contractOutName = "CSHARE-ONE LP";
-    contractOutAddress = contracts.CShareOneLP;
-  } else {
-    log.warn(
-      "[Module: " + thisInfo.moduleName + "]: Incorrect tokenOut otfSetting!",
-    );
-    return false;
-  }
-
-  if (balanceOf > 0) {
-    let amountToUse = balanceOf;
-
-    if (otfSettings.amtType == "wei") {
-      if (otfSettings.amt <= amountToUse) {
-        amountToUse = otfSettings.amt;
-      }
-    } else if (otfSettings.amtType == "percent") {
-      amountToUse = Math.floor(amountToUse * otfSettings.amt);
-    }
-
+    const comfyContract = new Contract(contracts.Comfy, ComfyABI, signer);
+    let balanceOf = 0;
     try {
-      const tx: TransactionResponse = await zapContract.zapInToken(
-        contractInAddress,
-        amountToUse,
-        contractOutAddress,
-        contracts.ViperRouter,
-        address,
-        { ...systemGas },
-      );
-      await tx.wait(2);
-
-      log.info(
-        "[Module: " +
-          thisInfo.moduleName +
-          "]: Zapped " +
-          formatUnits(balanceOf, 18) +
-          " " +
-          contractInName +
-          " into " +
-          contractOutName +
-          ".",
-      );
-
-      return true;
+      balanceOf = await comfyContract.balanceOf(address);
     } catch (e) {
       log.warn(e);
+      return false;
+    }
 
+    if (balanceOf > 0) {
+      let amountToUse = balanceOf;
+
+      if (otfSettings.amtType == "wei") {
+        if (otfSettings.amt <= amountToUse) {
+          amountToUse = otfSettings.amt;
+        }
+      } else if (otfSettings.amtType == "percent") {
+        amountToUse = amountToUse * otfSettings.amt;
+      }
+
+      try {
+        const tx: TransactionResponse = await zapContract.zapInToken(
+          contracts.Comfy,
+          amountToUse,
+          contracts.ComfyOneLP,
+          contracts.ViperRouter,
+          address,
+        );
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Zapped " +
+            formatUnits(balanceOf, 18) +
+            " Comfy into Comfy-One LP.",
+        );
+      } catch (e) {
+        log.warn(e);
+        return false;
+      }
+
+      return true;
+    } else {
+      return false;
+    }
+  } else if (otfSettings.tokenIn == "cshare") {
+    const cshareContract = new Contract(contracts.CShare, CShareABI, signer);
+    let balanceOf = 0;
+    try {
+      balanceOf = await cshareContract.balanceOf(address);
+    } catch (e) {
+      log.warn(e);
+      return false;
+    }
+
+    if (balanceOf > 0) {
+      let amountToUse = balanceOf;
+
+      if (otfSettings.amtType == "wei") {
+        if (otfSettings.amt <= amountToUse) {
+          amountToUse = otfSettings.amt;
+        }
+      } else if (otfSettings.amtType == "percent") {
+        amountToUse = amountToUse * otfSettings.amt;
+      }
+
+      try {
+        const tx: TransactionResponse = await zapContract.zapInToken(
+          contracts.CShare,
+          amountToUse,
+          contracts.CShareOneLP,
+          contracts.ViperRouter,
+          address,
+        );
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Zapped " +
+            formatUnits(balanceOf, 18) +
+            " Cshare into CShare-One LP.",
+        );
+      } catch (e) {
+        log.warn(e);
+        return false;
+      }
+
+      return true;
+    } else {
       return false;
     }
   } else {
-    log.warn("[Module: " + thisInfo.moduleName + "]: balanceOf is 0 or less.");
-
     return false;
   }
 };

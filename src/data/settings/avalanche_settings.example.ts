@@ -5,8 +5,6 @@ export const avalancheSettings: NetworkSettingsBO = {
   name: "Avalanche",
   chainId: networks[2].chainId,
   providerURL: networks[2].providerURL,
-  aggregateProviders: networks[2].aggregateProviders,
-  port: 4202,
   isActive: false,
   groups: [],
   orders: {},
@@ -17,5 +15,4 @@ export const avalancheSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
-  runPersonalRPCAggregator: false,
 };

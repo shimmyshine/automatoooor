@@ -5,6 +5,8 @@ export const binanceSmartChainSettings: NetworkSettingsBO = {
   name: "Binance_Smart_Chain",
   chainId: networks[3].chainId,
   providerURL: networks[3].providerURL,
+  aggregateProviders: networks[3].aggregateProviders,
+  port: 4203,
   isActive: false,
   groups: [],
   orders: {},
@@ -15,4 +17,5 @@ export const binanceSmartChainSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
+  runPersonalRPCAggregator: false,
 };

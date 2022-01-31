@@ -6,6 +6,7 @@ export interface gasInterface {
 
 export const getGasSettings = (
   chainName: string,
+  otfOverrides?: { gasPrice?: number; gasLimit?: number },
 ): { gasPrice?: number; gasLimit?: number } => {
   const toReturn: gasInterface = {};
 
@@ -15,6 +16,16 @@ export const getGasSettings = (
 
   if (settings.networks[chainName].gasLimitEnforced > 0) {
     toReturn.gasLimit = settings.networks[chainName].gasLimitEnforced;
+  }
+
+  if (otfOverrides) {
+    if (otfOverrides.gasPrice && otfOverrides.gasPrice > 0) {
+      toReturn.gasPrice = otfOverrides.gasPrice;
+    }
+
+    if (otfOverrides.gasLimit && otfOverrides.gasLimit > 0) {
+      toReturn.gasLimit = otfOverrides.gasLimit;
+    }
   }
 
   return toReturn;

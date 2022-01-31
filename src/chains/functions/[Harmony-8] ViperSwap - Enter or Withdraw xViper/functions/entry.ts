@@ -55,7 +55,9 @@ export const entry = async (
     if (quantityToUse > 0) {
       let attemptToEnter = null;
       try {
-        attemptToEnter = xViperContractToUse.enter(quantityToUse);
+        attemptToEnter = xViperContractToUse.enter(quantityToUse, {
+          ...systemGas,
+        });
       } catch (e) {
         log.warn(e);
       }
@@ -100,7 +102,9 @@ export const entry = async (
     if (quantityToUse > 0) {
       let attemptToLeave = null;
       try {
-        attemptToLeave = xViperContractToUse.leave(quantityToUse);
+        attemptToLeave = xViperContractToUse.leave(quantityToUse, {
+          ...systemGas,
+        });
       } catch (e) {
         log.warn(e);
       }

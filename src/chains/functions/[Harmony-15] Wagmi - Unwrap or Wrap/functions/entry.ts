@@ -188,7 +188,7 @@ export const entry = async (
             contracts.wsWAGMI,
             wsWAGMIABI,
             signer,
-          ).wrap(qtyToUse);
+          ).wrap(qtyToUse, { ...systemGas });
           await tx.wait(2);
         } catch (e) {
           log.warn(e);
@@ -209,7 +209,7 @@ export const entry = async (
             contracts.wsWAGMI,
             wsWAGMIABI,
             signer,
-          ).unwrap(String(qtyToUse), systemGas);
+          ).unwrap(String(qtyToUse), { ...systemGas });
 
           await tx.wait(2);
         } catch (e) {

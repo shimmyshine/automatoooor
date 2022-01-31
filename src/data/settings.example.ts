@@ -32,4 +32,22 @@ export const settings: Settings = {
     RSK: rskSettings,
     Telos: telosSettings,
   },
+  notifications: {
+    telegram: {
+      active: false,
+      token:
+        process.env.TELEGRAM_TOKEN !== undefined
+          ? process.env.TELEGRAM_TOKEN
+          : "",
+      chatID: "",
+    },
+    discord: {
+      active: false,
+      token:
+        process.env.DISCORD_TOKEN !== undefined
+          ? process.env.DISCORD_TOKEN
+          : "",
+      channelID: "",
+    },
+  },
 };

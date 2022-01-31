@@ -10,7 +10,6 @@ import moduleSettings from "../settings";
 import { ComfyRewardPool } from "../data/contract_abis/ComfyRewardPool";
 import { ComfyABI } from "../data/contract_abis/Comfy";
 import { CShareABI } from "../data/contract_abis/CShare";
-import { ERC20ABI } from "../data/contract_abis/erc20";
 
 export const entry = async (
   log: Logger,
@@ -24,12 +23,11 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  let tokenContract, tokenName;
+  let tokenContract;
   let poolContract;
 
   if (otfSettings.contractPreference == "comfypool") {
     tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
-    tokenName = "COMFY-ONE LP";
     poolContract = new Contract(
       contracts.ComfyRewardPool,
       ComfyRewardPool,
@@ -38,10 +36,8 @@ export const entry = async (
   } else if (otfSettings.contractPreference == "csharepool") {
     if (otfSettings.tokenToDeposit == "comfyonelp") {
       tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
-      tokenName = "COMFY-ONE LP";
     } else if (otfSettings.tokenToDeposit == "cshareonelp") {
       tokenContract = new Contract(contracts.CShareOneLP, CShareABI, signer);
-      tokenName = "CSHARE-ONE LP";
     } else {
       return false;
     }
@@ -52,7 +48,6 @@ export const entry = async (
     );
   } else if (otfSettings.contractPreference == "zenden") {
     tokenContract = new Contract(contracts.CShare, CShareABI, signer);
-    tokenName = "CSHARE";
   } else {
     return false;
   }
@@ -69,8 +64,9 @@ export const entry = async (
     if (poolContract) {
       try {
         const tx: TransactionResponse = await poolContract.deposit(
-          0,
+          otfSettings.poolID,
           balanceOf,
+          { ...systemGas },
         );
         await tx.wait(2);
 
@@ -79,9 +75,7 @@ export const entry = async (
             thisInfo.moduleName +
             "]: Deposited " +
             formatUnits(balanceOf, 18) +
-            " " +
-            tokenName +
-            ".",
+            " COMFY-ONE LP.",
         );
       } catch (e) {
         log.warn(e);

@@ -5,6 +5,8 @@ export const auroraSettings: NetworkSettingsBO = {
   name: "Aurora",
   chainId: networks[5].chainId,
   providerURL: networks[5].providerURL,
+  aggregateProviders: networks[5].aggregateProviders,
+  port: 4205,
   isActive: false,
   groups: [],
   orders: {},
@@ -15,4 +17,5 @@ export const auroraSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
+  runPersonalRPCAggregator: false,
 };

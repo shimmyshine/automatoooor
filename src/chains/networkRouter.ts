@@ -29,6 +29,12 @@ const NetworkRouter = async (
 
   if (networkSettings.runPersonalRPCAggregator == false) {
     provider = getProvider(networkSettings.name);
+    if (networkSettings.runAggregatorButDontUse) {
+      setupPrivateAggregator(
+        networkSettings.aggregateProviders,
+        networkSettings.port,
+      );
+    }
   } else if (networkSettings.runPersonalRPCAggregator == true) {
     setupPrivateAggregator(
       networkSettings.aggregateProviders,
@@ -80,6 +86,8 @@ const NetworkRouter = async (
             provider
               .getNetwork()
               .then(async () => {
+                log.info("Attempting to execute group " + grp + ".");
+
                 let z = 1;
                 const orderResults: OrderResults = {};
 

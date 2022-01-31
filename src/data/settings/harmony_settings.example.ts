@@ -18,4 +18,5 @@ export const harmonySettings: NetworkSettingsBO = {
   gasLimitEnforced: 200000,
   requireAllTrue: false,
   runPersonalRPCAggregator: false,
+  runAggregatorButDontUse: false,
 };

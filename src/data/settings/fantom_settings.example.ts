@@ -18,4 +18,5 @@ export const fantomSettings: NetworkSettingsBO = {
   gasLimitEnforced: 200000,
   requireAllTrue: false,
   runPersonalRPCAggregator: false,
+  runAggregatorButDontUse: false,
 };

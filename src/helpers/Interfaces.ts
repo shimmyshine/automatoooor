@@ -56,6 +56,7 @@ export interface NetworkSettingsBO {
   gasLimitEnforced: number;
   requireAllTrue: boolean;
   runPersonalRPCAggregator: boolean;
+  runAggregatorButDontUse: boolean;
 }
 
 export interface OTFSettings {

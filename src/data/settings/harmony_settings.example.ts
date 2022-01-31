@@ -5,6 +5,8 @@ export const harmonySettings: NetworkSettingsBO = {
   name: "Harmony",
   chainId: networks[0].chainId,
   providerURL: networks[0].providerURL,
+  aggregateProviders: networks[0].aggregateProviders,
+  port: 4200,
   isActive: false,
   groups: [],
   orders: {},
@@ -15,4 +17,5 @@ export const harmonySettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
+  runPersonalRPCAggregator: false,
 };

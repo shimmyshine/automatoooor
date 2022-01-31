@@ -65,8 +65,9 @@ export const entry = async (
     if (poolContract) {
       try {
         const tx: TransactionResponse = await poolContract.deposit(
-          0,
+          otfSettings.poolID,
           balanceOf,
+          { ...systemGas },
         );
         await tx.wait(2);
 

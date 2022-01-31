@@ -33,12 +33,12 @@
     "prettier": "^2.5.1",
     "telegraf-ts": "^3.89.1",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.3"
-  },
-  "dependencies": {
+    "typescript": "^4.5.3",
     "@ethersproject/constants": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
-    "@ethersproject/experimental": "^5.5.0",
+    "@ethersproject/experimental": "^5.5.0"
+  },
+  "dependencies": {
     "@ethersproject/shims": "^5.5.0",
     "@types/set-interval-async": "^1.0.0",
     "bignumber.js": "^9.0.2",

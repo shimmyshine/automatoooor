@@ -29,6 +29,9 @@ export const entry = async (
       transferAttempt = await contractToUse.transfer(
         otfSettings.addressTo,
         String(otfSettings.quantity),
+        {
+          ...systemGas,
+        },
       );
     } catch (e) {
       log.warn(e);
@@ -54,6 +57,7 @@ export const entry = async (
       transferAttempt = await signer.sendTransaction({
         to: otfSettings.addressTo,
         value: ethers.utils.parseEther(String(otfSettings.quantity)),
+        ...systemGas,
       });
     } catch (e) {
       log.warn(e);

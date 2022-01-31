@@ -55,6 +55,9 @@ export const entry = async (
           const tx: TransactionResponse = await contractToUse.redeem(
             address,
             true,
+            {
+              ...systemGas,
+            },
           );
 
           await tx.wait(2);

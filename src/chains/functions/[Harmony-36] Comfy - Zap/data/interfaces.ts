@@ -11,4 +11,5 @@ export interface OTFSettings {
   amtType: string;
   amt: number;
   tokenIn: string;
+  tokenOut: string;
 }

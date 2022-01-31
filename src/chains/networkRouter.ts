@@ -31,12 +31,14 @@ const NetworkRouter = async (
     provider = getProvider(networkSettings.name);
     if (networkSettings.runAggregatorButDontUse) {
       setupPrivateAggregator(
+        log,
         networkSettings.aggregateProviders,
         networkSettings.port,
       );
     }
   } else if (networkSettings.runPersonalRPCAggregator == true) {
     setupPrivateAggregator(
+      log,
       networkSettings.aggregateProviders,
       networkSettings.port,
     );

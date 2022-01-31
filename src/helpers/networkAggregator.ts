@@ -1,7 +1,9 @@
 import http from "http";
 import axios from "axios";
+import { Logger } from "tslog";
 
 export const setupPrivateAggregator = async (
+  log: Logger,
   urls: string[],
   port: number,
 ): Promise<boolean> => {
@@ -17,6 +19,7 @@ export const setupPrivateAggregator = async (
         });
 
         if (req.method !== "POST") {
+          log.warn("[Network Aggregator]: Request method not POST.");
           res.end();
           return;
         }
@@ -44,7 +47,7 @@ export const setupPrivateAggregator = async (
               });
 
               if (_res.data.error) {
-                throw new Error("request failed");
+                throw log.warn("[Network Aggregator]: Request failed.");
               }
 
               source.abort();
@@ -55,13 +58,14 @@ export const setupPrivateAggregator = async (
 
           res.end(_req);
         } catch (e) {
-          console.log(e);
-          console.log("all requests failed");
+          log.warn(e);
+          log.warn("[Network Aggregator]: All requests failed.");
           res.end();
         }
       })
       .listen(port);
 
+    log.info("[Network Aggregator]: Aggregator started.");
     Promise.resolve(true);
   });
 

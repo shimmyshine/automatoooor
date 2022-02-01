@@ -27,16 +27,17 @@ const NetworkRouter = async (
 
   let provider: BaseProvider;
 
-  if (networkSettings.runPersonalRPCAggregator == false) {
+  if (networkSettings.runPersonalRPCAggregator === false) {
     provider = getProvider(networkSettings.name);
-    if (networkSettings.runAggregatorButDontUse) {
+
+    if (networkSettings.runAggregatorButDontUse === true) {
       setupPrivateAggregator(
         log,
         networkSettings.aggregateProviders,
         networkSettings.port,
       );
     }
-  } else if (networkSettings.runPersonalRPCAggregator == true) {
+  } else if (networkSettings.runPersonalRPCAggregator === true) {
     setupPrivateAggregator(
       log,
       networkSettings.aggregateProviders,
@@ -202,7 +203,7 @@ const NetworkRouter = async (
                             "/functions/main.ts"
                         );
 
-                        const modResult = await moduleResult.Main(
+                        let modResult = await moduleResult.Main(
                           log,
                           address,
                           provider,
@@ -210,6 +211,36 @@ const NetworkRouter = async (
                           enforcedGas,
                           otfSettings,
                         );
+
+                        if (
+                          otfSettings.retryOnFailure === true ||
+                          networkSettings.retryOnFailureForAll === true
+                        ) {
+                          let p = 1;
+                          while (
+                            modResult === false &&
+                            p <= networkSettings.retryLimiter - 1
+                          ) {
+                            log.info(
+                              "[Module: " +
+                                specificFunctionData[modu].moduleName +
+                                "]: Retrying attempt " +
+                                p +
+                                ".",
+                            );
+
+                            modResult = await moduleResult.Main(
+                              log,
+                              address,
+                              provider,
+                              signer,
+                              enforcedGas,
+                              otfSettings,
+                            );
+
+                            p++;
+                          }
+                        }
 
                         orderResults[z] = modResult;
                       } catch (e) {

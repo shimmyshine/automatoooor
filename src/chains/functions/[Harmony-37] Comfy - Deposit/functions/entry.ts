@@ -56,7 +56,7 @@ export const entry = async (
     return false;
   }
 
-  let balanceOf = 0;
+  let balanceOf;
   try {
     balanceOf = await tokenContract.balanceOf(address);
   } catch (e) {
@@ -73,7 +73,7 @@ export const entry = async (
           amountToUse = otfSettings.amt;
         }
       } else if (otfSettings.amtType == "percent") {
-        amountToUse = Math.floor(amountToUse * otfSettings.amt);
+        amountToUse = amountToUse.mul(otfSettings.amt);
       }
 
       try {

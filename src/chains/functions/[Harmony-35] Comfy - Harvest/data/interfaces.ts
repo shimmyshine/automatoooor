@@ -3,4 +3,6 @@ export interface Contracts {
   CShareRewardPool: string;
 }
 
-export interface OTFSettings {}
+export interface OTFSettings {
+  harvestPool: string;
+}

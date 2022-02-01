@@ -17,6 +17,8 @@ export const telosSettings: NetworkSettingsBO = {
   gasPriceEnforced: 2,
   gasLimitEnforced: 200000,
   requireAllTrue: false,
+  retryOnFailureForAll: false,
+  retryLimiter: 3,
   runPersonalRPCAggregator: false,
   runAggregatorButDontUse: false,
 };

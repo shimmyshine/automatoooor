@@ -37,68 +37,72 @@ export const entry = async (
 
   let rewardsClaimed = 0;
 
-  for await (const poolID of comfyPools) {
-    let rewards = 0;
-    try {
-      rewards = await comfyRewardContract.pendingCOMFY([poolID], address);
-    } catch (e) {
-      log.warn(e);
-    }
-
-    if (rewards > 0) {
+  if (otfSettings.harvestPool == "comfy") {
+    for await (const poolID of comfyPools) {
+      let rewards = 0;
       try {
-        const tx: TransactionResponse = await comfyRewardContract.withdraw(
-          poolID,
-          Zero,
-          { ...systemGas },
-        );
-        await tx.wait(2);
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Harvested " +
-            formatUnits(rewards, 18) +
-            " COMFY from pool ID: " +
-            poolID +
-            ".",
-        );
-        rewardsClaimed += rewards;
+        rewards = await comfyRewardContract.pendingCOMFY([poolID], address);
       } catch (e) {
         log.warn(e);
+      }
+
+      if (rewards > 0) {
+        try {
+          const tx: TransactionResponse = await comfyRewardContract.withdraw(
+            poolID,
+            Zero,
+            { ...systemGas },
+          );
+          await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Harvested " +
+              formatUnits(rewards, 18) +
+              " COMFY from pool ID: " +
+              poolID +
+              ".",
+          );
+          rewardsClaimed += rewards;
+        } catch (e) {
+          log.warn(e);
+        }
       }
     }
   }
 
-  for await (const poolID of csharePools) {
-    let rewards = 0;
-    try {
-      rewards = await cshareRewardContract.pendingShare([poolID], address);
-    } catch (e) {
-      log.warn(e);
-    }
-
-    if (rewards > 0) {
+  if (otfSettings.harvestPool == "cshare") {
+    for await (const poolID of csharePools) {
+      let rewards = 0;
       try {
-        const tx: TransactionResponse = await cshareRewardContract.withdraw(
-          poolID,
-          Zero,
-          { ...systemGas },
-        );
-        await tx.wait(2);
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Harvested " +
-            formatUnits(rewards, 18) +
-            " CSHARE from pool ID: " +
-            poolID +
-            ".",
-        );
-        rewardsClaimed += rewards;
+        rewards = await cshareRewardContract.pendingShare([poolID], address);
       } catch (e) {
         log.warn(e);
+      }
+
+      if (rewards > 0) {
+        try {
+          const tx: TransactionResponse = await cshareRewardContract.withdraw(
+            poolID,
+            Zero,
+            { ...systemGas },
+          );
+          await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Harvested " +
+              formatUnits(rewards, 18) +
+              " CSHARE from pool ID: " +
+              poolID +
+              ".",
+          );
+          rewardsClaimed += rewards;
+        } catch (e) {
+          log.warn(e);
+        }
       }
     }
   }

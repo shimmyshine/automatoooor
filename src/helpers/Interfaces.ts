@@ -55,6 +55,8 @@ export interface NetworkSettingsBO {
   gasPriceEnforced: number;
   gasLimitEnforced: number;
   requireAllTrue: boolean;
+  retryOnFailureForAll: boolean;
+  retryLimiter: number;
   runPersonalRPCAggregator: boolean;
   runAggregatorButDontUse: boolean;
 }

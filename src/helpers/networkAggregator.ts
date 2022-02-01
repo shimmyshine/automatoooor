@@ -19,7 +19,7 @@ export const setupPrivateAggregator = async (
         });
 
         if (req.method !== "POST") {
-          log.warn("[Network Aggregator]: Request method not POST.");
+          //log.warn("[Network Aggregator]: Request method not POST.");
           res.end();
           return;
         }

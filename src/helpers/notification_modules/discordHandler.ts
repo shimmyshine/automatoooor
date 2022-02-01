@@ -1,5 +1,6 @@
 import { settings } from "../../data/settings";
 import { Client, TextChannel } from "discord.js";
+import { log } from "../logAssistor";
 
 let setOK = false;
 let bot: Client<boolean>;
@@ -30,7 +31,12 @@ export function sendDiscordMessage(message: string): void {
       console.log(e);
     }
   } else {
-    initiateBot();
+    try {
+      initiateBot();
+    } catch (e) {
+      log.warn(e);
+    }
+
     setTimeout(() => {
       sendDiscordMessage(message);
     }, 2 * 1000);

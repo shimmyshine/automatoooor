@@ -1,5 +1,6 @@
 import { settings } from "../../data/settings";
 import { Telegraf, TelegrafContext } from "telegraf-ts";
+import { log } from "../logAssistor";
 
 let setOK = false;
 let bot: Telegraf<TelegrafContext>;
@@ -29,7 +30,12 @@ export function sendTelegramMessage(message: string): void {
       settings.notifications.telegram.token !== "" &&
       settings.notifications.telegram.chatID !== ""
     ) {
-      initiateBot();
+      try {
+        initiateBot();
+      } catch (e) {
+        log.warn(e);
+      }
+
       setTimeout(() => {
         sendTelegramMessage(message);
       }, 1 * 1000);

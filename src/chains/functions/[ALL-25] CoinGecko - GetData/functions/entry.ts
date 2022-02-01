@@ -29,7 +29,7 @@ export const entry = async (
           otfSettings.parameters,
         );
 
-        log.info(call);
+        log.info(JSON.stringify(call));
 
         return true;
       } catch (e) {
@@ -45,7 +45,7 @@ export const entry = async (
       try {
         const call = await (client as any)[otfSettings.functionToCall]();
 
-        log.info(call);
+        log.info(JSON.stringify(call));
 
         return true;
       } catch (e) {

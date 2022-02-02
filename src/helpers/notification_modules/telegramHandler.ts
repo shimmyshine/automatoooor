@@ -17,12 +17,48 @@ function initiateBot(): void {
   setOK = true;
 }
 
+function checkSubstr(str: string, size: number): any {
+  const numChunks = Math.ceil(str.length / size);
+  const chunks = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; i++, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+}
+
 export function sendTelegramMessage(message: string): void {
   if (setOK && bot) {
-    try {
-      bot.telegram.sendMessage(settings.notifications.telegram.chatID, message);
-    } catch (e) {
-      console.log(e);
+    if (message.length >= settings.notifications.telegram.maxLength) {
+      const messageChunks = checkSubstr(
+        message,
+        settings.notifications.telegram.maxLength,
+      );
+      console.log(messageChunks);
+      if (messageChunks) {
+        for (let i = 0; i < messageChunks.length; i++) {
+          setTimeout(() => {
+            try {
+              bot.telegram.sendMessage(
+                settings.notifications.telegram.chatID,
+                messageChunks[i],
+              );
+            } catch (e) {
+              log.warn(e);
+            }
+          }, 0.5 * 1000);
+        }
+      }
+    } else {
+      try {
+        bot.telegram.sendMessage(
+          settings.notifications.telegram.chatID,
+          message,
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   } else {
     if (

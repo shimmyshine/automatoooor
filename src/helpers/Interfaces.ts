@@ -15,11 +15,13 @@ export interface Notifications {
     active: boolean;
     token: string;
     chatID: string;
+    maxLength: number;
   };
   discord: {
     active: boolean;
     token: string;
     channelID: string;
+    maxLength: number;
   };
 }
 
@@ -59,6 +61,8 @@ export interface NetworkSettingsBO {
   retryLimiter: number;
   runPersonalRPCAggregator: boolean;
   runAggregatorButDontUse: boolean;
+  randomizeGas: [boolean, boolean];
+  randomizeGasWindow: number;
 }
 
 export interface OTFSettings {

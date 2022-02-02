@@ -169,13 +169,6 @@ const NetworkRouter = async (
                         typeof otfSettings.overridePrice !== "undefined"
                       ) {
                         otfOverrides.gasPrice = otfSettings.overridePrice;
-                        log.info(
-                          "[Module: " +
-                            specificFunctionData[modu].moduleName +
-                            "]: Overriding gasPrice with " +
-                            otfSettings.overridePrice +
-                            " wei.",
-                        );
                       }
                       if (
                         typeof otfSettings !== "undefined" &&
@@ -195,6 +188,19 @@ const NetworkRouter = async (
                         networkSettings.name,
                         otfOverrides,
                       );
+
+                      if (
+                        typeof otfSettings !== "undefined" &&
+                        typeof otfSettings.overridePrice !== "undefined"
+                      ) {
+                        log.info(
+                          "[Module: " +
+                            specificFunctionData[modu].moduleName +
+                            "]: Overriding gasPrice with " +
+                            enforcedGas.gasPrice +
+                            " wei.",
+                        );
+                      }
 
                       try {
                         moduleResult = await import(

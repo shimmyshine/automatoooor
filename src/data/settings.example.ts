@@ -40,6 +40,7 @@ export const settings: Settings = {
           ? process.env.TELEGRAM_TOKEN
           : "",
       chatID: "",
+      maxLength: 4000,
     },
     discord: {
       active: false,
@@ -48,6 +49,7 @@ export const settings: Settings = {
           ? process.env.DISCORD_TOKEN
           : "",
       channelID: "",
+      maxLength: 1900,
     },
   },
 };

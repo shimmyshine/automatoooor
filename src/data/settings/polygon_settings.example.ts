@@ -19,4 +19,6 @@ export const polygonSettings: NetworkSettingsBO = {
   requireAllTrue: false,
   runPersonalRPCAggregator: false,
   runAggregatorButDontUse: false,
+  randomizeGas: [false, false],
+  randomizeGasWindow: 0,
 };

@@ -21,4 +21,6 @@ export const telosSettings: NetworkSettingsBO = {
   retryLimiter: 3,
   runPersonalRPCAggregator: false,
   runAggregatorButDontUse: false,
+  randomizeGas: [false, false],
+  randomizeGasWindow: 0,
 };

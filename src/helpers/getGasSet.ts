@@ -11,7 +11,18 @@ export const getGasSettings = (
   const toReturn: gasInterface = {};
 
   if (settings.networks[chainName].gasPriceEnforced > 0) {
-    toReturn.gasPrice = settings.networks[chainName].gasPriceEnforced;
+    if (settings.networks[chainName].randomizeGas[0]) {
+      const min =
+        settings.networks[chainName].gasPriceEnforced -
+        settings.networks[chainName].randomizeGasWindow;
+      const max =
+        settings.networks[chainName].gasPriceEnforced +
+        settings.networks[chainName].randomizeGasWindow;
+      const gasToUse = Math.floor(min + Math.random() * (max + 1 - min));
+      toReturn.gasPrice = gasToUse;
+    } else {
+      toReturn.gasPrice = settings.networks[chainName].gasPriceEnforced;
+    }
   }
 
   if (settings.networks[chainName].gasLimitEnforced > 0) {
@@ -20,7 +31,18 @@ export const getGasSettings = (
 
   if (otfOverrides) {
     if (otfOverrides.gasPrice && otfOverrides.gasPrice > 0) {
-      toReturn.gasPrice = otfOverrides.gasPrice;
+      if (settings.networks[chainName].randomizeGas[1]) {
+        const min =
+          otfOverrides.gasPrice -
+          settings.networks[chainName].randomizeGasWindow;
+        const max =
+          otfOverrides.gasPrice +
+          settings.networks[chainName].randomizeGasWindow;
+        const gasToUse = Math.floor(min + Math.random() * (max + 1 - min));
+        toReturn.gasPrice = gasToUse;
+      } else {
+        toReturn.gasPrice = otfOverrides.gasPrice;
+      }
     }
 
     if (otfOverrides.gasLimit && otfOverrides.gasLimit > 0) {

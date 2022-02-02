@@ -18,27 +18,41 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  if (otfSettings.functionToCall && otfSettings.parameters) {
-    const client = new CoinGeckoClient({
-      timeout: otfSettings.timeout ? otfSettings.timeout : 30 * 1000,
-    });
+  if (otfSettings.functionToCall) {
+    if (otfSettings.parameters) {
+      const client = new CoinGeckoClient({
+        timeout: otfSettings.timeout ? otfSettings.timeout : 30 * 1000,
+      });
 
-    try {
-      const call = await eval(
-        "client." +
-          otfSettings.functionToCall +
-          "(" +
-          { ...otfSettings.parameters } +
-          ")",
-      );
+      try {
+        const call = await (client as any)[otfSettings.functionToCall](
+          otfSettings.parameters,
+        );
 
-      log.info(call);
+        log.info(JSON.stringify(call));
 
-      return true;
-    } catch (e) {
-      log.warn(e);
+        return true;
+      } catch (e) {
+        log.warn(e);
 
-      return false;
+        return false;
+      }
+    } else {
+      const client = new CoinGeckoClient({
+        timeout: otfSettings.timeout ? otfSettings.timeout : 30 * 1000,
+      });
+
+      try {
+        const call = await (client as any)[otfSettings.functionToCall]();
+
+        log.info(JSON.stringify(call));
+
+        return true;
+      } catch (e) {
+        log.warn(e);
+
+        return false;
+      }
     }
   } else {
     return false;

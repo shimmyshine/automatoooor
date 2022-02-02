@@ -225,7 +225,7 @@ const NetworkRouter = async (
                           let p = 1;
                           while (
                             modResult === false &&
-                            p <= networkSettings.retryLimiter - 1
+                            p <= networkSettings.retryLimiter
                           ) {
                             log.info(
                               "[Module: " +

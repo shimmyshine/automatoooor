@@ -16,12 +16,25 @@ export interface Notifications {
     token: string;
     chatID: string;
     maxLength: number;
+    commands: {
+      commandsEnabled: boolean;
+      individualCommands: {
+        shutdownActive: boolean;
+      };
+    };
   };
   discord: {
     active: boolean;
     token: string;
     channelID: string;
     maxLength: number;
+    commands: {
+      commandsEnabled: boolean;
+      commandsPrefix: string;
+      individualCommands: {
+        shutdownActive: boolean;
+      };
+    };
   };
 }
 

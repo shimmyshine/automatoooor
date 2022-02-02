@@ -41,6 +41,12 @@ export const settings: Settings = {
           : "",
       chatID: "",
       maxLength: 4000,
+      commands: {
+        commandsEnabled: true,
+        individualCommands: {
+          shutdownActive: true,
+        },
+      },
     },
     discord: {
       active: false,
@@ -50,6 +56,13 @@ export const settings: Settings = {
           : "",
       channelID: "",
       maxLength: 1900,
+      commands: {
+        commandsEnabled: true,
+        commandsPrefix: "::",
+        individualCommands: {
+          shutdownActive: true,
+        },
+      },
     },
   },
 };

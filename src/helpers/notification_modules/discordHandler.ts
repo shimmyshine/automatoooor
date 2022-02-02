@@ -7,11 +7,39 @@ let bot: Client<boolean>;
 
 function initiateBot(): void {
   bot = new Client({
-    intents: [],
+    intents: ["GUILDS", "GUILD_MESSAGES"],
   });
 
   bot.on("ready", () => {
     setOK = true;
+  });
+
+  bot.on("messageCreate", (message) => {
+    if (message.author.bot) return;
+    if (!settings.notifications.discord.commands.commandsEnabled) return;
+    if (
+      !message.content.startsWith(
+        settings.notifications.discord.commands.commandsPrefix,
+      )
+    )
+      return;
+
+    const commandBody = message.content.slice(
+      settings.notifications.discord.commands.commandsPrefix.length,
+    );
+    const args = commandBody.split(" ");
+    const command = args.shift()?.toLowerCase();
+
+    if (
+      command === "shutdown" &&
+      settings.notifications.discord.commands.individualCommands.shutdownActive
+    ) {
+      log.info("Shutting down Automatoooor.");
+
+      setTimeout(() => {
+        process.kill(0);
+      }, 1 * 1000);
+    }
   });
 
   bot.login(settings.notifications.discord.token);

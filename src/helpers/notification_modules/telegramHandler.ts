@@ -12,6 +12,27 @@ function initiateBot(): void {
       : "",
   );
 
+  bot.command("shutdown", async (ctx, next) => {
+    try {
+      if (!settings.notifications.telegram.commands.commandsEnabled) return;
+
+      if (
+        settings.notifications.telegram.commands.individualCommands
+          .shutdownActive
+      ) {
+        log.info("Shutting down Automatoooor.");
+
+        setTimeout(() => {
+          process.kill(0);
+        }, 1 * 1000);
+      }
+      await next();
+    } catch (e) {
+      log.warn(e);
+      ctx.reply("Error");
+    }
+  });
+
   bot.launch();
 
   setOK = true;

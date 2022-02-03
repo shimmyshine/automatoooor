@@ -5,6 +5,7 @@ export interface Contracts {
   ComfyOneLP: string;
   CShare: string;
   CShareOneLP: string;
+  ZenDen: string;
 }
 
 export interface OTFSettings {

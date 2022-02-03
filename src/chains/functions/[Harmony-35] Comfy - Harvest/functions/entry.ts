@@ -9,6 +9,7 @@ import { contracts } from "../data/contracts";
 import { CShareRewardPool } from "../data/contract_abis/CShareRewardPool";
 import { formatUnits } from "ethers/lib/utils";
 import { Zero } from "@ethersproject/constants";
+import { ZenDenABI } from "../data/contract_abis/ZenDen";
 
 export const entry = async (
   log: Logger,
@@ -22,22 +23,60 @@ export const entry = async (
   const thisInfo = moduleInfo;
 
   // Code Execution Here
-  const comfyPools = [0];
-  const comfyRewardContract = new Contract(
-    contracts.ComfyRewardPool,
-    ComfyRewardPool,
-    signer,
-  );
-  const csharePools = [0, 1];
-  const cshareRewardContract = new Contract(
-    contracts.CShareRewardPool,
-    CShareRewardPool,
-    signer,
-  );
-
   let rewardsClaimed = 0;
 
+  if (otfSettings.harvestPool == "zenden") {
+    const zenDenContract = new Contract(contracts.ZenDen, ZenDenABI, signer);
+
+    let rewards = 0;
+    try {
+      rewards = await zenDenContract.earned(address);
+    } catch (e) {
+      log.warn(e);
+    }
+
+    let canClaim = false;
+    try {
+      canClaim = await zenDenContract.canClaimReward(address);
+    } catch (e) {
+      log.warn(e);
+    }
+
+    if (rewards > 0 && canClaim) {
+      try {
+        const tx: TransactionResponse = await zenDenContract.claimReward({
+          ...systemGas,
+        });
+        await tx.wait(2);
+
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Harvested " +
+            formatUnits(rewards, 18) +
+            " COMFY from the Zen Den.",
+        );
+        rewardsClaimed += rewards;
+      } catch (e) {
+        log.warn(e);
+      }
+    } else {
+      log.info(
+        "[Module: " +
+          thisInfo.moduleName +
+          "]: Failed harvesting COMFY from the Zen Den.  Balance < 0.",
+      );
+    }
+  }
+
   if (otfSettings.harvestPool == "comfy") {
+    const comfyPools = [0];
+    const comfyRewardContract = new Contract(
+      contracts.ComfyRewardPool,
+      ComfyRewardPool,
+      signer,
+    );
+
     for await (const poolID of comfyPools) {
       let rewards = 0;
       try {
@@ -68,11 +107,26 @@ export const entry = async (
         } catch (e) {
           log.warn(e);
         }
+      } else {
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Failed harvesting COMFY from Pool ID " +
+            poolID +
+            ".  Balance < 0.",
+        );
       }
     }
   }
 
   if (otfSettings.harvestPool == "cshare") {
+    const csharePools = [0, 1];
+    const cshareRewardContract = new Contract(
+      contracts.CShareRewardPool,
+      CShareRewardPool,
+      signer,
+    );
+
     for await (const poolID of csharePools) {
       let rewards = 0;
       try {
@@ -103,6 +157,14 @@ export const entry = async (
         } catch (e) {
           log.warn(e);
         }
+      } else {
+        log.info(
+          "[Module: " +
+            thisInfo.moduleName +
+            "]: Failed harvesting CSHARE from Pool ID " +
+            poolID +
+            ".  Balance < 0.",
+        );
       }
     }
   }

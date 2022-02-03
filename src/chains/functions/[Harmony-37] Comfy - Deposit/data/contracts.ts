@@ -7,4 +7,5 @@ export const contracts: Contracts = {
   ComfyOneLP: "0xf2d9e493a280545699e3c07aee22eae9ef24ddb7",
   CShare: "0x3cb98cacd44ee77eb35e99eb74ace91bf550c964",
   CShareOneLP: "0x8fd44a4fb89e26a97b0edf99535236d415d03e50",
+  ZenDen: "0x108426718e67da46e09e841bc4e8430a824bdafc",
 };

@@ -10,6 +10,7 @@ import moduleSettings from "../settings";
 import { ComfyRewardPool } from "../data/contract_abis/ComfyRewardPool";
 import { ComfyABI } from "../data/contract_abis/Comfy";
 import { CShareABI } from "../data/contract_abis/CShare";
+import { ZenDenABI } from "../data/contract_abis/ZenDen";
 
 export const entry = async (
   log: Logger,
@@ -51,6 +52,7 @@ export const entry = async (
     );
   } else if (otfSettings.contractPreference == "zenden") {
     tokenContract = new Contract(contracts.CShare, CShareABI, signer);
+    poolContract = new Contract(contracts.ZenDen, ZenDenABI, signer);
     tokenName = "CSHARE";
   } else {
     return false;
@@ -77,22 +79,40 @@ export const entry = async (
       }
 
       try {
-        const tx: TransactionResponse = await poolContract.deposit(
-          otfSettings.poolID,
-          amountToUse,
-          { ...systemGas },
-        );
-        await tx.wait(2);
+        if (otfSettings.contractPreference == "zenden") {
+          const tx: TransactionResponse = await poolContract.stake(
+            amountToUse,
+            { ...systemGas },
+          );
+          await tx.wait(2);
 
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Deposited " +
-            formatUnits(amountToUse, 18) +
-            " " +
-            tokenName +
-            ".",
-        );
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Staked " +
+              formatUnits(amountToUse, 18) +
+              " " +
+              tokenName +
+              ".",
+          );
+        } else {
+          const tx: TransactionResponse = await poolContract.deposit(
+            otfSettings.poolID,
+            amountToUse,
+            { ...systemGas },
+          );
+          await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Deposited " +
+              formatUnits(amountToUse, 18) +
+              " " +
+              tokenName +
+              ".",
+          );
+        }
       } catch (e) {
         log.warn(e);
         return false;

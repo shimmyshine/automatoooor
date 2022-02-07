@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 9,
-  moduleName: "Viperswap - Claim Rewards",
+  moduleName: "ViperSwap - Claim Rewards",
   moduleDescription:
     "Claims rewards from any eligibile pools, xviper or locked balance.",
   moduleSettings: settings,

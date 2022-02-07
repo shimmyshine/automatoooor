@@ -1,6 +1,6 @@
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
-import { Contract, Wallet } from "ethers";
+import { BigNumber, Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -60,7 +60,7 @@ export const entry = async (
           "[Module: " +
             thisInfo.moduleName +
             "]: Claimed " +
-            formatUnits(claimableBalance, 18) +
+            claimableBalance / 10 ** 18 +
             " VIPER from the locked balance.",
         );
         totalClaimable += claimableBalance;
@@ -94,21 +94,19 @@ export const entry = async (
     }
 
     const rewardsCount = [];
-    let claimableRewards = 0;
+    let claimedRewards = 0;
 
-    for (let i = 1; i <= poolLength; i++) {
-      let poolReward = 0;
+    for (let i = 1; i < poolLength; i++) {
+      let poolReward;
       try {
-        poolReward = await masterBreederContract.poolReward(i, address, {
-          ...systemGas,
-        });
+        poolReward = await masterBreederContract.pendingReward(i, address);
       } catch (e) {
         log.warn(e);
       }
 
       if (poolReward > 0) {
         rewardsCount.push(i);
-        claimableRewards += poolReward;
+        claimedRewards += poolReward * (10 ^ 18);
       }
     }
 
@@ -124,12 +122,12 @@ export const entry = async (
           "[Module: " +
             thisInfo.moduleName +
             "]: Claimed " +
-            formatUnits(claimableRewards, 18) +
+            claimedRewards / 10 ** 18 +
             " VIPER from the following pool IDs: " +
             poolIDReadout(rewardsCount) +
             ".",
         );
-        totalClaimable += claimableRewards;
+        totalClaimable += claimedRewards;
       } catch (e) {
         log.warn(e);
       }

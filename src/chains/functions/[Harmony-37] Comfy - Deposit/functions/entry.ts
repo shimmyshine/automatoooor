@@ -93,7 +93,7 @@ export const entry = async (
               formatUnits(amountToUse, 18) +
               " " +
               tokenName +
-              ".",
+              " in the Zen Den.",
           );
         } else {
           const tx: TransactionResponse = await poolContract.deposit(

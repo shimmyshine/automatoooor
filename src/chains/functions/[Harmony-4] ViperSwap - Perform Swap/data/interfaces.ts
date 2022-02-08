@@ -3,14 +3,13 @@ export interface Contracts {
 }
 
 export interface OTFSettings {
+  swapMethod: string;
   fromToken: string;
-  fromTokenDecimals: number;
   toToken: string;
-  toTokenDecimals: number;
-  firmToken: string;
   slippage: number;
+  quantityType: string;
   quantity: number;
-  deadline: number;
-  isDeflationary?: string;
+  customRoute?: string[];
+  deadline?: number;
   alternateReceiver?: string;
 }

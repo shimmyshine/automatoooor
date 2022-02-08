@@ -22,27 +22,25 @@ const moduleSettings: ModuleSettings = {
 **Located in ./src/data/CHAIN_settings.ts and are independent for each time the module is loaded.**
 ```
 "GROUP:ORDER:MODULE_ID": {
+          swapMethod: string,
           fromToken: string,
-          fromTokenDecimals: number,
           toToken: string,
-          toTokenDecimals: number,
-          firmToken: string,
           slippage: number,
+          quantityType: string,
           quantity: number,
-          deadline: number;
-          isDeflationary?: string;
-          alternateReceiver?: string;
+          customRoute?: string[],
+          deadline?: number,
+          alternateReceiver?: string,
         },
 ```
 
 ### otfSettings Explained
+* swapMethod: string["swapExactTokensForTokens", "swapExactETHForTokens", "swapExactTokensForETH", "swapExactTokensForTokensSupportingFeeOnTransferTokens", "swapExactETHForTokensSupportingFeeOnTransferTokens", "swapExactTokensForETHSupportingFeeOnTransferTokens"] is the method to call to perform the swap.  Their explanations can be found starting [here](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02#swapexacttokensfortokens): 
 * fromToken: string is the 0x address of the token you're swapping from.  Use "chain_coin" to swap the chain coin (ONE, AVAX, ETH, BNB, etc...)
-* fromTokenDecimals: number is the decimal of the from token.  Use 0 for "chain_coin".
 * toToken: string is the 0x address of the token you're swapping to.  Use "chain_coin" to swap the chain coin (ONE, AVAX, ETH, BNB, etc...)
-* toTokenDecimals: number is the decimal of the to token.  Use 0 for "chain_coin".
-* firmToken: string["fromToken", "toToken"] is the token you want the absolute amount of.  For example, you want 1000 ONE, then you're willing to swap however much jewel for it.  Or you want 1000 jewel, then you're willing to swap however much ONE for it.
 * slippage: number is the slippage you'll accept.  A percent between 0 and 1, where advised to never go above .5
-* quantity: number is the number you want to swap from or to in wei.
-* deadline: number is the amount of time you're willing to wait before the contracts void the swap attempt.  This is tracked from the time the swap is made.  So: 20 * 60 * 1000 is 20 minutes and that would make it 20 minutes from the time the swap is made or transaction is sent.
-* isDeflationary?: string["fromToken", "toToken"] is to tell whether either or both tokens are deflationary (have a tax of some sort).  The (?) means that this can be unset in your otfSettings.
+* quantityType: string["max", "percent", "wei"] is how you would like to calculate the quantity to swap.
+* quantity: number is the number you want to swap from or to.
+* customRoute?: string[] is the exact path you want the swap to hop through.  When using this, put "WETH" in place of "chain_coin".  So for example to hop through the chain coin, it would look like: ["fromToken", "WETH", "toToken"]
+* deadline?: number is the amount of time you're willing to wait before the contracts void the swap attempt.  This is tracked from the time the swap is made.  So: 20 * 60 * 1000 is 20 minutes and that would make it 20 minutes from the time the swap is made or transaction is sent.
 * alternateReceiver?: string is an alternate 0x address to receive the swap other than your wallet.  Do not set this to leave it at your wallet address.

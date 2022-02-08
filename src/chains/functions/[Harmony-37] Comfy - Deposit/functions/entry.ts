@@ -27,7 +27,7 @@ export const entry = async (
   let tokenContract, tokenName;
   let poolContract;
 
-  if (otfSettings.contractPreference == "comfypool") {
+  if (otfSettings.contractPreference.toLowerCase() == "comfypool") {
     tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
     tokenName = "COMFY-ONE LP";
     poolContract = new Contract(
@@ -35,11 +35,11 @@ export const entry = async (
       ComfyRewardPool,
       signer,
     );
-  } else if (otfSettings.contractPreference == "csharepool") {
+  } else if (otfSettings.contractPreference.toLowerCase() == "csharepool") {
     if (otfSettings.tokenToDeposit == "comfyonelp") {
       tokenContract = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
       tokenName = "COMFY-ONE LP";
-    } else if (otfSettings.tokenToDeposit == "cshareonelp") {
+    } else if (otfSettings.tokenToDeposit.toLowerCase() == "cshareonelp") {
       tokenContract = new Contract(contracts.CShareOneLP, CShareABI, signer);
       tokenName = "CSHARE-ONE LP";
     } else {
@@ -50,7 +50,7 @@ export const entry = async (
       CShareRewardPool,
       signer,
     );
-  } else if (otfSettings.contractPreference == "zenden") {
+  } else if (otfSettings.contractPreference.toLowerCase() == "zenden") {
     tokenContract = new Contract(contracts.CShare, CShareABI, signer);
     poolContract = new Contract(contracts.ZenDen, ZenDenABI, signer);
     tokenName = "CSHARE";
@@ -70,16 +70,16 @@ export const entry = async (
     if (poolContract) {
       let amountToUse = balanceOf;
 
-      if (otfSettings.amtType == "wei") {
+      if (otfSettings.amtType.toLowerCase() == "wei") {
         if (otfSettings.amt <= amountToUse) {
           amountToUse = otfSettings.amt;
         }
-      } else if (otfSettings.amtType == "percent") {
+      } else if (otfSettings.amtType.toLowerCase() == "percent") {
         amountToUse = amountToUse.mul(otfSettings.amt);
       }
 
       try {
-        if (otfSettings.contractPreference == "zenden") {
+        if (otfSettings.contractPreference.toLowerCase() == "zenden") {
           const tx: TransactionResponse = await poolContract.stake(
             amountToUse,
             { ...systemGas },

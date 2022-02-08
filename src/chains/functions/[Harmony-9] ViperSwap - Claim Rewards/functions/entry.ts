@@ -1,6 +1,5 @@
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
-import { formatUnits } from "@ethersproject/units";
-import { BigNumber, Contract, Wallet } from "ethers";
+import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";

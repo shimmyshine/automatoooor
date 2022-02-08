@@ -18,7 +18,7 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  let epoch = null;
+  let epoch;
   try {
     epoch = await new Contract(
       contracts.StakingDistributor,

@@ -190,19 +190,21 @@ export const entry = async (
             signer,
           ).wrap(qtyToUse, { ...systemGas });
           await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              formatUnits(qtyToUse, 9) +
+              " sWAGMI to wsWAGMI.",
+          );
+
+          return true;
         } catch (e) {
           log.warn(e);
+
+          return false;
         }
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            formatUnits(qtyToUse, 9) +
-            " sWAGMI to wsWAGMI.",
-        );
-
-        return true;
       } else if (otfSettings.type.toLowerCase() == "unwrap") {
         try {
           const tx: TransactionResponse = await new Contract(
@@ -210,21 +212,22 @@ export const entry = async (
             wsWAGMIABI,
             signer,
           ).unwrap(String(qtyToUse), { ...systemGas });
-
           await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              qtyToUse / 10 ** 18 +
+              " wsWAGMI to sWAGMI.",
+          );
+
+          return true;
         } catch (e) {
           log.warn(e);
+
+          return false;
         }
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            qtyToUse / 10 ** 18 +
-            " wsWAGMI to sWAGMI.",
-        );
-
-        return true;
       } else {
         return false;
       }

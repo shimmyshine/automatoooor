@@ -69,7 +69,7 @@ export const entry = async (
     }
   }
 
-  if (otfSettings.harvestPool == "comfy") {
+  if (otfSettings.harvestPool.toLowerCase() == "comfy") {
     const comfyPools = [0];
     const comfyRewardContract = new Contract(
       contracts.ComfyRewardPool,
@@ -119,7 +119,7 @@ export const entry = async (
     }
   }
 
-  if (otfSettings.harvestPool == "cshare") {
+  if (otfSettings.harvestPool.toLowerCase() == "cshare") {
     const csharePools = [0, 1];
     const cshareRewardContract = new Contract(
       contracts.CShareRewardPool,

@@ -27,11 +27,11 @@ export const entry = async (
   let contractOut, contractOutName, contractOutAddress;
   let balanceOf;
 
-  if (otfSettings.tokenIn == "comfy") {
+  if (otfSettings.tokenIn.toLowerCase() == "comfy") {
     contractIn = new Contract(contracts.Comfy, ComfyABI, signer);
     contractInName = "COMFY";
     contractInAddress = contracts.Comfy;
-  } else if (otfSettings.tokenIn == "cshare") {
+  } else if (otfSettings.tokenIn.toLowerCase() == "cshare") {
     contractIn = new Contract(contracts.CShare, CShareABI, signer);
     contractInName = "CSHARE";
     contractInAddress = contracts.CShare;
@@ -50,11 +50,11 @@ export const entry = async (
     return false;
   }
 
-  if (otfSettings.tokenOut == "comfyonelp") {
+  if (otfSettings.tokenOut.toLowerCase() == "comfyonelp") {
     contractOut = new Contract(contracts.ComfyOneLP, ComfyABI, signer);
     contractOutName = "COMFY-ONE LP";
     contractOutAddress = contracts.ComfyOneLP;
-  } else if (otfSettings.tokenOut == "cshareonelp") {
+  } else if (otfSettings.tokenOut.toLowerCase() == "cshareonelp") {
     contractOut = new Contract(contracts.CShareOneLP, CShareABI, signer);
     contractOutName = "CSHARE-ONE LP";
     contractOutAddress = contracts.CShareOneLP;
@@ -68,11 +68,11 @@ export const entry = async (
   if (balanceOf > 0) {
     let amountToUse = balanceOf;
 
-    if (otfSettings.amtType == "wei") {
+    if (otfSettings.amtType.toLowerCase() == "wei") {
       if (otfSettings.amt <= amountToUse) {
         amountToUse = otfSettings.amt;
       }
-    } else if (otfSettings.amtType == "percent") {
+    } else if (otfSettings.amtType.toLowerCase() == "percent") {
       amountToUse = amountToUse.mul(otfSettings.amt);
     }
 

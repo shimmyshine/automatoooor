@@ -5,7 +5,6 @@ import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
 import { StakingABI } from "../data/contract_abis/Staking";
-import { StakingDistributorABI } from "../data/contract_abis/StakingDistributor";
 import { StakingHelperABI } from "../data/contract_abis/StakingHelper";
 import { sWAGMIABI } from "../data/contract_abis/sWAGMI";
 import { WAGMIABI } from "../data/contract_abis/WAGMI";
@@ -49,6 +48,8 @@ export const entry = async (
     } catch (e) {
       log.warn(e);
     }
+  } else {
+    return false;
   }
 
   if (otfSettings.qtyType.toLowerCase() == "max") {
@@ -166,6 +167,8 @@ export const entry = async (
     }
 
     clearToProceed = true;
+  } else {
+    return false;
   }
 
   if (clearToProceed) {
@@ -177,21 +180,22 @@ export const entry = async (
             StakingHelperABI,
             signer,
           ).stake(qtyToUse, address, { ...systemGas });
-
           await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              formatUnits(qtyToUse, 9) +
+              " WAGMI to sWAGMI.",
+          );
+
+          return true;
         } catch (e) {
           log.warn(e);
+
+          return false;
         }
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            formatUnits(qtyToUse, 9) +
-            " WAGMI to sWAGMI.",
-        );
-
-        return true;
       } else if (otfSettings.type.toLowerCase() == "unstake") {
         try {
           const tx: TransactionResponse = await new Contract(
@@ -199,21 +203,22 @@ export const entry = async (
             StakingABI,
             signer,
           ).unstake(qtyToUse, false, { ...systemGas });
-
           await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Converted " +
+              formatUnits(qtyToUse, 9) +
+              " sWAGMI to WAGMI.",
+          );
+
+          return true;
         } catch (e) {
           log.warn(e);
+
+          return false;
         }
-
-        log.info(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: Converted " +
-            formatUnits(qtyToUse, 9) +
-            " sWAGMI to WAGMI.",
-        );
-
-        return true;
       } else {
         return false;
       }

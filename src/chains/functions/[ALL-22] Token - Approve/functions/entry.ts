@@ -1,4 +1,4 @@
-import { BaseProvider } from "@ethersproject/providers";
+import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -23,32 +23,30 @@ export const entry = async (
     signer,
   );
 
-  let allowanceAttempt = null;
   try {
-    allowanceAttempt = await contractToUse.approve(
+    const tx: TransactionResponse = await contractToUse.approve(
       otfSettings.contractAddress,
       String(otfSettings.quantity),
       {
         ...systemGas,
       },
     );
+    await tx.wait(2);
+
+    log.info(
+      "[Module: " +
+        thisInfo.moduleName +
+        "] approved " +
+        otfSettings.contractAddress +
+        " to transfer " +
+        otfSettings.quantity / 10 ** otfSettings.decimal +
+        " tokens",
+    );
+
+    return true;
   } catch (e) {
     log.warn(e);
 
     return false;
   }
-
-  await allowanceAttempt.wait(1);
-
-  log.info(
-    "[Module: " +
-      thisInfo.moduleName +
-      "] approved " +
-      otfSettings.contractAddress +
-      " to transfer " +
-      otfSettings.quantity / 10 ** otfSettings.decimal +
-      " tokens",
-  );
-
-  return true;
 };

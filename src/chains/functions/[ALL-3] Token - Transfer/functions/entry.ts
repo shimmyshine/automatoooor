@@ -1,4 +1,4 @@
-import { BaseProvider } from "@ethersproject/providers";
+import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, ethers, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -17,66 +17,63 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  if (otfSettings.type == "token") {
+  if (otfSettings.type.toLowerCase() == "token") {
     const contractToUse = new Contract(
       otfSettings.tokenAddress,
       ERC20ABI,
       signer,
     );
 
-    let transferAttempt = null;
     try {
-      transferAttempt = await contractToUse.transfer(
+      const tx: TransactionResponse = await contractToUse.transfer(
         otfSettings.addressTo,
         String(otfSettings.quantity),
         {
           ...systemGas,
         },
       );
+
+      await tx.wait(2);
+
+      log.info(
+        "[Module: " +
+          thisInfo.moduleName +
+          "] sent " +
+          otfSettings.quantity / 10 ** otfSettings.decimal +
+          " tokens to " +
+          otfSettings.addressTo,
+      );
+
+      return true;
     } catch (e) {
       log.warn(e);
 
       return false;
     }
-
-    await transferAttempt.wait(1);
-
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "] sent " +
-        otfSettings.quantity / 10 ** otfSettings.decimal +
-        " tokens to " +
-        otfSettings.addressTo,
-    );
-
-    return true;
-  } else if (otfSettings.type == "chain_coin") {
-    let transferAttempt = null;
+  } else if (otfSettings.type.toLowerCase() == "chain_coin") {
     try {
-      transferAttempt = await signer.sendTransaction({
+      const tx: TransactionResponse = await signer.sendTransaction({
         to: otfSettings.addressTo,
         value: ethers.utils.parseEther(String(otfSettings.quantity)),
         ...systemGas,
       });
+      await tx.wait(2);
+
+      log.info(
+        "[Module: " +
+          thisInfo.moduleName +
+          "] sent " +
+          (otfSettings.quantity / 10) ** otfSettings.decimal +
+          " coins to " +
+          otfSettings.addressTo,
+      );
+
+      return true;
     } catch (e) {
       log.warn(e);
 
       return false;
     }
-
-    await transferAttempt?.wait(1);
-
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "] sent " +
-        (otfSettings.quantity / 10) ** otfSettings.decimal +
-        " coins to " +
-        otfSettings.addressTo,
-    );
-
-    return true;
   } else {
     return false;
   }

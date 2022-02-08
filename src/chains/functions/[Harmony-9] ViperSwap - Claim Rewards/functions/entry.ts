@@ -6,19 +6,8 @@ import { contracts } from "../data/contracts";
 import { MasterBreederABI } from "../data/contract_abis/MasterBreeder";
 import { ViperABI } from "../data/contract_abis/Viper";
 import { OTFSettings } from "../data/interfaces";
+import { poolIDReadout } from "../helpers/poolIDReadout";
 import moduleSettings from "../settings";
-
-function poolIDReadout(poolIDs: number[]): string {
-  let readout = "";
-  for (let i = 0; i < poolIDs.length; i++) {
-    if (i === 0) {
-      readout += poolIDs[i];
-    } else if (i > 0) {
-      readout += ", " + poolIDs[i];
-    }
-  }
-  return readout;
-}
 
 export const entry = async (
   log: Logger,

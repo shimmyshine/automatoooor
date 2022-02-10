@@ -130,12 +130,6 @@ export const entry = async (
   if (qtyToUse > 0) {
     if (otfSettings.swapMethod.toLowerCase() === "swapexacttokensfortokens") {
       try {
-        log.info("router: " + router);
-        log.info("qtyToUse: " + qtyToUse);
-        log.info("minimumAccepted: " + minimumAccepted);
-        log.info("route: " + route);
-        log.info("toAddress: " + toAddress);
-        log.info("deadline: " + deadline);
         const tx: TransactionResponse = await router.swapExactTokensForTokens(
           qtyToUse,
           minimumAccepted,

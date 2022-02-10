@@ -1,6 +1,7 @@
 /* eslint-disable no-empty */
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, ethers, Wallet } from "ethers";
+import { getBlock } from "helpers/getCurrentBlock";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -19,6 +20,13 @@ export const entry = async (
 ): Promise<boolean> => {
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
+
+  let timestamp = 0;
+  try {
+    timestamp = (await provider.getBlock(provider.blockNumber)).timestamp;
+  } catch (e) {
+    log.warn(e);
+  }
 
   const router = new Contract(
     contracts.viperSwapRouter,
@@ -77,8 +85,8 @@ export const entry = async (
 
   let deadline;
   otfSettings.deadline
-    ? (deadline = Math.floor(otfSettings.deadline / 1000) + 60 * 10)
-    : (deadline = 20 * 60 * 60 * 1000);
+    ? (deadline = timestamp + otfSettings.deadline)
+    : (deadline = timestamp + 20 * 60 * 1000);
   let toAddress;
   otfSettings.alternateReceiver
     ? (toAddress = otfSettings.alternateReceiver)
@@ -111,17 +119,24 @@ export const entry = async (
   }
 
   let amountOut;
+  let minimumAccepted;
   try {
     amountOut = await router.getAmountsOut(qtyToUse, route);
+    minimumAccepted = Math.floor(amountOut[1] * (1 - otfSettings.slippage));
   } catch (e) {
     log.warn(e);
   }
-  const minimumAccepted = amountOut.mul(otfSettings.slippage);
 
   if (qtyToUse > 0) {
     if (otfSettings.swapMethod.toLowerCase() === "swapexacttokensfortokens") {
       try {
-        const tx: TransactionResponse = router.swapExactTokensForTokens(
+        log.info("router: " + router);
+        log.info("qtyToUse: " + qtyToUse);
+        log.info("minimumAccepted: " + minimumAccepted);
+        log.info("route: " + route);
+        log.info("toAddress: " + toAddress);
+        log.info("deadline: " + deadline);
+        const tx: TransactionResponse = await router.swapExactTokensForTokens(
           qtyToUse,
           minimumAccepted,
           route,
@@ -139,7 +154,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",
@@ -155,7 +170,7 @@ export const entry = async (
       otfSettings.swapMethod.toLowerCase() === "swapexactethfortokens"
     ) {
       try {
-        const tx: TransactionResponse = router.swapExactETHForTokens(
+        const tx: TransactionResponse = await router.swapExactETHForTokens(
           minimumAccepted,
           route,
           toAddress,
@@ -176,7 +191,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",
@@ -192,7 +207,7 @@ export const entry = async (
       otfSettings.swapMethod.toLowerCase() === "swapexacttokensforeth"
     ) {
       try {
-        const tx: TransactionResponse = router.swapExactTokensForETH(
+        const tx: TransactionResponse = await router.swapExactTokensForETH(
           qtyToUse,
           minimumAccepted,
           route,
@@ -210,7 +225,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",
@@ -228,7 +243,7 @@ export const entry = async (
     ) {
       try {
         const tx: TransactionResponse =
-          router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+          await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             qtyToUse,
             minimumAccepted,
             route,
@@ -246,7 +261,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",
@@ -264,7 +279,7 @@ export const entry = async (
     ) {
       try {
         const tx: TransactionResponse =
-          router.swapExactETHForTokensSupportingFeeOnTransferTokens(
+          await router.swapExactETHForTokensSupportingFeeOnTransferTokens(
             minimumAccepted,
             route,
             toAddress,
@@ -285,7 +300,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",
@@ -303,7 +318,7 @@ export const entry = async (
     ) {
       try {
         const tx: TransactionResponse =
-          router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+          await router.swapExactTokensForETHSupportingFeeOnTransferTokens(
             qtyToUse,
             minimumAccepted,
             route,
@@ -321,7 +336,7 @@ export const entry = async (
             " " +
             fromTokenName +
             " to ~" +
-            amountOut / 10 ** toTokenDecimals +
+            amountOut[1] / 10 ** toTokenDecimals +
             " " +
             toTokenName +
             ".",

@@ -1,6 +1,7 @@
+import { isBigNumberish } from "@ethersproject/bignumber/lib/bignumber";
 import { BaseProvider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
-import { Contract, Wallet } from "ethers";
+import { BigNumber, Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { ERC20ABI } from "../data/contract_abis/erc20";
@@ -18,41 +19,65 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  if (otfSettings.type == "token") {
+  if (otfSettings.type.toLowerCase() == "token") {
     const contractToUse = new Contract(
       otfSettings.tokenAddress,
       ERC20ABI,
       signer,
     );
 
-    const decimals = await contractToUse.decimals();
+    let decimals;
+    try {
+      decimals = await contractToUse.decimals();
+    } catch (e) {
+      log.warn(e);
+    }
 
-    const tokenSymbol = await contractToUse.symbol();
+    let tokenSymbol;
+    try {
+      tokenSymbol = await contractToUse.symbol();
+    } catch (e) {
+      log.warn(e);
+    }
 
-    const balanceOfAttempt = await contractToUse.balanceOf(
-      otfSettings.walletAddress,
-    );
+    let balanceOfAttempt;
+    try {
+      balanceOfAttempt = await contractToUse.balanceOf(
+        otfSettings.walletAddress,
+      );
+    } catch (e) {
+      log.warn(e);
+    }
 
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "] " +
-        otfSettings.walletAddress +
-        " holds " +
-        (await balanceOfAttempt) / 10 ** (await decimals) +
-        " " +
-        (await tokenSymbol),
-    );
-  } else if (otfSettings.type == "chain_coin") {
-    const balance = await provider.getBalance(otfSettings.walletAddress);
+    if (decimals && tokenSymbol && balanceOfAttempt) {
+      log.info(
+        "[Module: " +
+          thisInfo.moduleName +
+          "] " +
+          otfSettings.walletAddress +
+          " holds " +
+          balanceOfAttempt / 10 ** decimals +
+          " " +
+          tokenSymbol,
+      );
+    }
+  } else if (otfSettings.type.toLowerCase() == "chain_coin") {
+    let balance;
+    try {
+      balance = await provider.getBalance(otfSettings.walletAddress);
+    } catch (e) {
+      log.warn(e);
+    }
 
-    log.info(
-      "[Module: " +
-        thisInfo.moduleName +
-        "] " +
-        otfSettings.walletAddress +
-        " holds " +
-        formatUnits(balance, "ether"),
-    );
+    if (isBigNumberish(balance)) {
+      log.info(
+        "[Module: " +
+          thisInfo.moduleName +
+          "] " +
+          otfSettings.walletAddress +
+          " holds " +
+          formatUnits(balance, "ether"),
+      );
+    }
   }
 };

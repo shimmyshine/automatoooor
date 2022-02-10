@@ -1,4 +1,4 @@
-import { BaseProvider } from "@ethersproject/providers";
+import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -24,19 +24,21 @@ export const entry = async (
     xViperABI,
     provider,
   );
+  const viperContract = new Contract(contracts.viperContract, ERC20ABI, signer);
 
-  if (otfSettings.to.toLowerCase() == "to") {
-    const viperBalance = new Contract(
-      contracts.viperContract,
-      ERC20ABI,
-      provider,
-    ).balanceOf(address);
+  let viperBalance;
+  try {
+    viperBalance = await viperContract.balanceOf(address);
+  } catch (e) {
+    log.warn(e);
+  }
 
-    let quantityToUse = 0;
+  if (viperBalance > 0) {
+    let quantityToUse;
 
-    if (otfSettings.qtyType.toLowerCase() == "max") {
+    if (otfSettings.qtyType.toLowerCase() === "max") {
       quantityToUse = viperBalance;
-    } else if (otfSettings.qtyType.toLowerCase() == "wei") {
+    } else if (otfSettings.qtyType.toLowerCase() === "wei") {
       if (otfSettings.qty > viperBalance) {
         quantityToUse = viperBalance;
 
@@ -48,82 +50,74 @@ export const entry = async (
       } else {
         quantityToUse = otfSettings.qty;
       }
-    } else if (otfSettings.qtyType.toLowerCase() == "percent") {
-      quantityToUse = viperBalance * otfSettings.qty;
+    } else if (otfSettings.qtyType.toLowerCase() === "percent") {
+      quantityToUse = viperBalance.mul(otfSettings.qty);
     }
 
     if (quantityToUse > 0) {
-      let attemptToEnter = null;
-      try {
-        attemptToEnter = xViperContractToUse.enter(quantityToUse, {
-          ...systemGas,
-        });
-      } catch (e) {
-        log.warn(e);
-      }
+      if (otfSettings.to.toLowerCase() === "to") {
+        try {
+          const tx: TransactionResponse = xViperContractToUse.enter(
+            quantityToUse,
+            {
+              ...systemGas,
+            },
+          );
+          await tx.wait(2);
 
-      await attemptToEnter.wait(1);
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: has deposited " +
+              quantityToUse * 10 ** 18 +
+              " VIPER into the ViperPit",
+          );
 
-      log.info(
-        "[Module: " +
-          thisInfo.moduleName +
-          "]: has deposited " +
-          quantityToUse * 10 ** 18 +
-          " VIPER into the ViperPit",
-      );
+          return true;
+        } catch (e) {
+          log.warn(e);
 
-      return true;
-    } else {
-      return false;
-    }
-  } else if (otfSettings.to.toLowerCase() == "from") {
-    const xViperBalance = xViperContractToUse.balanceOf(address);
+          return false;
+        }
+      } else if (otfSettings.to.toLowerCase() === "from") {
+        try {
+          const tx: TransactionResponse = xViperContractToUse.leave(
+            quantityToUse,
+            {
+              ...systemGas,
+            },
+          );
+          await tx.wait(2);
 
-    let quantityToUse = 0;
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: has withdrawn " +
+              quantityToUse * 10 ** 18 +
+              " xVIPER from the ViperPit",
+          );
 
-    if (otfSettings.qtyType.toLowerCase() == "max") {
-      quantityToUse = xViperBalance;
-    } else if (otfSettings.qtyType.toLowerCase() == "wei") {
-      if (otfSettings.qty > xViperBalance) {
-        quantityToUse = xViperBalance;
+          return true;
+        } catch (e) {
+          log.warn(e);
 
-        log.warn(
-          "[Module: " +
-            thisInfo.moduleName +
-            "]: The balance told to be used was greater than what's available for xVIPER.",
-        );
+          return false;
+        }
       } else {
-        quantityToUse = otfSettings.qty;
+        log.info(
+          "[Module: " + thisInfo.moduleName + "]: unrecognized 'to' command.",
+        );
+
+        return false;
       }
-    } else if (otfSettings.qtyType.toLowerCase() == "percent") {
-      quantityToUse = xViperBalance * otfSettings.qty;
-    }
-
-    if (quantityToUse > 0) {
-      let attemptToLeave = null;
-      try {
-        attemptToLeave = xViperContractToUse.leave(quantityToUse, {
-          ...systemGas,
-        });
-      } catch (e) {
-        log.warn(e);
-      }
-
-      await attemptToLeave.wait(1);
-
-      log.info(
-        "[Module: " +
-          thisInfo.moduleName +
-          "]: has withdrawn " +
-          quantityToUse * 10 ** 18 +
-          " xVIPER from the ViperPit",
-      );
-
-      return true;
     } else {
+      log.info("[Module: " + thisInfo.moduleName + "]: balance < 0.");
+
       return false;
     }
   } else {
+    log.info("[Module: " + thisInfo.moduleName + "]: balance < 0.");
+
     return false;
   }
 };

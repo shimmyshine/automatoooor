@@ -20,6 +20,8 @@ export const entry = async (
     "[Module: " +
       thisInfo.moduleName +
       "]: pausing for " +
+      otfSettings.interval +
+      " milliseconds or " +
       otfSettings.interval / 1000 +
       " seconds.",
   );

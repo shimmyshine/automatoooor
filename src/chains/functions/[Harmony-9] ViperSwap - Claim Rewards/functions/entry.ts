@@ -23,7 +23,10 @@ export const entry = async (
   // Code Execution Here
   let totalClaimable = 0;
 
-  if (otfSettings.claimType === "lppools" || otfSettings.claimType === "all") {
+  if (
+    otfSettings.claimType === "lockedbalance" ||
+    otfSettings.claimType === "all"
+  ) {
     const viperContract = new Contract(
       contracts.viperAddress,
       ViperABI,
@@ -64,10 +67,7 @@ export const entry = async (
     }
   }
 
-  if (
-    otfSettings.claimType === "lockedbalance" ||
-    otfSettings.claimType === "all"
-  ) {
+  if (otfSettings.claimType === "lppools" || otfSettings.claimType === "all") {
     const masterBreederContract = new Contract(
       contracts.masterBreederAddress,
       MasterBreederABI,

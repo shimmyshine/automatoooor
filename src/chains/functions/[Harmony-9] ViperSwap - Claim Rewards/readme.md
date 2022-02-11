@@ -27,4 +27,4 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ### otfSettings Explained
-* claimType: string["lppools", "lockedbalance", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.
+* claimType: string["lppools", "lockedbalance", "community", "vipernest", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.

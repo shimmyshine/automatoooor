@@ -4,10 +4,12 @@ import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
 import { MasterBreederABI } from "../data/contract_abis/MasterBreeder";
+import { CommunityPoolABI } from "../data/contract_abis/CommunityPool";
 import { ViperABI } from "../data/contract_abis/Viper";
 import { OTFSettings } from "../data/interfaces";
 import { poolIDReadout } from "../helpers/poolIDReadout";
 import moduleSettings from "../settings";
+import { ERC20ABI } from "../data/contract_abis/erc20";
 
 export const entry = async (
   log: Logger,
@@ -23,9 +25,144 @@ export const entry = async (
   // Code Execution Here
   let totalClaimable = 0;
 
+  const communityContracts = [
+    contracts.immortlOneToImmortlAddress,
+    contracts.immortlViperToImmortlAddress,
+    contracts.hplayOneToHPLAYAddress,
+  ];
   if (
-    otfSettings.claimType === "lockedbalance" ||
-    otfSettings.claimType === "all"
+    otfSettings.claimType.toLowerCase() === "all" ||
+    otfSettings.claimType.toLowerCase() === "community"
+  ) {
+    for (let i = 0; i < Object.values(communityContracts).length; i++) {
+      const communityContract = new Contract(
+        communityContracts[i],
+        CommunityPoolABI,
+        signer,
+      );
+
+      let pendingReward;
+      try {
+        pendingReward = await communityContract.pendingReward(address);
+      } catch (e) {
+      }
+
+      if (pendingReward > 0) {
+        let rewardToken;
+        try {
+          rewardToken = await communityContract.rewardToken();
+        } catch (e) {
+          log.warn(e);
+        }
+        const rewardContract = new Contract(rewardToken, ERC20ABI, signer);
+        let rewardDecimals;
+        try {
+          rewardDecimals = await rewardContract.decimals();
+        } catch (e) {
+          log.warn(e);
+        }
+        let rewardName;
+        try {
+          rewardName = await rewardContract.symbol();
+        } catch (e) {
+          log.warn(e);
+        }
+
+        try {
+          const tx: TransactionResponse = await communityContract.deposit(0, {
+            ...systemGas,
+          });
+          await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Claimed " +
+              pendingReward / 10 ** rewardDecimals +
+              " " +
+              rewardName +
+              " from a community pool.",
+          );
+
+          totalClaimable += pendingReward;
+        } catch (e) {
+          log.warn(e);
+        }
+      }
+    }
+  }
+
+  const viperNestContracts = [
+    contracts.xViperTowsWAGMIAddress,
+    contracts.wsWAGMIToViperAddress,
+    contracts.xViperToViperAddress,
+    contracts.xViperToCSHAREAddress,
+  ];
+  if (
+    otfSettings.claimType.toLowerCase() === "all" ||
+    otfSettings.claimType.toLowerCase() === "vipernest"
+  ) {
+    for (let i = 0; i < Object.values(viperNestContracts).length; i++) {
+      const viperNestContract = new Contract(
+        viperNestContracts[i],
+        CommunityPoolABI,
+        signer,
+      );
+
+      let pendingReward;
+      try {
+        pendingReward = await viperNestContract.pendingReward(address);
+      } catch (e) {
+      }
+
+      if (pendingReward > 0) {
+        let rewardToken;
+        try {
+          rewardToken = await viperNestContract.rewardToken();
+        } catch (e) {
+          log.warn(e);
+        }
+        const rewardContract = new Contract(rewardToken, ERC20ABI, signer);
+        let rewardDecimals;
+        try {
+          rewardDecimals = await rewardContract.decimals();
+        } catch (e) {
+          log.warn(e);
+        }
+        let rewardName;
+        try {
+          rewardName = await rewardContract.symbol();
+        } catch (e) {
+          log.warn(e);
+        }
+
+        try {
+          const tx: TransactionResponse = await viperNestContract.deposit(0, {
+            ...systemGas,
+          });
+          await tx.wait(2);
+
+          log.info(
+            "[Module: " +
+              thisInfo.moduleName +
+              "]: Claimed " +
+              pendingReward / 10 ** rewardDecimals +
+              " " +
+              rewardName +
+              " from a ViperNest pool.",
+          );
+
+          totalClaimable += pendingReward;
+        } catch (e) {
+          log.warn(e);
+        }
+      }
+    }
+  }
+
+  if (
+    otfSettings.claimType.toLowerCase() === "lockedbalance" ||
+    otfSettings.claimType.toLowerCase() === "all"
   ) {
     const viperContract = new Contract(
       contracts.viperAddress,
@@ -67,7 +204,10 @@ export const entry = async (
     }
   }
 
-  if (otfSettings.claimType === "lppools" || otfSettings.claimType === "all") {
+  if (
+    otfSettings.claimType.toLowerCase() === "lppools" ||
+    otfSettings.claimType.toLowerCase() === "all"
+  ) {
     const masterBreederContract = new Contract(
       contracts.masterBreederAddress,
       MasterBreederABI,

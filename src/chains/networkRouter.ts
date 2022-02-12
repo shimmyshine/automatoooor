@@ -35,6 +35,7 @@ const NetworkRouter = async (
         log,
         networkSettings.aggregateProviders,
         networkSettings.port,
+        networkSettings.name,
       );
     }
   } else if (networkSettings.runPersonalRPCAggregator === true) {
@@ -42,6 +43,7 @@ const NetworkRouter = async (
       log,
       networkSettings.aggregateProviders,
       networkSettings.port,
+      networkSettings.name,
     );
     provider = getProviderLocal(
       networkSettings.name,

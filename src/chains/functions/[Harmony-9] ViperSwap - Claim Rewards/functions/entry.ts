@@ -44,8 +44,7 @@ export const entry = async (
       let pendingReward;
       try {
         pendingReward = await communityContract.pendingReward(address);
-      } catch (e) {
-      }
+      } catch (e) {}
 
       if (pendingReward > 0) {
         let rewardToken;
@@ -112,8 +111,7 @@ export const entry = async (
       let pendingReward;
       try {
         pendingReward = await viperNestContract.pendingReward(address);
-      } catch (e) {
-      }
+      } catch (e) {}
 
       if (pendingReward > 0) {
         let rewardToken;

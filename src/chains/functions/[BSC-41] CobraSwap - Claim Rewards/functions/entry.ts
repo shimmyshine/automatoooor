@@ -5,7 +5,7 @@ import moduleInfo from "..";
 import { contracts } from "../data/contracts";
 import { MasterBreederABI } from "../data/contract_abis/MasterBreeder";
 import { CommunityPoolABI } from "../data/contract_abis/CommunityPool";
-import { ViperABI } from "../data/contract_abis/Viper";
+import { CobraABI } from "../data/contract_abis/Cobra";
 import { OTFSettings } from "../data/interfaces";
 import { poolIDReadout } from "../helpers/poolIDReadout";
 import moduleSettings from "../settings";
@@ -25,31 +25,27 @@ export const entry = async (
   // Code Execution Here
   let totalClaimable = 0;
 
-  const communityContracts = [
-    contracts.immortlOneToImmortlAddress,
-    contracts.immortlViperToImmortlAddress,
-    contracts.hplayOneToHPLAYAddress,
-  ];
+  const cobraNestContracts = [contracts.xCobraToCobraAddress];
   if (
     otfSettings.claimType.toLowerCase() === "all" ||
-    otfSettings.claimType.toLowerCase() === "community"
+    otfSettings.claimType.toLowerCase() === "cobranest"
   ) {
-    for (let i = 0; i < Object.values(communityContracts).length; i++) {
-      const communityContract = new Contract(
-        communityContracts[i],
+    for (let i = 0; i < Object.values(cobraNestContracts).length; i++) {
+      const cobraNestContract = new Contract(
+        cobraNestContracts[i],
         CommunityPoolABI,
         signer,
       );
 
       let pendingReward;
       try {
-        pendingReward = await communityContract.pendingReward(address);
+        pendingReward = await cobraNestContract.pendingReward(address);
       } catch (e) {}
 
       if (pendingReward > 0) {
         let rewardToken;
         try {
-          rewardToken = await communityContract.rewardToken();
+          rewardToken = await cobraNestContract.rewardToken();
         } catch (e) {
           log.warn(e);
         }
@@ -68,7 +64,7 @@ export const entry = async (
         }
 
         try {
-          const tx: TransactionResponse = await communityContract.deposit(0, {
+          const tx: TransactionResponse = await cobraNestContract.deposit(0, {
             ...systemGas,
           });
           await tx.wait(2);
@@ -80,74 +76,7 @@ export const entry = async (
               pendingReward / 10 ** rewardDecimals +
               " " +
               rewardName +
-              " from a community pool.",
-          );
-
-          totalClaimable += pendingReward;
-        } catch (e) {
-          log.warn(e);
-        }
-      }
-    }
-  }
-
-  const viperNestContracts = [
-    contracts.xViperTowsWAGMIAddress,
-    contracts.wsWAGMIToViperAddress,
-    contracts.xViperToViperAddress,
-    contracts.xViperToCSHAREAddress,
-  ];
-  if (
-    otfSettings.claimType.toLowerCase() === "all" ||
-    otfSettings.claimType.toLowerCase() === "vipernest"
-  ) {
-    for (let i = 0; i < Object.values(viperNestContracts).length; i++) {
-      const viperNestContract = new Contract(
-        viperNestContracts[i],
-        CommunityPoolABI,
-        signer,
-      );
-
-      let pendingReward;
-      try {
-        pendingReward = await viperNestContract.pendingReward(address);
-      } catch (e) {}
-
-      if (pendingReward > 0) {
-        let rewardToken;
-        try {
-          rewardToken = await viperNestContract.rewardToken();
-        } catch (e) {
-          log.warn(e);
-        }
-        const rewardContract = new Contract(rewardToken, ERC20ABI, signer);
-        let rewardDecimals;
-        try {
-          rewardDecimals = await rewardContract.decimals();
-        } catch (e) {
-          log.warn(e);
-        }
-        let rewardName;
-        try {
-          rewardName = await rewardContract.symbol();
-        } catch (e) {
-          log.warn(e);
-        }
-
-        try {
-          const tx: TransactionResponse = await viperNestContract.deposit(0, {
-            ...systemGas,
-          });
-          await tx.wait(2);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Claimed " +
-              pendingReward / 10 ** rewardDecimals +
-              " " +
-              rewardName +
-              " from a ViperNest pool.",
+              " from a CobraNest pool.",
           );
 
           totalClaimable += pendingReward;
@@ -162,22 +91,22 @@ export const entry = async (
     otfSettings.claimType.toLowerCase() === "lockedbalance" ||
     otfSettings.claimType.toLowerCase() === "all"
   ) {
-    const viperContract = new Contract(
-      contracts.viperAddress,
-      ViperABI,
+    const cobraContract = new Contract(
+      contracts.cobraAddress,
+      CobraABI,
       signer,
     );
 
     let claimableBalance;
     try {
-      claimableBalance = await viperContract.canUnlockAmount(address);
+      claimableBalance = await cobraContract.canUnlockAmount(address);
     } catch (e) {
       log.warn(e);
     }
 
     if (claimableBalance > 0) {
       try {
-        const tx: TransactionResponse = await viperContract.unlock({
+        const tx: TransactionResponse = await cobraContract.unlock({
           ...systemGas,
         });
         await tx.wait(2);
@@ -187,7 +116,7 @@ export const entry = async (
             thisInfo.moduleName +
             "]: Claimed " +
             claimableBalance / 10 ** 18 +
-            " VIPER from the locked balance.",
+            " COBRA from the locked balance.",
         );
         totalClaimable += claimableBalance;
       } catch (e) {
@@ -197,7 +126,7 @@ export const entry = async (
       log.info(
         "[Module: " +
           thisInfo.moduleName +
-          "]: Failed claiming VIPER from your locked balance.  Balance < 0.",
+          "]: Failed claiming COBRA from your locked balance.  Balance < 0.",
       );
     }
   }
@@ -249,7 +178,7 @@ export const entry = async (
             thisInfo.moduleName +
             "]: Claimed " +
             claimedRewards / 10 ** 18 +
-            " VIPER from the following pool IDs: " +
+            " COBRA from the following pool IDs: " +
             poolIDReadout(rewardsCount) +
             ".",
         );
@@ -261,7 +190,7 @@ export const entry = async (
       log.info(
         "[Module: " +
           thisInfo.moduleName +
-          "]: Failed claiming VIPER from your staked LP Pools.  Balance < 0.",
+          "]: Failed claiming COBRA from your staked LP Pools.  Balance < 0.",
       );
     }
   }

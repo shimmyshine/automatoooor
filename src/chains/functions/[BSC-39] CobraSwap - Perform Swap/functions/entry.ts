@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
-import { Contract, ethers, Wallet } from "ethers";
+import { BigNumber, Contract, ethers, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -28,7 +28,7 @@ export const entry = async (
   }
 
   const router = new Contract(
-    contracts.viperSwapRouter,
+    contracts.cobraSwapRouter,
     UniswapV2Router02,
     signer,
   );
@@ -38,7 +38,7 @@ export const entry = async (
   let fromTokenDecimals;
   if (otfSettings.fromToken.toLowerCase() === "chain_coin") {
     fromTokenDecimals = 18;
-    fromTokenName = "ONE";
+    fromTokenName = "BNB";
     try {
       balanceOfFrom = provider.getBalance(address);
     } catch (e) {
@@ -67,7 +67,7 @@ export const entry = async (
   let toTokenDecimals;
   if (otfSettings.toToken.toLowerCase() === "chain_coin") {
     toTokenDecimals = 18;
-    toTokenName = "ONE";
+    toTokenName = "BNB";
   } else {
     const toToken = new Contract(otfSettings.toToken, ERC20ABI, signer);
     try {
@@ -177,7 +177,7 @@ export const entry = async (
           toAddress,
           deadline,
           {
-            to: contracts.viperSwapRouter,
+            to: contracts.cobraSwapRouter,
             value: ethers.utils.parseEther(String(qtyToUse)),
             ...systemGas,
           },
@@ -286,7 +286,7 @@ export const entry = async (
             toAddress,
             deadline,
             {
-              to: contracts.viperSwapRouter,
+              to: contracts.cobraSwapRouter,
               value: ethers.utils.parseEther(String(qtyToUse)),
               ...systemGas,
             },

@@ -1,9 +1,9 @@
-# Viperswap - Claim Rewards
-Claims rewards from any eligibile pools, xviper or locked balance.
+# Cobraswap - Claim Rewards
+Claims rewards from any eligibile pools, xcobra or locked balance.
 
-* Module ID: 9
-* Module Network: Harmony
-* Module Protocol: ViperSwap
+* Module ID: 41
+* Module Network: Binance_Smart_Chain
+* Module Protocol: CobraSwap
 * Module Primary Focus: Claiming (IE: Performs Transfer, Stake or Unstake)
 
 ## Settings
@@ -27,4 +27,4 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ### otfSettings Explained
-* claimType: string["lppools", "lockedbalance", "community", "vipernest", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.
+* claimType: string["lppools", "lockedbalance", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.

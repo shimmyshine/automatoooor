@@ -1,6 +1,7 @@
 /* eslint-disable no-empty */
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
 import { Contract, ethers, Wallet } from "ethers";
+import { getBlock } from "helpers/getCurrentBlock";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -28,7 +29,7 @@ export const entry = async (
   }
 
   const router = new Contract(
-    contracts.viperSwapRouter,
+    contracts.dfkSwapRouter,
     UniswapV2Router02,
     signer,
   );
@@ -108,17 +109,10 @@ export const entry = async (
   if (otfSettings.customRoute) {
     route = otfSettings.customRoute;
   } else {
-    let weth;
-    try {
-      weth = await router.WETH();
-    } catch (e) {
-      log.warn(e);
-    }
-
     if (otfSettings.fromToken.toLowerCase() === "chain_coin") {
-      route = [weth, otfSettings.toToken];
+      route = ["WETH", otfSettings.toToken];
     } else if (otfSettings.toToken.toLowerCase() === "chain_coin") {
-      route = [otfSettings.fromToken, weth];
+      route = [otfSettings.fromToken, "WETH"];
     } else {
       route = [otfSettings.fromToken, otfSettings.toToken];
     }
@@ -177,7 +171,7 @@ export const entry = async (
           toAddress,
           deadline,
           {
-            to: contracts.viperSwapRouter,
+            to: contracts.dfkSwapRouter,
             value: ethers.utils.parseEther(String(qtyToUse)),
             ...systemGas,
           },
@@ -286,7 +280,7 @@ export const entry = async (
             toAddress,
             deadline,
             {
-              to: contracts.viperSwapRouter,
+              to: contracts.dfkSwapRouter,
               value: ethers.utils.parseEther(String(qtyToUse)),
               ...systemGas,
             },

@@ -1,9 +1,9 @@
-# ViperSwap - Perform Swap
+# Cobraswap - Perform Swap
 Perform a swap between two tokens.
 
-* Module ID: 4
-* Module Network: Harmony
-* Module Protocol: ViperSwap
+* Module ID: 39
+* Module Network: Binance_Smart_Chain
+* Module Protocol: CobraSwap
 * Module Primary Focus: Performs A Swap
 
 ## Settings
@@ -35,7 +35,7 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ### otfSettings Explained
-* swapMethod: string["swapExactTokensForTokens", "swapExactETHForTokens", "swapExactTokensForETH", "swapExactTokensForTokensSupportingFeeOnTransferTokens", "swapExactETHForTokensSupportingFeeOnTransferTokens", "swapExactTokensForETHSupportingFeeOnTransferTokens"] is the method to call to perform the swap.  Their explanations can be found starting [here](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02#swapexacttokensfortokens): 
+* swapMethod: string["swapexacttokensfortokens", "swapexactethfortokens", "swapexacttokensforeth", "swapexacttokensfortokenssupportingfeeontransfertokens", "swapexactethforokenssupportingfeeontransfertokens", "swapexacttokensforethsupportingfeeontransfertokens"] is the method to call to perform the swap.  Their explanations can be found starting [here](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02#swapexacttokensfortokens): 
 * fromToken: string is the 0x address of the token you're swapping from.  Use "chain_coin" to swap the chain coin (ONE, AVAX, ETH, BNB, etc...)
 * toToken: string is the 0x address of the token you're swapping to.  Use "chain_coin" to swap the chain coin (ONE, AVAX, ETH, BNB, etc...)
 * slippage: number is the slippage you'll accept.  A percent between 0 and 1, where advised to never go above .5

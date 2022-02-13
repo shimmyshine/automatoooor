@@ -4,7 +4,7 @@ import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
 import { ERC20ABI } from "../data/contract_abis/erc20";
-import { xViperABI } from "../data/contract_abis/xViper";
+import { xCobraABI } from "../data/contract_abis/xCobra";
 import { OTFSettings } from "../data/interfaces";
 import moduleSettings from "../settings";
 
@@ -19,28 +19,28 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  const xViperContractToUse = new Contract(
-    contracts.xViperContract,
-    xViperABI,
+  const xCobraContractToUse = new Contract(
+    contracts.xCobraContract,
+    xCobraABI,
     signer,
   );
-  const viperContract = new Contract(contracts.viperContract, ERC20ABI, signer);
+  const cobraContract = new Contract(contracts.cobraContract, ERC20ABI, signer);
 
-  let viperBalance;
+  let cobraBalance;
   try {
-    viperBalance = await viperContract.balanceOf(address);
+    cobraBalance = await cobraContract.balanceOf(address);
   } catch (e) {
     log.warn(e);
   }
 
-  if (viperBalance > 0) {
+  if (cobraBalance > 0) {
     let quantityToUse;
 
     if (otfSettings.qtyType.toLowerCase() === "max") {
-      quantityToUse = viperBalance;
+      quantityToUse = cobraBalance;
     } else if (otfSettings.qtyType.toLowerCase() === "wei") {
-      if (otfSettings.qty > viperBalance) {
-        quantityToUse = viperBalance;
+      if (otfSettings.qty > cobraBalance) {
+        quantityToUse = cobraBalance;
 
         log.warn(
           "[Module: " +
@@ -51,13 +51,13 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = viperBalance.mul(otfSettings.qty);
+      quantityToUse = cobraBalance.mul(otfSettings.qty);
     }
 
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
-          const tx: TransactionResponse = await xViperContractToUse.enter(
+          const tx: TransactionResponse = await xCobraContractToUse.enter(
             quantityToUse,
             {
               ...systemGas,
@@ -70,7 +70,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has deposited " +
               quantityToUse * 10 ** 18 +
-              " VIPER into the ViperPit",
+              " COBRA into the CobraPit",
           );
 
           return true;
@@ -81,7 +81,7 @@ export const entry = async (
         }
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
-          const tx: TransactionResponse = await xViperContractToUse.leave(
+          const tx: TransactionResponse = await xCobraContractToUse.leave(
             quantityToUse,
             {
               ...systemGas,
@@ -94,7 +94,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has withdrawn " +
               quantityToUse * 10 ** 18 +
-              " xVIPER from the ViperPit",
+              " xCOBRA from the CobraPit",
           );
 
           return true;

@@ -1,5 +1,5 @@
 # ViperSwap - Perform Swap
-MODULE DESCRIPTION
+Perform a swap between two tokens.
 
 * Module ID: 4
 * Module Network: Harmony

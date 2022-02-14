@@ -22,7 +22,7 @@ export const entry = async (
   const xViperContractToUse = new Contract(
     contracts.xViperContract,
     xViperABI,
-    provider,
+    signer,
   );
   const viperContract = new Contract(contracts.viperContract, ERC20ABI, signer);
 
@@ -57,7 +57,7 @@ export const entry = async (
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
-          const tx: TransactionResponse = xViperContractToUse.enter(
+          const tx: TransactionResponse = await xViperContractToUse.enter(
             quantityToUse,
             {
               ...systemGas,
@@ -70,7 +70,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has deposited " +
               quantityToUse * 10 ** 18 +
-              " VIPER into the ViperPit",
+              " VIPER into the Viperpit",
           );
 
           return true;
@@ -81,7 +81,7 @@ export const entry = async (
         }
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
-          const tx: TransactionResponse = xViperContractToUse.leave(
+          const tx: TransactionResponse = await xViperContractToUse.leave(
             quantityToUse,
             {
               ...systemGas,
@@ -94,7 +94,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has withdrawn " +
               quantityToUse * 10 ** 18 +
-              " xVIPER from the ViperPit",
+              " xVIPER from the VIPERPIT",
           );
 
           return true;

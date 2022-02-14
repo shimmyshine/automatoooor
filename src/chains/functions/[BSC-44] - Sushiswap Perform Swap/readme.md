@@ -1,8 +1,8 @@
 # SushiSwap - Perform Swap
 Perform a swap between two tokens.
 
-* Module ID: 42
-* Module Network: Harmony
+* Module ID: 44
+* Module Network: Binance_Smart_Chain
 * Module Protocol: SushiSwap
 * Module Primary Focus: Performs A Swap
 

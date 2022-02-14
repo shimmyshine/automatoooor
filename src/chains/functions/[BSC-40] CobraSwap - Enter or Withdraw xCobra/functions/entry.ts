@@ -22,7 +22,7 @@ export const entry = async (
   const xCobraContractToUse = new Contract(
     contracts.xCobraContract,
     xCobraABI,
-    provider,
+    signer,
   );
   const cobraContract = new Contract(contracts.cobraContract, ERC20ABI, signer);
 
@@ -45,7 +45,7 @@ export const entry = async (
         log.warn(
           "[Module: " +
             thisInfo.moduleName +
-            "]: The balance told to be used was greater than what's available for VIPER.",
+            "]: The balance told to be used was greater than what's available for JEWEL.",
         );
       } else {
         quantityToUse = otfSettings.qty;
@@ -57,7 +57,7 @@ export const entry = async (
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
-          const tx: TransactionResponse = xCobraContractToUse.enter(
+          const tx: TransactionResponse = await xCobraContractToUse.enter(
             quantityToUse,
             {
               ...systemGas,
@@ -70,7 +70,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has deposited " +
               quantityToUse * 10 ** 18 +
-              " COBRA into the CobraPit",
+              " COBRA into the COBRAPIT",
           );
 
           return true;
@@ -81,7 +81,7 @@ export const entry = async (
         }
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
-          const tx: TransactionResponse = xCobraContractToUse.leave(
+          const tx: TransactionResponse = await xCobraContractToUse.leave(
             quantityToUse,
             {
               ...systemGas,
@@ -94,7 +94,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has withdrawn " +
               quantityToUse * 10 ** 18 +
-              " xCOBRA from the CobraPit",
+              " xCOBRA from the Cobrapit",
           );
 
           return true;

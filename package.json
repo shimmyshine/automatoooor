@@ -8,7 +8,8 @@
     "lint": "eslint . --ext .ts",
     "viewlogs": "npx ts-node ./src/viewLogs.ts",
     "prepare-settings": "node ./scripts/prepare-settings.js",
-    "start": "npx ts-node ./src/index.ts"
+    "start": "npx ts-node ./src/index.ts",
+    "generate-modules-wiki": "npx ts-node ./scripts/generate_modules_wiki/generate.ts"
   },
   "author": "",
   "license": "",

@@ -1,9 +1,9 @@
-# Viperswap - Claim Rewards
-Claims rewards from any eligibile pools, xviper or locked balance.
+# DefiKingdoms - Claim Rewards
+Claims rewards from any eligibile pools, xJewel or locked balance.
 
-* Module ID: 9
+* Module ID: 21
 * Module Network: Harmony
-* Module Protocol: ViperSwap
+* Module Protocol: DefiKingdoms
 * Module Primary Focus: Claiming (IE: Performs Transfer, Stake or Unstake)
 
 ## Settings
@@ -27,4 +27,4 @@ const moduleSettings: ModuleSettings = {
 ```
 
 ### otfSettings Explained
-* claimType: string["lppools", "lockedbalance", "community", "vipernest", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.
+* claimType: string["lppools", "lockedbalance", "all"] is which rewards system specifically to claim, or "all" to attempt to claim each one.

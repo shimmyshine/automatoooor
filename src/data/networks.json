@@ -7,7 +7,9 @@
             "https://api.s0.t.hmny.one/",
             "https://api.fuzz.fi/",
             "https://rpc.heavenswail.one/",
-            "https://rpc.hermesdefi.io/"
+            "https://rpc.hermesdefi.io/",
+            "https://rpc.cosmicuniverse.one/",
+            "https://rpc.onechain.services"
         ],
         "chainId": 1666600000
     },

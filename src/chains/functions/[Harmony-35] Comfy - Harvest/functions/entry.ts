@@ -25,7 +25,10 @@ export const entry = async (
   // Code Execution Here
   let rewardsClaimed = 0;
 
-  if (otfSettings.harvestPool == "zenden") {
+  if (
+    otfSettings.harvestPool.toLowerCase() === "zenden" ||
+    otfSettings.harvestPool.toLowerCase() === "all"
+  ) {
     const zenDenContract = new Contract(contracts.ZenDen, ZenDenABI, signer);
 
     let rewards = 0;
@@ -69,7 +72,10 @@ export const entry = async (
     }
   }
 
-  if (otfSettings.harvestPool.toLowerCase() == "comfy") {
+  if (
+    otfSettings.harvestPool.toLowerCase() === "comfy" ||
+    otfSettings.harvestPool.toLowerCase() === "all"
+  ) {
     const comfyPools = [0];
     const comfyRewardContract = new Contract(
       contracts.ComfyRewardPool,
@@ -119,7 +125,10 @@ export const entry = async (
     }
   }
 
-  if (otfSettings.harvestPool.toLowerCase() == "cshare") {
+  if (
+    otfSettings.harvestPool.toLowerCase() === "cshare" ||
+    otfSettings.harvestPool.toLowerCase() === "all"
+  ) {
     const csharePools = [0, 1];
     const cshareRewardContract = new Contract(
       contracts.CShareRewardPool,

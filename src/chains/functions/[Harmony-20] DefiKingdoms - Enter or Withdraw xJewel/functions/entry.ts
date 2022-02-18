@@ -4,7 +4,7 @@ import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
 import { ERC20ABI } from "../data/contract_abis/erc20";
-import { xViperABI } from "../data/contract_abis/xViper";
+import { xJewelABI } from "../data/contract_abis/xJewel";
 import { OTFSettings } from "../data/interfaces";
 import moduleSettings from "../settings";
 
@@ -19,45 +19,45 @@ export const entry = async (
   const thisSettings = moduleSettings;
   const thisInfo = moduleInfo;
 
-  const xViperContractToUse = new Contract(
-    contracts.xViperContract,
-    xViperABI,
+  const xJewelContractToUse = new Contract(
+    contracts.xJewelContract,
+    xJewelABI,
     signer,
   );
-  const viperContract = new Contract(contracts.viperContract, ERC20ABI, signer);
+  const jewelContract = new Contract(contracts.jewelContract, ERC20ABI, signer);
 
-  let viperBalance;
+  let jewelBalance;
   try {
-    viperBalance = await viperContract.balanceOf(address);
+    jewelBalance = await jewelContract.balanceOf(address);
   } catch (e) {
     log.warn(e);
   }
 
-  if (viperBalance > 0) {
+  if (jewelBalance > 0) {
     let quantityToUse;
 
     if (otfSettings.qtyType.toLowerCase() === "max") {
-      quantityToUse = viperBalance;
+      quantityToUse = jewelBalance;
     } else if (otfSettings.qtyType.toLowerCase() === "wei") {
-      if (otfSettings.qty > viperBalance) {
-        quantityToUse = viperBalance;
+      if (otfSettings.qty > jewelBalance) {
+        quantityToUse = jewelBalance;
 
         log.warn(
           "[Module: " +
             thisInfo.moduleName +
-            "]: The balance told to be used was greater than what's available for VIPER.",
+            "]: The balance told to be used was greater than what's available for JEWEL.",
         );
       } else {
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = viperBalance.mul(otfSettings.qty);
+      quantityToUse = jewelBalance.mul(otfSettings.qty);
     }
 
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
-          const tx: TransactionResponse = await xViperContractToUse.enter(
+          const tx: TransactionResponse = await xJewelContractToUse.enter(
             quantityToUse,
             {
               ...systemGas,
@@ -70,7 +70,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has deposited " +
               quantityToUse * 10 ** 18 +
-              " VIPER into the Viperpit",
+              " JEWEL into the Jeweler",
           );
 
           return true;
@@ -81,7 +81,7 @@ export const entry = async (
         }
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
-          const tx: TransactionResponse = await xViperContractToUse.leave(
+          const tx: TransactionResponse = await xJewelContractToUse.leave(
             quantityToUse,
             {
               ...systemGas,
@@ -94,7 +94,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has withdrawn " +
               quantityToUse * 10 ** 18 +
-              " xVIPER from the VIPERPIT",
+              " xJEWEL from the Jeweler",
           );
 
           return true;

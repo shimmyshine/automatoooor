@@ -45,7 +45,7 @@ export const entry = async (
         log.warn(
           "[Module: " +
             thisInfo.moduleName +
-            "]: The balance told to be used was greater than what's available for VIPER.",
+            "]: The balance told to be used was greater than what's available for COBRA.",
         );
       } else {
         quantityToUse = otfSettings.qty;

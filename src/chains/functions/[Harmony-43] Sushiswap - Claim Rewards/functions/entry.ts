@@ -25,6 +25,7 @@ export const entry = async (
   let totalClaimable = 0;
 
   if (
+    otfSettings.claimType.toLowerCase() === "lppools" ||
     otfSettings.claimType.toLowerCase() === "all"
   ) {
     const masterBreederContract = new Contract(

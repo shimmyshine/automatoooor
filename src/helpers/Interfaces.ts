@@ -1,3 +1,10 @@
+export interface UpcomingModules {
+  chain: string;
+  protocol: string;
+  name: string;
+  description: string;
+}
+
 export interface Settings {
   settingsCheck: {
     showWarns: boolean;
@@ -103,15 +110,18 @@ export interface Account {
 }
 
 export interface Modules {
-  [key: number]: {
-    moduleID: number;
-    moduleName: string;
-    moduleDescription: string;
-    moduleSettings: ModuleSettings;
-    moduleSettingsCheck: string;
-    chain: string;
-    directory: string;
-  };
+  [key: number]: Module;
+}
+
+export interface Module {
+  moduleID: number;
+  moduleName: string;
+  moduleDescription: string;
+  moduleSettings: ModuleSettings;
+  moduleSettingsCheck: string;
+  chain: string;
+  protocol: string;
+  directory: string;
 }
 
 export interface ModuleSettings {

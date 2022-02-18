@@ -7,7 +7,8 @@ const moduleInfo = {
     "Get various types of data from CoinGecko's public API v3.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",
-  chain: "Harmony", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos
+  chain: "ALL", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos
+  protocol: "ALL",
 };
 
 export default moduleInfo;

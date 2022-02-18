@@ -1,0 +1,68 @@
+[
+    {
+        "chain": "Harmony",
+        "protocol": "Comfy",
+        "name": "Withdraw From Pool",
+        "description": "Withdraws from any pool."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "Tranquil",
+        "name": "Claim",
+        "description": "Allows you to claim from all or any of the tranq staking pools (including lending or borrowing)."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "Tranquil",
+        "name": "Stake",
+        "description": "Allows you to stake in any of the tranq staking pools (not including lending or borrowing)."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "Tranquil",
+        "name": "Borrowing",
+        "description": "Allows you to borrow against what you're lending."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "ViperSwap",
+        "name": "Add Liquidity",
+        "description": "Adds liquidity on ViperSwap."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "ViperSwap",
+        "name": "Staking",
+        "description": "Stakes or unstakes your LP with an existing farm pool on ViperSwap."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "TokenJenny",
+        "name": "Gem Mines Claim All",
+        "description": "Performs a claim all on the gem mines."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "TokenJenny",
+        "name": "Pool Party Claim All",
+        "description": "Performs a claim all on the pool parties."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "TokenJenny",
+        "name": "Stake",
+        "description": "Stakes tokens in a Pool Party."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "DefiKingdoms",
+        "name": "Add Liquidity",
+        "description": "Adds liquidity on DefiKingdoms."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "DefiKingdoms",
+        "name": "Staking",
+        "description": "Stakes or unstakes your LP with an existing farm pool on DefiKingdoms."
+    }
+]

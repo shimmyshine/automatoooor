@@ -7,6 +7,7 @@ const moduleInfo = {
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",
   chain: "Harmony",
+  protocol: "Euphoria",
 };
 
 export default moduleInfo;

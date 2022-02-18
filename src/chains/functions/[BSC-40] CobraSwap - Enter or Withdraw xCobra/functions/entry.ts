@@ -45,7 +45,7 @@ export const entry = async (
         log.warn(
           "[Module: " +
             thisInfo.moduleName +
-            "]: The balance told to be used was greater than what's available for JEWEL.",
+            "]: The balance told to be used was greater than what's available for VIPER.",
         );
       } else {
         quantityToUse = otfSettings.qty;
@@ -70,7 +70,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has deposited " +
               quantityToUse * 10 ** 18 +
-              " COBRA into the COBRAPIT",
+              " COBRA into the CobraPit",
           );
 
           return true;
@@ -94,7 +94,7 @@ export const entry = async (
               thisInfo.moduleName +
               "]: has withdrawn " +
               quantityToUse * 10 ** 18 +
-              " xCOBRA from the Cobrapit",
+              " xCOBRA from the CobraPit",
           );
 
           return true;

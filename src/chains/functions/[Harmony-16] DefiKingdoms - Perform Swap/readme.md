@@ -1,5 +1,5 @@
 # Defikingdoms - Perform Swap
-MODULE DESCRIPTION
+Perform a swap between two tokens.
 
 * Module ID: 16
 * Module Network: Harmony

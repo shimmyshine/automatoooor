@@ -1,7 +1,6 @@
 /* eslint-disable no-empty */
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
-import { Contract, ethers, Wallet } from "ethers";
-import { getBlock } from "helpers/getCurrentBlock";
+import { BigNumber, Contract, ethers, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -109,23 +108,31 @@ export const entry = async (
   if (otfSettings.customRoute) {
     route = otfSettings.customRoute;
   } else {
+    let weth;
+    try {
+      weth = await router.WETH();
+    } catch (e) {
+      log.warn(e);
+    }
+
     if (otfSettings.fromToken.toLowerCase() === "chain_coin") {
-      route = ["WETH", otfSettings.toToken];
+      route = [weth, otfSettings.toToken];
     } else if (otfSettings.toToken.toLowerCase() === "chain_coin") {
-      route = [otfSettings.fromToken, "WETH"];
+      route = [otfSettings.fromToken, weth];
     } else {
       route = [otfSettings.fromToken, otfSettings.toToken];
     }
   }
 
   let amountOut;
-  let minimumAccepted;
   try {
     amountOut = await router.getAmountsOut(qtyToUse, route);
-    minimumAccepted = Math.floor(amountOut[1] * (1 - otfSettings.slippage));
   } catch (e) {
     log.warn(e);
   }
+  const minimumAccepted = amountOut[1].sub(
+    amountOut[1].div(otfSettings.slippage * 100),
+  );
 
   if (qtyToUse > 0) {
     if (otfSettings.swapMethod.toLowerCase() === "swapexacttokensfortokens") {

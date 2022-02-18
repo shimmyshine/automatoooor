@@ -6,6 +6,7 @@ export const setupPrivateAggregator = async (
   log: Logger,
   urls: string[],
   port: number,
+  chain: string,
 ): Promise<boolean> => {
   const network: boolean = await new Promise(() => {
     http
@@ -65,7 +66,7 @@ export const setupPrivateAggregator = async (
       })
       .listen(port);
 
-    log.info("[Network Aggregator]: Aggregator started.");
+    log.info("[Network Aggregator]: Aggregator started for " + chain + ".");
     Promise.resolve(true);
   });
 

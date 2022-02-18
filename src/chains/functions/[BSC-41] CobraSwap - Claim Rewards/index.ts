@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 41,
-  moduleName: "Cobraswap - Claim Rewards",
+  moduleName: "CobraSwap - Claim Rewards",
   moduleDescription:
     "Claims rewards from any eligibile pools, xcobra or locked balance.",
   moduleSettings: settings,

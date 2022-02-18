@@ -119,13 +119,14 @@ export const entry = async (
   }
 
   let amountOut;
-  let minimumAccepted;
   try {
     amountOut = await router.getAmountsOut(qtyToUse, route);
-    minimumAccepted = Math.floor(amountOut[1] * (1 - otfSettings.slippage));
   } catch (e) {
     log.warn(e);
   }
+  const minimumAccepted = amountOut[1].sub(
+    amountOut[1].div(otfSettings.slippage * 100),
+  );
 
   if (qtyToUse > 0) {
     if (otfSettings.swapMethod.toLowerCase() === "swapexacttokensfortokens") {

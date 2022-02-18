@@ -25,74 +25,7 @@ export const entry = async (
   // Code Execution Here
   let totalClaimable = 0;
 
-  const communityContracts = [
-  contracts.communityPoolsHereAddress,
-  ];
-  if (
-    otfSettings.claimType.toLowerCase() === "all" ||
-    otfSettings.claimType.toLowerCase() === "community"
-  ) {
-    for (let i = 0; i < Object.values(communityContracts).length; i++) {
-      const communityContract = new Contract(
-        communityContracts[i],
-        CommunityPoolABI,
-        signer,
-      );
-
-      let pendingReward;
-      try {
-        pendingReward = await communityContract.pendingReward(address);
-      } catch (e) {
-      }
-
-      if (pendingReward > 0) {
-        let rewardToken;
-        try {
-          rewardToken = await communityContract.rewardToken();
-        } catch (e) {
-          log.warn(e);
-        }
-        const rewardContract = new Contract(rewardToken, ERC20ABI, signer);
-        let rewardDecimals;
-        try {
-          rewardDecimals = await rewardContract.decimals();
-        } catch (e) {
-          log.warn(e);
-        }
-        let rewardName;
-        try {
-          rewardName = await rewardContract.symbol();
-        } catch (e) {
-          log.warn(e);
-        }
-
-        try {
-          const tx: TransactionResponse = await communityContract.deposit(0, {
-            ...systemGas,
-          });
-          await tx.wait(2);
-
-          log.info(
-            "[Module: " +
-              thisInfo.moduleName +
-              "]: Claimed " +
-              pendingReward / 10 ** rewardDecimals +
-              " " +
-              rewardName +
-              " from a community pool.",
-          );
-
-          totalClaimable += pendingReward;
-        } catch (e) {
-          log.warn(e);
-        }
-      }
-    }
-  }
-
-  const cobraNestContracts = [
-    contracts.xCobraToCobraAddress,
-  ];
+  const cobraNestContracts = [contracts.xCobraToCobraAddress];
   if (
     otfSettings.claimType.toLowerCase() === "all" ||
     otfSettings.claimType.toLowerCase() === "cobranest"
@@ -107,8 +40,7 @@ export const entry = async (
       let pendingReward;
       try {
         pendingReward = await cobraNestContract.pendingReward(address);
-      } catch (e) {
-      }
+      } catch (e) {}
 
       if (pendingReward > 0) {
         let rewardToken;

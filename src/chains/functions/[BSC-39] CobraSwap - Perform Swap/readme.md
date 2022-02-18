@@ -1,5 +1,5 @@
 # Cobraswap - Perform Swap
-MODULE DESCRIPTION
+Perform a swap between two tokens.
 
 * Module ID: 39
 * Module Network: Binance_Smart_Chain

@@ -51,7 +51,7 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = cobraBalance.mul(otfSettings.qty);
+      quantityToUse = cobraBalance.sub(cobraBalance.div(otfSettings.qty * 100));
     }
 
     if (quantityToUse > 0) {

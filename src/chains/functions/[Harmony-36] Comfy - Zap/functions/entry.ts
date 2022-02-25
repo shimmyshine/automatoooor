@@ -73,7 +73,7 @@ export const entry = async (
         amountToUse = otfSettings.amt;
       }
     } else if (otfSettings.amtType.toLowerCase() == "percent") {
-      amountToUse = amountToUse.mul(otfSettings.amt);
+      amountToUse = amountToUse.sub(amountToUse.div(otfSettings.amt * 100));
     }
 
     try {

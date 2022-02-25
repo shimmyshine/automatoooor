@@ -102,7 +102,7 @@ export const entry = async (
       qtyToUse = balanceOfFrom;
     }
   } else if (otfSettings.quantityType.toLowerCase() === "percent") {
-    qtyToUse = balanceOfFrom.mul(otfSettings.quantity);
+    qtyToUse = balanceOfFrom.sub(balanceOfFrom.div(otfSettings.quantity * 100));
   }
 
   let route;

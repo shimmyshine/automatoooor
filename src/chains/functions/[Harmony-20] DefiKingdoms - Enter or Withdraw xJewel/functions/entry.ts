@@ -51,7 +51,7 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = jewelBalance.mul(otfSettings.qty);
+      quantityToUse = jewelBalance.sub(jewelBalance.div(otfSettings.qty * 100));
     }
 
     if (quantityToUse > 0) {

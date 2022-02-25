@@ -79,7 +79,7 @@ export const entry = async (
       if (otfSettings.qtyType.toLowerCase() === "wei") {
         amountToUse = otfSettings.qty;
       } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-        amountToUse = amountToUse.mul(otfSettings.qty);
+        amountToUse = amountToUse.sub(amountToUse.div(otfSettings.qty * 100));
       }
 
       try {

@@ -51,7 +51,7 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = viperBalance.mul(otfSettings.qty);
+      quantityToUse = viperBalance.sub(viperBalance.div(otfSettings.qty * 100));
     }
 
     if (quantityToUse > 0) {

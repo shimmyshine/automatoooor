@@ -31,4 +31,4 @@ const moduleSettings: ModuleSettings = {
 ### otfSettings Explained
 * target: ["1usdc", "1usdt", "1dai", "1eth", "1wbtc", "1btc", "one", "stone"] is which lending target you want.
 * qtyType: ["max", "percent", "wei"] is how you want to measure the quantity to use.
-* qty: number is the number to use specifically.  (max=0, wei=quantity of token measured in wei, percent=a number between 0 & 1 in decimal form)\
+* qty: number is the number to use specifically.  (max=0, wei=quantity of token measured in wei, percent=a number between 0 & 1 in decimal form)

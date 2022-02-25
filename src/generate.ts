@@ -1,7 +1,7 @@
 import { promisify } from "util";
 import _glob from "glob";
-import { Module, Modules, UpcomingModules } from "../../src/helpers/Interfaces";
-import * as upcomingModules from "../../src/data/planned_modules.json";
+import { Module, Modules, UpcomingModules } from "./helpers/Interfaces";
+import * as upcomingModules from "./data/planned_modules.json";
 
 const chainLongToShort: { [key: string]: string } = {
   ALL: "ALL",
@@ -26,11 +26,11 @@ async function getFunctions(): Promise<Modules> {
   // eslint-disable-next-line prefer-const
   let functions: Modules = {};
 
-  const res = await getDirectories("./src/chains/functions/");
+  const res = await getDirectories("./src/chains/functions");
 
   res.map((dir) => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const functionValues = require("../." + dir + "/index.ts");
+    const functionValues = require("." + dir + "/index.ts");
     functions[functionValues.default.moduleName] = {
       ...functionValues.default,
       directory: dir,

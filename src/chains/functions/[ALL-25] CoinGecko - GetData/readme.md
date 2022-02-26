@@ -1,6 +1,8 @@
 # CoinGecko - GetData
 Get any data with passed parameters from CoinGecko.
 
+Check official documentation for this API [here (NPM Package)](https://www.npmjs.com/package/coingecko-api-v3) and [here (CoinGecko API Documentation)](https://github.com/samuraitruong/coingecko-api-v3).
+
 * Module ID: 25
 * Module Network: ALL
 * Module Protocol: CoinGecko

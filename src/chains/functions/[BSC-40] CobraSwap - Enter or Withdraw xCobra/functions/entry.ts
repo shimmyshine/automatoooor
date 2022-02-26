@@ -1,4 +1,5 @@
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
+import { formatUnits } from "@ethersproject/units";
 import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -69,7 +70,7 @@ export const entry = async (
             "[Module: " +
               thisInfo.moduleName +
               "]: has deposited " +
-              quantityToUse * 10 ** 18 +
+              formatUnits(quantityToUse, 18) +
               " COBRA into the CobraPit",
           );
 
@@ -93,7 +94,7 @@ export const entry = async (
             "[Module: " +
               thisInfo.moduleName +
               "]: has withdrawn " +
-              quantityToUse * 10 ** 18 +
+              formatUnits(quantityToUse, 18) +
               " xCOBRA from the CobraPit",
           );
 

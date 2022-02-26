@@ -3,8 +3,6 @@
         "name": "Harmony",
         "providerURL": "https://api.harmony.one/",
         "aggregateProviders": [
-            "https://api.harmony.one/",
-            "https://api.s0.t.hmny.one/",
             "https://api.fuzz.fi/",
             "https://rpc.heavenswail.one/",
             "https://rpc.hermesdefi.io/",

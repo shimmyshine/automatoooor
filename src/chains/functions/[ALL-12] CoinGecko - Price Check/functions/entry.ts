@@ -25,7 +25,9 @@ export const entry = async (
   if (otfSettings.checkAgainst) {
     let price, name;
     try {
-      const call = await client.coinId({ id: otfSettings.tokenName });
+      const call = await client.coinId({
+        id: otfSettings.tokenName.toLowerCase(),
+      });
       price = call.market_data?.current_price?.usd;
       name = call.name;
     } catch (e) {
@@ -34,7 +36,7 @@ export const entry = async (
       return false;
     }
 
-    if (price && name) {
+    if (typeof price !== "undefined" && typeof name !== "undefined") {
       if (
         otfSettings.checkType.toLowerCase() === "equal" &&
         price === otfSettings.qty
@@ -51,14 +53,14 @@ export const entry = async (
         return true;
       } else if (
         otfSettings.checkType.toLowerCase() === "greater" &&
-        price < otfSettings.qty
+        price > otfSettings.qty
       ) {
         log.info(
           "[Module: " +
-            moduleInfo +
-            "]: The qty parameter provided is greater than " +
+            moduleInfo.moduleName +
+            "]: The price for " +
             name +
-            "'s price.\n\nPrice Returned: " +
+            " is greater than the qty parameter.\n\nPrice Returned: " +
             price +
             "\nQty Parameter: " +
             otfSettings.qty,
@@ -67,14 +69,14 @@ export const entry = async (
         return true;
       } else if (
         otfSettings.checkType.toLowerCase() === "less" &&
-        price > otfSettings.qty
+        price < otfSettings.qty
       ) {
         log.info(
           "[Module: " +
-            moduleInfo +
-            "]: The qty parameter provided is less than " +
+            moduleInfo.moduleName +
+            "]: The price for " +
             name +
-            "'s price.\n\nPrice Returned: " +
+            " is less than the qty parameter.\n\nPrice Returned: " +
             price +
             "\nQty Parameter: " +
             otfSettings.qty,
@@ -89,8 +91,8 @@ export const entry = async (
       ) {
         log.info(
           "[Module: " +
-            moduleInfo +
-            "The price falls within the window for " +
+            moduleInfo.moduleName +
+            "]: The price falls within the window for " +
             name +
             "\n\nPrice Returned: " +
             price +
@@ -107,16 +109,33 @@ export const entry = async (
         return true;
       } else {
         log.warn(
-          "[Module: " +
-            moduleInfo.moduleName +
-            "]: None of the parameters were met.  Failing for safety.\n\nPrice Check For: " +
-            name +
-            "\nPrice Returned: " +
-            price +
-            "\ncheckType Provided: " +
-            otfSettings.checkType +
-            "\nqty Parameter: " +
-            otfSettings.qty,
+          !otfSettings.windowStart
+            ? "[Module: " +
+                moduleInfo.moduleName +
+                "]: None of the parameters were met.  Failing for safety.\n\nPrice Check For: " +
+                name +
+                "\nPrice Returned: " +
+                price +
+                "\ncheckType Provided: " +
+                otfSettings.checkType +
+                "\nqty Parameter: " +
+                otfSettings.qty
+            : "[Module: " +
+                moduleInfo.moduleName +
+                "]: None of the parameters were met.  Failing for safety.\n\nPrice Check For: " +
+                name +
+                "\nPrice Returned: " +
+                price +
+                "\ncheckType Provided: " +
+                otfSettings.checkType +
+                "\nqty Parameter: " +
+                otfSettings.qty +
+                "\nwindowStart: " +
+                otfSettings.windowStart +
+                "\nWindow To Check: " +
+                (otfSettings.windowStart - otfSettings.qty) +
+                " - " +
+                (otfSettings.windowStart + otfSettings.qty),
         );
 
         return false;
@@ -131,7 +150,9 @@ export const entry = async (
     }
   } else {
     try {
-      const call = await client.coinId({ id: otfSettings.tokenName });
+      const call = await client.coinId({
+        id: otfSettings.tokenName.toLowerCase(),
+      });
 
       log.info(
         "[Module: " +

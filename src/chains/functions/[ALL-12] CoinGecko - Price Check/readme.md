@@ -1,6 +1,8 @@
 # CoinGecko - Price Check
 Either gets a price or gets a price and compares it to provided parameters.
 
+Be careful running this module too frequently to prevent CoinGecko rate limiting your requests.
+
 * Module ID: 12
 * Module Network: ALL
 * Module Protocol: CoinGecko

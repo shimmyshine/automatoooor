@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 28,
-  moduleName: "balanceOf",
+  moduleName: "Token - balanceOf",
   moduleDescription: "View the balance of a wallet for a token.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",

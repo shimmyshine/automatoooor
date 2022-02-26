@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 13,
-  moduleName: "Log",
+  moduleName: "Automatoooor - Log",
   moduleDescription: "Log yourself a personalized message.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",

@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 34,
-  moduleName: "Timeout",
+  moduleName: "Automatoooor - Timeout",
   moduleDescription: "Set wait periods between modules of a group.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",

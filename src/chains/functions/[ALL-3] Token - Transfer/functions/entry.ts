@@ -1,5 +1,5 @@
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
-import { Contract, ethers, Wallet } from "ethers";
+import { BigNumber, Contract, ethers, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { ERC20ABI } from "../data/contract_abis/erc20";
@@ -67,10 +67,35 @@ export const entry = async (
       return false;
     }
   } else if (otfSettings.type.toLowerCase() == "chain_coin") {
+    const contractToUse = new Contract(
+      otfSettings.tokenAddress,
+      ERC20ABI,
+      signer,
+    );
+
+    let balanceOf;
+    try {
+      balanceOf = await provider.getBalance(address);
+    } catch (e) {
+      log.warn(e);
+    }
+
+    let amountToUse;
+    if (otfSettings.quantityType.toLowerCase() === "max") {
+      amountToUse = balanceOf;
+    } else if (otfSettings.quantityType.toLowerCase() === "wei") {
+      amountToUse = otfSettings.quantity;
+    } else if (otfSettings.quantityType.toLowerCase() === "percent") {
+      amountToUse = (Number(balanceOf) * (otfSettings.quantity * 100)) / 100;
+      amountToUse = balanceOf
+        ? balanceOf.mul(otfSettings.quantity * 100).div(100)
+        : 0;
+    }
+
     try {
       const tx: TransactionResponse = await signer.sendTransaction({
         to: otfSettings.addressTo,
-        value: ethers.utils.parseEther(String(otfSettings.quantity)),
+        value: ethers.utils.parseEther(String(amountToUse)),
         ...systemGas,
       });
       await tx.wait(2);
@@ -79,7 +104,7 @@ export const entry = async (
         "[Module: " +
           thisInfo.moduleName +
           "] sent " +
-          (otfSettings.quantity / 10) ** otfSettings.decimal +
+          Number(amountToUse) / 10 ** otfSettings.decimal +
           " coins to " +
           otfSettings.addressTo,
       );

@@ -23,10 +23,26 @@ export const entry = async (
     signer,
   );
 
+  let balanceOf;
+  try {
+    balanceOf = await contractToUse.balanceOf(address);
+  } catch (e) {
+    log.warn(e);
+  }
+
+  let amountToUse;
+  if (otfSettings.quantityType.toLowerCase() === "max") {
+    amountToUse = balanceOf;
+  } else if (otfSettings.quantityType.toLowerCase() === "wei") {
+    amountToUse = otfSettings.quantity;
+  } else if (otfSettings.quantityType.toLowerCase() === "percent") {
+    amountToUse = balanceOf.mul(otfSettings.quantity * 100).div(100);
+  }
+
   try {
     const tx: TransactionResponse = await contractToUse.approve(
       otfSettings.contractAddress,
-      String(otfSettings.quantity),
+      String(amountToUse),
       {
         ...systemGas,
       },
@@ -39,7 +55,7 @@ export const entry = async (
         "] approved " +
         otfSettings.contractAddress +
         " to transfer " +
-        otfSettings.quantity / 10 ** otfSettings.decimal +
+        amountToUse / 10 ** otfSettings.decimal +
         " tokens",
     );
 

@@ -24,6 +24,7 @@ const moduleSettings: ModuleSettings = {
 "GROUP:ORDER:MODULE_ID": {
           contractAddress: string,
           tokenAddress: string,
+          quantityType: string,
           quantity: number,
           decimal: number,
         },
@@ -32,5 +33,6 @@ const moduleSettings: ModuleSettings = {
 ### otfSettings Explained
 * contractAddress: string is the 0x address of the contract you want to approve
 * tokenAddress: string is the 0x address of the token you're approving the contract to transfer
-* quantity: number is the quantity in wei you want to send
+* quantityType: ["max", "wei", "percent"] is how you want the quantity to be calculated.
+* quantity: number is the quantity you want to send.  max = 0, wei = exact amount of wei, percent = a number between 0 and 1 (IE: 50% is 0.5)
 * decimal: number is the decimal of the token your sending (enter 0 if the chain coin)

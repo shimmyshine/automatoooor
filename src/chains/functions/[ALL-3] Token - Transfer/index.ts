@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 3,
-  moduleName: "Transfer",
+  moduleName: "Token - Transfer",
   moduleDescription: "Transfer a token or the chain coin.",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",

@@ -19,21 +19,27 @@
     },
     {
         "chain": "Harmony",
-        "protocol": "Tranquil",
-        "name": "Borrowing",
-        "description": "Allows you to borrow against what you're lending."
-    },
-    {
-        "chain": "Harmony",
         "protocol": "ViperSwap",
-        "name": "Add Liquidity",
-        "description": "Adds liquidity on ViperSwap."
+        "name": "Add or Remove Liquidity",
+        "description": "Adds or removes liquidity on ViperSwap."
     },
     {
         "chain": "Harmony",
         "protocol": "ViperSwap",
         "name": "Staking",
         "description": "Stakes or unstakes your LP with an existing farm pool on ViperSwap."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "Defira",
+        "name": "Add or Remove Liquidity",
+        "description": "Adds or removes liquidity on Defira."
+    },
+    {
+        "chain": "Harmony",
+        "protocol": "Defira",
+        "name": "Staking",
+        "description": "Stakes or unstakes your LP with an existing farm pool on Defira."
     },
     {
         "chain": "Harmony",

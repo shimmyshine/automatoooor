@@ -3,7 +3,7 @@ View the balance of a wallet for a token.
 
 * Module ID: 22
 * Module Network: ALL
-* Module Protocol: Tokens/Coins
+* Module Protocol: Tokens
 * Module Primary Focus: Performs a balance check.
 
 ## Settings

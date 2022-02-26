@@ -3,7 +3,7 @@ Set an allowance for a contract to transfer on your behalf.
 
 * Module ID: 22
 * Module Network: ALL
-* Module Protocol: Tokens/Coins
+* Module Protocol: Tokens
 * Module Primary Focus: Perform an Approval
 
 ## Settings

@@ -8,7 +8,7 @@ const moduleInfo = {
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",
   chain: "ALL", // Harmony, Fantom, Binance_Smart_Chain, Ethereum, Avalanche, Aurora, Polygon, RSK, Telos
-  protocol: "ALL",
+  protocol: "CoinGecko",
 };
 
 export default moduleInfo;

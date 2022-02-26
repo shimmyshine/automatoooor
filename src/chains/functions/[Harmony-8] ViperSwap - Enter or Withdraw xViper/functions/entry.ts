@@ -1,4 +1,5 @@
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
+import { formatUnits } from "@ethersproject/units";
 import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
@@ -51,7 +52,7 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = viperBalance.mul(otfSettings.qty);
+      quantityToUse = viperBalance.sub(viperBalance.div(otfSettings.qty * 100));
     }
 
     if (quantityToUse > 0) {
@@ -69,7 +70,7 @@ export const entry = async (
             "[Module: " +
               thisInfo.moduleName +
               "]: has deposited " +
-              quantityToUse * 10 ** 18 +
+              formatUnits(quantityToUse, 18) +
               " VIPER into the Viperpit",
           );
 
@@ -93,7 +94,7 @@ export const entry = async (
             "[Module: " +
               thisInfo.moduleName +
               "]: has withdrawn " +
-              quantityToUse * 10 ** 18 +
+              formatUnits(quantityToUse, 18) +
               " xVIPER from the VIPERPIT",
           );
 

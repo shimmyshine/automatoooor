@@ -3,7 +3,7 @@ Perform a transfer of a token or the chain coin (ONE, AVAX, ETH, etc...).
 
 * Module ID: 3
 * Module Network: ALL
-* Module Protocol: Tokens/Coins
+* Module Protocol: Tokens
 * Module Primary Focus: Perform a Transfer
 
 ## Settings

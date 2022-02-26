@@ -100,6 +100,14 @@ function getTotalModulesForChain(
   return count;
 }
 
+function replaceText(
+  text: string,
+  replace: string,
+  replaceWith: string,
+): string {
+  return text.split(replace).join(replaceWith);
+}
+
 function formatFunctions(
   functions: Module[],
   moduleCount: number,
@@ -117,7 +125,7 @@ function formatFunctions(
     if (i > 0 && functions[i].chain !== functions[i - 1].chain) {
       toReturn +=
         "\n## " +
-        functions[i].chain +
+        replaceText(functions[i].chain, "_", " ") +
         " Modules (" +
         getTotalModulesForChain(functions, functions[i].chain) +
         ")";
@@ -134,14 +142,14 @@ function formatFunctions(
       toReturn +=
         "\n\n### " +
         functions[i].protocol +
-        " - (" +
+        " (" +
         getTotalModulesForProtocol(functions, functions[i].protocol) +
         ")\n\n";
     } else if (i === 0) {
       toReturn +=
         "\n\n### " +
         functions[i].protocol +
-        " - (" +
+        " (" +
         getTotalModulesForProtocol(functions, functions[i].protocol) +
         ")\n\n";
     }

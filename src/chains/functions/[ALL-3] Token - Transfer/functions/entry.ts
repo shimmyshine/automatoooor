@@ -24,10 +24,26 @@ export const entry = async (
       signer,
     );
 
+    let balanceOf;
+    try {
+      balanceOf = await contractToUse.balanceOf(address);
+    } catch (e) {
+      log.warn(e);
+    }
+
+    let amountToUse;
+    if (otfSettings.quantityType.toLowerCase() === "max") {
+      amountToUse = balanceOf;
+    } else if (otfSettings.quantityType.toLowerCase() === "wei") {
+      amountToUse = otfSettings.quantity;
+    } else if (otfSettings.quantityType.toLowerCase() === "percent") {
+      amountToUse = (balanceOf * (otfSettings.quantity * 100)) / 100;
+    }
+
     try {
       const tx: TransactionResponse = await contractToUse.transfer(
         otfSettings.addressTo,
-        String(otfSettings.quantity),
+        String(amountToUse),
         {
           ...systemGas,
         },

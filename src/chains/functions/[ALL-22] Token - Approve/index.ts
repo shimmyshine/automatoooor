@@ -2,7 +2,7 @@ import settings from "./settings";
 
 const moduleInfo = {
   moduleID: 22,
-  moduleName: "Approve",
+  moduleName: "Token - Approve",
   moduleDescription: "Approve a contract to perform a transferFrom",
   moduleSettings: settings,
   moduleSettingsCheck: "settingsCheck.ts",

@@ -29,7 +29,11 @@ export const entry = async (
 
   let viperBalance;
   try {
-    viperBalance = await viperContract.balanceOf(address);
+    if (otfSettings.to.toLowerCase() === "to") {
+      viperBalance = await viperContract.balanceOf(address);
+    } else if (otfSettings.to.toLowerCase() === "from") {
+      viperBalance = await xViperContractToUse.balanceOf(address);
+    }
   } catch (e) {
     log.warn(e);
   }
@@ -52,14 +56,14 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = viperBalance.sub(viperBalance.div(otfSettings.qty * 100));
+      quantityToUse = viperBalance.mul(otfSettings.qty * 100).div(100);
     }
 
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
           const tx: TransactionResponse = await xViperContractToUse.enter(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },
@@ -83,7 +87,7 @@ export const entry = async (
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
           const tx: TransactionResponse = await xViperContractToUse.leave(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },

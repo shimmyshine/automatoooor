@@ -75,13 +75,13 @@ export const entry = async (
           amountToUse = otfSettings.amt;
         }
       } else if (otfSettings.amtType.toLowerCase() == "percent") {
-        amountToUse = amountToUse.sub(amountToUse.div(otfSettings.amt * 100));
+        amountToUse = amountToUse.mul(otfSettings.amt * 100).div(100);
       }
 
       try {
         if (otfSettings.contractPreference.toLowerCase() == "zenden") {
           const tx: TransactionResponse = await poolContract.stake(
-            amountToUse,
+            String(amountToUse),
             { ...systemGas },
           );
           await tx.wait(2);
@@ -98,7 +98,7 @@ export const entry = async (
         } else {
           const tx: TransactionResponse = await poolContract.deposit(
             otfSettings.poolID,
-            amountToUse,
+            String(amountToUse),
             { ...systemGas },
           );
           await tx.wait(2);

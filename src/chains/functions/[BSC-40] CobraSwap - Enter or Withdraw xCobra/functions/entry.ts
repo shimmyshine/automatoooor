@@ -29,7 +29,11 @@ export const entry = async (
 
   let cobraBalance;
   try {
-    cobraBalance = await cobraContract.balanceOf(address);
+    if (otfSettings.to.toLowerCase() === "to") {
+      cobraBalance = await cobraContract.balanceOf(address);
+    } else if (otfSettings.to.toLowerCase() === "from") {
+      cobraBalance = await xCobraContractToUse.balanceOf(address);
+    }
   } catch (e) {
     log.warn(e);
   }
@@ -52,14 +56,14 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = cobraBalance.sub(cobraBalance.div(otfSettings.qty * 100));
+      quantityToUse = cobraBalance.mul(otfSettings.qty * 100).div(100);
     }
 
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
           const tx: TransactionResponse = await xCobraContractToUse.enter(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },
@@ -83,7 +87,7 @@ export const entry = async (
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
           const tx: TransactionResponse = await xCobraContractToUse.leave(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },

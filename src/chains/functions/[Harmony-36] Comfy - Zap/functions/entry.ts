@@ -73,13 +73,13 @@ export const entry = async (
         amountToUse = otfSettings.amt;
       }
     } else if (otfSettings.amtType.toLowerCase() == "percent") {
-      amountToUse = amountToUse.sub(amountToUse.div(otfSettings.amt * 100));
+      amountToUse = amountToUse.mul(otfSettings.amt * 100).div(100);
     }
 
     try {
       const tx: TransactionResponse = await zapContract.zapInToken(
         contractInAddress,
-        amountToUse,
+        String(amountToUse),
         contractOutAddress,
         contracts.ViperRouter,
         address,

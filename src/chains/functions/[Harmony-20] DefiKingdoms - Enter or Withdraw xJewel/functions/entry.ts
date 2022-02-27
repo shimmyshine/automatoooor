@@ -29,7 +29,11 @@ export const entry = async (
 
   let jewelBalance;
   try {
-    jewelBalance = await jewelContract.balanceOf(address);
+    if (otfSettings.to.toLowerCase() === "to") {
+      jewelBalance = await jewelContract.balanceOf(address);
+    } else if (otfSettings.to.toLowerCase() === "from") {
+      jewelBalance = await xJewelContractToUse.balanceOf(address);
+    }
   } catch (e) {
     log.warn(e);
   }
@@ -52,14 +56,14 @@ export const entry = async (
         quantityToUse = otfSettings.qty;
       }
     } else if (otfSettings.qtyType.toLowerCase() === "percent") {
-      quantityToUse = jewelBalance.sub(jewelBalance.div(otfSettings.qty * 100));
+      quantityToUse = jewelBalance.mul(otfSettings.qty * 100).div(100);
     }
 
     if (quantityToUse > 0) {
       if (otfSettings.to.toLowerCase() === "to") {
         try {
           const tx: TransactionResponse = await xJewelContractToUse.enter(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },
@@ -83,7 +87,7 @@ export const entry = async (
       } else if (otfSettings.to.toLowerCase() === "from") {
         try {
           const tx: TransactionResponse = await xJewelContractToUse.leave(
-            quantityToUse,
+            String(quantityToUse),
             {
               ...systemGas,
             },

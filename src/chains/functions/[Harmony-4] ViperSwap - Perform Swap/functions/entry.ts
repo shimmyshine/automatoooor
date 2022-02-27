@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import { BaseProvider, TransactionResponse } from "@ethersproject/providers";
-import { Contract, ethers, Wallet } from "ethers";
+import { Contract, Wallet } from "ethers";
 import { Logger } from "tslog";
 import moduleInfo from "..";
 import { contracts } from "../data/contracts";
@@ -22,7 +22,8 @@ export const entry = async (
 
   let timestamp = 0;
   try {
-    timestamp = (await provider.getBlock(provider.blockNumber)).timestamp;
+    const tx = await provider.getBlock(provider.blockNumber);
+    timestamp = tx.timestamp;
   } catch (e) {
     log.warn(e);
   }
@@ -40,7 +41,7 @@ export const entry = async (
     fromTokenDecimals = 18;
     fromTokenName = "ONE";
     try {
-      balanceOfFrom = provider.getBalance(address);
+      balanceOfFrom = await provider.getBalance(address);
     } catch (e) {
       log.warn(e);
     }
@@ -101,7 +102,7 @@ export const entry = async (
       qtyToUse = balanceOfFrom;
     }
   } else if (otfSettings.quantityType.toLowerCase() === "percent") {
-    qtyToUse = balanceOfFrom.sub(balanceOfFrom.div(otfSettings.quantity * 100));
+    qtyToUse = balanceOfFrom.mul(otfSettings.quantity * 100).div(100);
   }
 
   let route;
@@ -116,29 +117,29 @@ export const entry = async (
     }
 
     if (otfSettings.fromToken.toLowerCase() === "chain_coin") {
-      route = [weth, otfSettings.toToken];
+      route = [await weth, otfSettings.toToken];
     } else if (otfSettings.toToken.toLowerCase() === "chain_coin") {
-      route = [otfSettings.fromToken, weth];
+      route = [otfSettings.fromToken, await weth];
     } else {
       route = [otfSettings.fromToken, otfSettings.toToken];
     }
   }
 
-  let amountOut;
-  try {
-    amountOut = await router.getAmountsOut(qtyToUse, route);
-  } catch (e) {
-    log.warn(e);
-  }
-  const minimumAccepted = amountOut[1].sub(
-    amountOut[1].div(otfSettings.slippage * 100),
-  );
-
   if (qtyToUse > 0) {
+    let amountOut;
+    try {
+      amountOut = await router.getAmountsOut(String(qtyToUse), route);
+    } catch (e) {
+      log.warn(e);
+    }
+    const minimumAccepted = amountOut[1].sub(
+      amountOut[1].div(otfSettings.slippage * 100),
+    );
+
     if (otfSettings.swapMethod.toLowerCase() === "swapexacttokensfortokens") {
       try {
         const tx: TransactionResponse = await router.swapExactTokensForTokens(
-          qtyToUse,
+          String(qtyToUse),
           minimumAccepted,
           route,
           toAddress,
@@ -177,8 +178,7 @@ export const entry = async (
           toAddress,
           deadline,
           {
-            to: contracts.viperSwapRouter,
-            value: ethers.utils.parseEther(String(qtyToUse)),
+            value: String(qtyToUse),
             ...systemGas,
           },
         );
@@ -209,7 +209,7 @@ export const entry = async (
     ) {
       try {
         const tx: TransactionResponse = await router.swapExactTokensForETH(
-          qtyToUse,
+          String(qtyToUse),
           minimumAccepted,
           route,
           toAddress,
@@ -245,7 +245,7 @@ export const entry = async (
       try {
         const tx: TransactionResponse =
           await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            qtyToUse,
+            String(qtyToUse),
             minimumAccepted,
             route,
             toAddress,
@@ -286,8 +286,7 @@ export const entry = async (
             toAddress,
             deadline,
             {
-              to: contracts.viperSwapRouter,
-              value: ethers.utils.parseEther(String(qtyToUse)),
+              value: String(qtyToUse),
               ...systemGas,
             },
           );
@@ -320,7 +319,7 @@ export const entry = async (
       try {
         const tx: TransactionResponse =
           await router.swapExactTokensForETHSupportingFeeOnTransferTokens(
-            qtyToUse,
+            String(qtyToUse),
             minimumAccepted,
             route,
             toAddress,
@@ -362,7 +361,7 @@ export const entry = async (
     log.info(
       "[Module: " +
         thisInfo.moduleName +
-        "]: unrecognized 'swapMethod' command.",
+        "]: The quantity to swap out is <= 0.",
     );
 
     return false;

@@ -8,7 +8,8 @@
             "https://rpc.hermesdefi.io/",
             "https://rpc.cosmicuniverse.one/",
             "https://rpc.onechain.services",
-            "https://rpc.foxswap.fi/"
+            "https://rpc.foxswap.fi/",
+            "https://harmony-0-rpc.gateway.pokt.network/"
         ],
         "chainId": 1666600000
     },

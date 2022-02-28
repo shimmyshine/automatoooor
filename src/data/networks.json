@@ -7,7 +7,8 @@
             "https://rpc.heavenswail.one/",
             "https://rpc.hermesdefi.io/",
             "https://rpc.cosmicuniverse.one/",
-            "https://rpc.onechain.services"
+            "https://rpc.onechain.services",
+            "https://rpc.foxswap.fi/"
         ],
         "chainId": 1666600000
     },
